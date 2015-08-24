@@ -1,0 +1,14 @@
+D:\Coding\SimplyMusic\SimplyMusic\bin\Release\SimplyMusic.exe.config
+D:\Coding\SimplyMusic\SimplyMusic\bin\Release\SimplyMusic.exe
+D:\Coding\SimplyMusic\SimplyMusic\bin\Release\SimplyMusic.pdb
+D:\Coding\SimplyMusic\SimplyMusic\bin\Release\LeagueSharp.Common.dll
+D:\Coding\SimplyMusic\SimplyMusic\bin\Release\LeagueSharp.dll
+D:\Coding\SimplyMusic\SimplyMusic\bin\Release\NAudio.dll
+D:\Coding\SimplyMusic\SimplyMusic\bin\Release\SharpDX.dll
+D:\Coding\SimplyMusic\SimplyMusic\bin\Release\SharpDX.Direct3D9.dll
+D:\Coding\SimplyMusic\SimplyMusic\bin\Release\clipper_library.dll
+D:\Coding\SimplyMusic\SimplyMusic\bin\Release\LeagueSharp.Sandbox.dll
+D:\Coding\SimplyMusic\SimplyMusic\obj\Debug\SimplyMusic.csprojResolveAssemblyReference.cache
+D:\Coding\SimplyMusic\SimplyMusic\obj\Debug\SimplyMusic.exe
+D:\Coding\SimplyMusic\SimplyMusic\obj\Debug\SimplyMusic.pdb
+D:\Coding\SimplyMusic\SimplyMusic\bin\Debug\SimplyMusic.exe.config

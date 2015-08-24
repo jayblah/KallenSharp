@@ -1,0 +1,13 @@
+D:\Coding\Gosu_Shen\Gosu_Shen\bin\Debug\Gosu_Shen.exe.config
+D:\Coding\Gosu_Shen\Gosu_Shen\obj\Debug\Gosu_Shen.csprojResolveAssemblyReference.cache
+D:\Coding\Gosu_Shen\Gosu_Shen\bin\Debug\Gosu_Shen.exe
+D:\Coding\Gosu_Shen\Gosu_Shen\bin\Debug\Gosu_Shen.pdb
+D:\Coding\Gosu_Shen\Gosu_Shen\bin\Debug\LeagueSharp.Common.dll
+D:\Coding\Gosu_Shen\Gosu_Shen\bin\Debug\LeagueSharp.dll
+D:\Coding\Gosu_Shen\Gosu_Shen\bin\Debug\SharpDX.dll
+D:\Coding\Gosu_Shen\Gosu_Shen\bin\Debug\SharpDX.Direct3D9.dll
+D:\Coding\Gosu_Shen\Gosu_Shen\bin\Debug\clipper_library.dll
+D:\Coding\Gosu_Shen\Gosu_Shen\bin\Debug\LeagueSharp.Sandbox.dll
+D:\Coding\Gosu_Shen\Gosu_Shen\bin\Debug\LeagueSharp.xml
+D:\Coding\Gosu_Shen\Gosu_Shen\obj\Debug\Gosu_Shen.exe
+D:\Coding\Gosu_Shen\Gosu_Shen\obj\Debug\Gosu_Shen.pdb
