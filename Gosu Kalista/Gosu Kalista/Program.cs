@@ -59,7 +59,8 @@ namespace Gosu_Kalista
 
         private static void Game_OnUpdate(EventArgs args)
         {
-            //Auto Level using the auto leveler in common cuz why not
+            //Auto Level in common is broken LOL
+
             //LeagueSharp.Common.AutoLevel.Enabled(Properties.MainMenu.Item("bAutoLevel").GetValue<bool>());
 
             AutoLevel.LevelUpSpells();

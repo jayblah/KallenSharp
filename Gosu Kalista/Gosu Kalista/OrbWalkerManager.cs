@@ -16,13 +16,16 @@ namespace Gosu_Kalista
             }
 
             // Console.WriteLine("Checking Epic Monsters");
-            CheckEpicMonsters();
-           // Console.WriteLine("Checking Champions for kills");
-            CheckEnemies();
+            if (Properties.MainMenu.Item("bUseEToKillEpics").GetValue<bool>() && Properties.Champion.E.IsReady())
+                CheckEpicMonsters();
+            // Console.WriteLine("Checking Champions for kills");
+            if (Properties.MainMenu.Item("bUseEToAutoKill").GetValue<bool>() && Properties.Champion.E.IsReady())
+                CheckEnemies();
         }
 
         private static void CheckEpicMonsters()
         {
+            // ReSharper disable once UnusedVariable
             foreach (var mob in MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
                 Properties.Champion.E.Range,
                 MinionTypes.All,
@@ -35,12 +38,16 @@ namespace Gosu_Kalista
 
         private static void CheckEnemies()
         {
-            foreach (var target in from target in HeroManager.Enemies where target != null where !target.IsDead where !DamageCalc.CheckNoDamageBuffs(target) where Properties.Champion.E.IsInRange(target) where !(DamageCalc.GetRendDamage(target) < target.Health) select target)
-            {
-                Console.WriteLine("Killing champion");
-                Properties.Champion.E.Cast();
-            }
-        
+            // ReSharper disable once UnusedVariable
+            if (!(from target in HeroManager.Enemies
+                where target.IsValid
+                where !DamageCalc.CheckNoDamageBuffs(target)
+                where Properties.Champion.E.IsInRange(target)
+                where !(DamageCalc.GetRendDamage(target) < target.Health)
+                select target).Any()) return;
+
+            Console.WriteLine("Killing champion(s)");
+            Properties.Champion.E.Cast();
         }
 
         public static void DoTheWalk()
@@ -68,7 +75,17 @@ namespace Gosu_Kalista
 
         private static void Combo()
         {
+            if (Properties.MainMenu.Item("bUseQCombo").GetValue<bool>() && Properties.Champion.Q.IsReady())
+            {
+                var target = TargetSelector.GetTarget(Properties.Champion.Q.Range, TargetSelector.DamageType.Physical);
+                var predictionPosition = Properties.Champion.Q.GetPrediction(target);
+                if (predictionPosition.Hitchance >= HitChance.VeryHigh)
+                    if (Properties.PlayerHero.IsWindingUp || Properties.PlayerHero.IsDashing())
+                        Properties.Champion.Q.Cast(predictionPosition.CastPosition);
+            }
+            if (!Properties.MainMenu.Item("bUseECombo").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
 
+            CheckEnemies();
         }
 
         private static void Mixed()
@@ -83,23 +100,20 @@ namespace Gosu_Kalista
             }
             if (!Properties.MainMenu.Item("bUseEMixed").GetValue<bool>()) return;
 
-            foreach (var target in HeroManager.Enemies)
+            // ReSharper disable once UnusedVariable
+            foreach (var stacks in from target in HeroManager.Enemies where target.IsValid where target.IsValidTarget(Properties.Champion.E.Range) where !DamageCalc.CheckNoDamageBuffs(target) select target.GetBuffCount("kalistaexpungemarker") into stacks where stacks >= Properties.MainMenu.Item("sMixedStacks").GetValue<Slider>().Value select stacks)
             {
-                if (target == null || !target.IsValid) continue;
-                if (!target.IsValidTarget(Properties.Champion.E.Range)) continue;
-                if (DamageCalc.CheckNoDamageBuffs(target)) continue;
-                var stacks = target.GetBuffCount("kalistaexpungemarker");
-                if (stacks < Properties.MainMenu.Item("sMixedStacks").GetValue<Slider>().Value) continue;
                 Properties.Champion.E.Cast();
             }
 
         }
     
 
-    private static void LaneClear()
+        private static void LaneClear()
         {
 
         }
+
         private static void LastHit()
         {
            
