@@ -15,19 +15,13 @@ namespace Gosu_Kalista
         public static Orbwalking.Orbwalker LukeOrbWalker { get; set; }
         public static Menu MainMenu { get; set; }
         public static Obj_AI_Hero PlayerHero { get; set; }
-        public static bool EnableFillDamage { get; set; }
-        public static bool EnableDrawingDamage { get; set; }
-        public static Color DamageFillColor { get; set; }
         #endregion
 
         internal class Drawing
         {
             private static DamageToUnitDelegate _damageToUnit;
-            // ReSharper disable once MemberHidesStaticFromOuterClass
             public static bool EnableFillDamage { get; set; }
-            // ReSharper disable once MemberHidesStaticFromOuterClass
             public static bool EnableDrawingDamage { get; set; }
-            // ReSharper disable once MemberHidesStaticFromOuterClass
             public static Color DamageFillColor { get; set; }
             public delegate float DamageToUnitDelegate(Obj_AI_Hero hero);
 
@@ -47,32 +41,32 @@ namespace Gosu_Kalista
 
         }
 
-        internal class AutoLevel
-        {
-            public static LeagueSharp.Common.AutoLevel LevelManager { get; set; }
+        //internal class AutoLevel
+        //{
+        //    public static LeagueSharp.Common.AutoLevel LevelManager { get; set; }
 
-            private struct Abilitys // So you can refeer to spell to level by slot rather than 1,2,3,4
-            {
-                public const int Q = 1;
-                public const int W = 2;
-                public const int E = 3;
-                public const int R = 4;
-            }
+        //    private struct Abilitys // So you can refeer to spell to level by slot rather than 1,2,3,4
+        //    {
+        //        public const int Q = 1;
+        //        public const int W = 2;
+        //        public const int E = 3;
+        //        public const int R = 4;
+        //    }
 
-            private static readonly int[] AbilitySequence =
-            {
-                Abilitys.W, Abilitys.E, Abilitys.Q, Abilitys.E,
-                Abilitys.E, Abilitys.R, Abilitys.E, Abilitys.Q,
-                Abilitys.E, Abilitys.Q, Abilitys.R, Abilitys.Q,
-                Abilitys.Q, Abilitys.W, Abilitys.W, Abilitys.R,
-                Abilitys.W, Abilitys.W
-            };
+        //    private static readonly int[] AbilitySequence =
+        //    {
+        //        Abilitys.W, Abilitys.E, Abilitys.Q, Abilitys.E,
+        //        Abilitys.E, Abilitys.R, Abilitys.E, Abilitys.Q,
+        //        Abilitys.E, Abilitys.Q, Abilitys.R, Abilitys.Q,
+        //        Abilitys.Q, Abilitys.W, Abilitys.W, Abilitys.R,
+        //        Abilitys.W, Abilitys.W
+        //    };
 
-            public static void InitilizeAutoLevel()
-            {
-                LevelManager = new LeagueSharp.Common.AutoLevel(AbilitySequence);
-            }
-        }
+        //    public static void InitilizeAutoLevel()
+        //    {
+        //        LevelManager = new LeagueSharp.Common.AutoLevel(AbilitySequence);
+        //    }
+        //}
 
         internal class Champion
         {

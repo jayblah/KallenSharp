@@ -35,12 +35,15 @@ namespace Gosu_Kalista
             Console.WriteLine(@"Linking Game Events...");
 
             Game.OnUpdate += Game_OnUpdate;
-            Properties.AutoLevel.InitilizeAutoLevel();
+            //Properties.AutoLevel.InitilizeAutoLevel();
             Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
 
             Properties.Drawing.DamageToUnit = DamageCalc.GetRendDamage;
             Drawing.OnDraw += DrawingManager.Drawing_OnDraw;
             Drawing.OnDraw += DrawingManager.Drawing_OnDrawChamp;
+            Humanizer.AddAction("rendDelay",100);
+            Humanizer.AddAction("generalDelay",125);
+
             Console.WriteLine(@"Gosu Kalista Load Completed");
         }
 
@@ -57,7 +60,9 @@ namespace Gosu_Kalista
         private static void Game_OnUpdate(EventArgs args)
         {
             //Auto Level using the auto leveler in common cuz why not
-            LeagueSharp.Common.AutoLevel.Enabled(Properties.MainMenu.Item("bAutoLevel").GetValue<bool>());
+            //LeagueSharp.Common.AutoLevel.Enabled(Properties.MainMenu.Item("bAutoLevel").GetValue<bool>());
+
+            AutoLevel.LevelUpSpells();
 
             if (Properties.PlayerHero.IsDead)
                 return;
@@ -68,14 +73,15 @@ namespace Gosu_Kalista
             {
                 if (!Humanizer.CheckDelay("generalDelay")) // Wait for delay for all other events
                 {
-                    Console.WriteLine(@"Waiting on Human delay");
+                    //Console.WriteLine(@"Waiting on Human delay");
                     return;
                 }
                 var nDelay = Seeder.Next(Properties.MainMenu.Item("minDelay").GetValue<Slider>().Value, Properties.MainMenu.Item("maxDelay").GetValue<Slider>().Value); // set a new random delay :D
                 Humanizer.ChangeDelay("generalDelay", nDelay);
             }
 
-           OrbWalkerManager.OrbWalk();
+            OrbWalkerManager.EventCheck();
+           OrbWalkerManager.DoTheWalk();
 
         }
     }

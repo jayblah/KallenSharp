@@ -32,9 +32,9 @@ namespace Gosu_Kalista
                 Render.Circle.DrawCircle(Properties.PlayerHero.Position, Properties.Champion.E.Range,
                     Color.DarkSlateBlue, 2);
 
-            if (Properties.MainMenu.Item("bDrawAutoAttackRange").GetValue<bool>())
-                Render.Circle.DrawCircle(Properties.PlayerHero.Position, Properties.PlayerHero.AttackRange,
-                    Color.DarkRed, 2);
+            //if (Properties.MainMenu.Item("bDrawAutoAttackRange").GetValue<bool>())
+            //    Render.Circle.DrawCircle(Properties.PlayerHero.Position, Properties.PlayerHero.AttackRange,
+            //        Color.DarkRed, 2);
         }
 
         public static void Drawing_OnDrawChamp(EventArgs args)
@@ -63,7 +63,7 @@ namespace Gosu_Kalista
                 
                 LeagueSharp.Drawing.DrawLine(xPosDamage, yPos, xPosDamage, yPos + Height, 1, Color.LightGray);
 
-                if (!Properties.EnableFillDamage) return;
+                if (!Properties.Drawing.EnableFillDamage) return;
                 Console.WriteLine("Fill damage");
                 var differenceInHp = xPosCurrentHp - xPosDamage;
                 var pos1 = barPos.X + 9 + (107 * percentHealthAfterDamage);

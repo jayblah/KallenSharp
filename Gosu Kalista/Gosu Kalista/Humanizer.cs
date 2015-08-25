@@ -33,7 +33,7 @@ namespace Gosu_Kalista
         public static void ChangeDelay(string actionName, float nDelay)
         {
             var cAction = ActionDelayList.Find(action => action.Name == actionName);
-            if (cAction.Name == null) AddAction(actionName,nDelay);
+            if (cAction.Name == null) return;
             cAction.Delay = nDelay;
         }
 

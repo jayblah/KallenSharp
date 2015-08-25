@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using LeagueSharp.Common;
 
 
@@ -6,9 +7,17 @@ namespace Gosu_Kalista
 {
     internal class OrbWalkerManager
     {
-        public void EventCheck()
+        public static void EventCheck()
         {
+            if (Properties.MainMenu.Item("doHuman").GetValue<bool>())
+            {
+                if (!Humanizer.CheckDelay("rendDelay")) // Wait for rend delay
+                    return;
+            }
+
+            // Console.WriteLine("Checking Epic Monsters");
             CheckEpicMonsters();
+           // Console.WriteLine("Checking Champions for kills");
             CheckEnemies();
         }
 
@@ -28,11 +37,13 @@ namespace Gosu_Kalista
         {
             foreach (var target in from target in HeroManager.Enemies where target != null where !target.IsDead where !DamageCalc.CheckNoDamageBuffs(target) where Properties.Champion.E.IsInRange(target) where !(DamageCalc.GetRendDamage(target) < target.Health) select target)
             {
+                Console.WriteLine("Killing champion");
                 Properties.Champion.E.Cast();
             }
+        
         }
 
-        public static void OrbWalk()
+        public static void DoTheWalk()
         {
 
             switch (Properties.LukeOrbWalker.ActiveMode)
@@ -62,15 +73,15 @@ namespace Gosu_Kalista
 
         private static void Mixed()
         {
-            if (Properties.MainMenu.Item("useQinMixed").GetValue<bool>() &&Properties.Champion.Q.IsReady())
+            if (Properties.MainMenu.Item("bUseQMixed").GetValue<bool>() && Properties.Champion.Q.IsReady())
             {
                 var target = TargetSelector.GetTarget(Properties.Champion.Q.Range, TargetSelector.DamageType.Physical);
                 var predictionPosition = Properties.Champion.Q.GetPrediction(target);
                 if (predictionPosition.Hitchance >= HitChance.VeryHigh)
                     if (Properties.PlayerHero.IsWindingUp || Properties.PlayerHero.IsDashing())
-                        Properties.Champion.Q.Cast(predictionPosition.CastPosition);   
+                        Properties.Champion.Q.Cast(predictionPosition.CastPosition);
             }
-            if (!Properties.MainMenu.Item("useEinMixed").GetValue<bool>()) return;
+            if (!Properties.MainMenu.Item("bUseEMixed").GetValue<bool>()) return;
 
             foreach (var target in HeroManager.Enemies)
             {
@@ -78,7 +89,7 @@ namespace Gosu_Kalista
                 if (!target.IsValidTarget(Properties.Champion.E.Range)) continue;
                 if (DamageCalc.CheckNoDamageBuffs(target)) continue;
                 var stacks = target.GetBuffCount("kalistaexpungemarker");
-                if (stacks < Properties.MainMenu.Item("minStacksHarass").GetValue<Slider>().Value) continue;
+                if (stacks < Properties.MainMenu.Item("sMixedStacks").GetValue<Slider>().Value) continue;
                 Properties.Champion.E.Cast();
             }
 
@@ -91,9 +102,7 @@ namespace Gosu_Kalista
         }
         private static void LastHit()
         {
-            // Handles itself?
-            if (!Properties.MainMenu.Item("useEToLastHit").GetValue<bool>()) return;
-
+           
         }
     }
 }

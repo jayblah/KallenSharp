@@ -13,6 +13,7 @@ namespace Gosu_Kalista
             Properties.MainMenu.AddSubMenu(DrawingMenu());
             Properties.MainMenu.AddSubMenu(AutoEvents());
             Properties.MainMenu.AddSubMenu(OrbWalkingMenu());
+            Properties.MainMenu.AddSubMenu(MixedMenu());
             Properties.LukeOrbWalker = new Orbwalking.Orbwalker(Properties.MainMenu.SubMenu("Orbwalking"));
         }
 
@@ -37,20 +38,29 @@ namespace Gosu_Kalista
 
         private static Menu OrbWalkingMenu()
         {
-            var orbWalkingMenu = new Menu("Orbwalking", "Orbwalking");
-            var targetSelectorMenu = new Menu("Target Selector", "Target Selector");
+            var orbWalkingMenu = new Menu("Orbwalking", "lukeWalker");
+            var targetSelectorMenu = new Menu("Target Selector", "tSelect");
             TargetSelector.AddToMenu(targetSelectorMenu);
             orbWalkingMenu.AddSubMenu(targetSelectorMenu);
             return orbWalkingMenu;
         }
 
+        private static Menu MixedMenu()
+        {
+            var mixedMenu = new Menu("Mixed Options", "mixedOptions");
+            mixedMenu.AddItem(new MenuItem("bUseQMixed", "Auto Q").SetValue(false));
+            mixedMenu.AddItem(new MenuItem("bUseEMixed", "Auto E on Stacks").SetValue(false));
+            mixedMenu.AddItem(new MenuItem("sMixedStacks", "Required E stacks").SetValue(new Slider(4, 2, 15)));
+
+            return mixedMenu;
+        }
         private static Menu DrawingMenu()
         {
             var drawMenu = new Menu("Drawing Settings", "Drawings");
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDraw", "Display Drawing").SetValue(true));
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawRendRange", "Draw Rend Range").SetValue(true));
-            drawMenu.SubMenu("Drawings")
-                .AddItem(new MenuItem("bDrawAutoAttackRange", "Draw Auto Attack Range").SetValue(true));
+          //  drawMenu.SubMenu("Drawings")
+            //    .AddItem(new MenuItem("bDrawAutoAttackRange", "Draw Auto Attack Range").SetValue(true));
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawText", "Display Floating Text").SetValue(true));
             return drawMenu;
         }
