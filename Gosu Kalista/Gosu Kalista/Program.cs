@@ -40,14 +40,17 @@ namespace Gosu_Kalista
 
             Properties.Drawing.DamageToUnit = DamageCalc.GetRendDamage;
             Drawing.OnDraw += DrawingManager.Drawing_OnDraw;
+            Drawing.OnDraw += DrawingManager.Drawing_OnDrawChamp;
             Console.WriteLine(@"Gosu Kalista Load Completed");
         }
 
         private static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            // Reset auto attack after 125 MS
+
+            if (sender == null || !sender.IsValid) return;
+                // Reset auto attack after 125 MS
             if (sender.IsMe && args.SData.Name == "KalistaExpungeWrapper")
-                Utility.DelayAction.Add(125, Orbwalking.ResetAutoAttackTimer);
+                Utility.DelayAction.Add(150, Orbwalking.ResetAutoAttackTimer);
             
         }
 

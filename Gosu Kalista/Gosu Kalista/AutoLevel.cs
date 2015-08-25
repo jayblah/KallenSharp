@@ -32,7 +32,6 @@ namespace Gosu_Kalista
         #region Public Functions
         public static void LevelUpSpells()
         {
-            var autoLevel = new  LeagueSharp.Common.AutoLevel(AbilitySequence);
             var qL = Properties.PlayerHero.Spellbook.GetSpell(Properties.Champion.Q.Slot).Level + QOff;
             var wL = Properties.PlayerHero.Spellbook.GetSpell(Properties.Champion.W.Slot).Level + WOff;
             var eL = Properties.PlayerHero.Spellbook.GetSpell(Properties.Champion.E.Slot).Level + EOff;

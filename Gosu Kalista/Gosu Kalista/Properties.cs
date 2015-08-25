@@ -23,8 +23,11 @@ namespace Gosu_Kalista
         internal class Drawing
         {
             private static DamageToUnitDelegate _damageToUnit;
+            // ReSharper disable once MemberHidesStaticFromOuterClass
             public static bool EnableFillDamage { get; set; }
+            // ReSharper disable once MemberHidesStaticFromOuterClass
             public static bool EnableDrawingDamage { get; set; }
+            // ReSharper disable once MemberHidesStaticFromOuterClass
             public static Color DamageFillColor { get; set; }
             public delegate float DamageToUnitDelegate(Obj_AI_Hero hero);
 

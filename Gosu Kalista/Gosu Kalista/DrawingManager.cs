@@ -53,16 +53,18 @@ namespace Gosu_Kalista
 
                 if (Properties.MainMenu.Item("bDrawText").GetValue<bool>() && damage > unit.Health)
                 {
+                    Console.WriteLine("Draw killable text");
                     RenderText.X = (int)barPos.X + XOffset;
                     RenderText.Y = (int)barPos.Y + YOffset - 13;
                     RenderText.text = "Rend Will Kill";
                     RenderText.OnEndScene();
                 }
 
+                
                 LeagueSharp.Drawing.DrawLine(xPosDamage, yPos, xPosDamage, yPos + Height, 1, Color.LightGray);
 
                 if (!Properties.EnableFillDamage) return;
-
+                Console.WriteLine("Fill damage");
                 var differenceInHp = xPosCurrentHp - xPosDamage;
                 var pos1 = barPos.X + 9 + (107 * percentHealthAfterDamage);
 
