@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
@@ -10,12 +9,6 @@ namespace Gosu_Kalista
     internal class DrawingManager
     {
         #region Variable Declaration
-
-        private const int XOffset = 10;
-        private const int YOffset = 20;
-        private const int Width = 103;
-        private const int Height = 8;
-        private static readonly Render.Text RenderText = new Render.Text(0, 0, "", 13, SharpDX.Color.Red, "monospace");
 
         #endregion
 
@@ -34,15 +27,7 @@ namespace Gosu_Kalista
                 Render.Circle.DrawCircle(Properties.PlayerHero.Position, Properties.Champion.E.Range,
                     Color.DarkSlateBlue, 2);
 
-            //if (Properties.MainMenu.Item("bDrawAutoAttackRange").GetValue<bool>())
-            //    Render.Circle.DrawCircle(Properties.PlayerHero.Position, Properties.PlayerHero.AttackRange,
-            //        Color.DarkRed, 2);
         }
-
-        //drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawOnMonsters", "Draw Damage On Monsters").SetValue(true));
-        //    drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawOnCreep", "Display Damage On Creeps").SetValue(true));
-        //    drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawOnEpics", "Draw Damage On Epics").SetValue(true));
-        //    drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawTextOnChamp", "Display Floating Text (on enemies)").SetValue(true));
 
         public static void Drawing_OnDrawMonster(EventArgs args)
         {
@@ -66,8 +51,11 @@ namespace Gosu_Kalista
 
             if (!Properties.MainMenu.Item("bDrawOnEpic").GetValue<bool>()) return;
 
-            foreach (var minion in ObjectManager.Get<Obj_AI_Minion>().Where( m => m.Team == GameObjectTeam.Neutral && m.IsValidTarget() && m.IsHPBarRendered))
+            foreach (var minion in ObjectManager.Get<Obj_AI_Minion>())
             {
+                if (minion.Team != GameObjectTeam.Neutral || !minion.IsValidTarget() || !minion.IsHPBarRendered)
+                    continue;
+
                 var hpBarPosition = minion.HPBarPosition;
                 var maxHealth = minion.MaxHealth;
                 var rendDamage = DamageCalc.GetRendDamage(minion);
@@ -104,7 +92,7 @@ namespace Gosu_Kalista
                         barWidth = 81;
                         xOffset = 58;
                         yOffset = 18;
-                        yOffset2 = 4;    
+                        yOffset2 = 4;
                         break;
                     case "SRU_Gromp":
                         barWidth = 87;
@@ -114,51 +102,57 @@ namespace Gosu_Kalista
                         break;
                 }
 
-                Drawing.DrawLine(new Vector2(hpBarPosition.X + xOffset + (barWidth * percentHealth), hpBarPosition.Y + yOffset), new Vector2(hpBarPosition.X + xOffset + (barWidth * percentHealth), hpBarPosition.Y + yOffset+yOffset2), 1, Color.LightGray);
-                if(rendDamage > minion.Health)
-                    Drawing.DrawText(hpBarPosition.X + xOffset, hpBarPosition.Y, Color.Red, "Killable");
+                Drawing.DrawLine(new Vector2(hpBarPosition.X + xOffset + (barWidth*percentHealth), hpBarPosition.Y + yOffset), new Vector2(hpBarPosition.X + xOffset + (barWidth*percentHealth), hpBarPosition.Y + yOffset + yOffset2), 1, Color.LightGray);
+                if (!(rendDamage > minion.Health)) continue;
+
+                Drawing.DrawText(hpBarPosition.X + xOffset, hpBarPosition.Y, Color.Red, "Killable");
             }
         }
 
 
         public static void Drawing_OnDrawChamp(EventArgs args)
         {
-           
             if (!Properties.MainMenu.Item("bDrawOnChamp").GetValue<bool>() || Properties.Drawing.DamageToUnit == null)
                 return;
             // For every enemis in E range
-            foreach (var unit in HeroManager.Enemies.Where(h => h.IsValid && h.IsHPBarRendered && Properties.Champion.E.IsInRange(h)))
+            foreach (var unit in HeroManager.Enemies)
             {
+                if (!unit.IsValid || !unit.IsHPBarRendered || !Properties.Champion.E.IsInRange(unit)) continue;
+                const int xOffset = 10;
+                const int yOffset = 20;
+                const int width = 103;
+                const int height = 8;
+
+                var renderText = new Render.Text(0, 0, "", 13, SharpDX.Color.Red, "monospace");
+
                 var barPos = unit.HPBarPosition;
                 var damage = DamageCalc.GetRendDamage(unit);
-                var percentHealthAfterDamage = Math.Max(0, unit.Health - damage) / unit.MaxHealth;
-                var yPos = barPos.Y + YOffset;
-                var xPosDamage = barPos.X + XOffset + Width * percentHealthAfterDamage;
-                var xPosCurrentHp = barPos.X + XOffset + Width * unit.Health / unit.MaxHealth;
+                var percentHealthAfterDamage = Math.Max(0, unit.Health - damage)/unit.MaxHealth;
+                var yPos = barPos.Y + yOffset;
+                var xPosDamage = barPos.X + xOffset + width*percentHealthAfterDamage;
+                var xPosCurrentHp = barPos.X + xOffset + width*unit.Health/unit.MaxHealth;
 
                 if (Properties.MainMenu.Item("bDrawTextOnChamp").GetValue<bool>() && damage > unit.Health)
                 {
-                    RenderText.X = (int)barPos.X + XOffset;
-                    RenderText.Y = (int)barPos.Y + YOffset - 13;
-                    RenderText.text = "Rend Will Kill";
-                    RenderText.OnEndScene();
+                    renderText.X = (int) barPos.X + xOffset;
+                    renderText.Y = (int) barPos.Y + yOffset - 13;
+                    renderText.text = "Rend Will Kill";
+                    renderText.OnEndScene();
                 }
 
-                
-                LeagueSharp.Drawing.DrawLine(xPosDamage, yPos, xPosDamage, yPos + Height, 1, Color.LightGray);
+
+                Drawing.DrawLine(xPosDamage, yPos, xPosDamage, yPos + height, 1, Color.LightGray);
 
                 if (!Properties.MainMenu.Item("bDrawFillOnChamp").GetValue<bool>()) return;
 
                 var differenceInHp = xPosCurrentHp - xPosDamage;
-                var pos1 = barPos.X + 9 + (107 * percentHealthAfterDamage);
+                var pos1 = barPos.X + 9 + (107*percentHealthAfterDamage);
 
                 for (var i = 0; i < differenceInHp; i++)
                 {
-                    LeagueSharp.Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + Height, 1, Color.DarkGray);
+                    Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.DarkGray);
                 }
-
             }
-
         }
     }
 }

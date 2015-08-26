@@ -30,50 +30,47 @@ namespace Gosu_Kalista
 
         public static bool CheckNoDamageBuffs(Obj_AI_Hero target)// From Asuna
         {
-            // Tryndamere R
-            if (target.ChampionName != "Tryndamere" || !target.Buffs.Any(
-                b => b.Caster.NetworkId == target.NetworkId && b.IsValidBuff() && b.DisplayName == "Undying Rage"))
+            foreach (var b in target.Buffs.Where(b => b.IsValidBuff()))
             {
-                if (!target.Buffs.Any(b => b.IsValidBuff() && b.DisplayName == "Chrono Shift"))
+                switch (b.DisplayName)
                 {
-                    if (!target.Buffs.Any(b => b.IsValidBuff() && b.DisplayName == "JudicatorIntervention"))
-                    {
-                        switch (target.ChampionName)
-                        {
-                            case "Poppy":
-                                if (
-                                    HeroManager.Allies.Any(
-                                        o =>
-                                            !o.IsMe
-                                            && o.Buffs.Any(
-                                                b =>
-                                                    b.Caster.NetworkId == target.NetworkId && b.IsValidBuff()
-                                                    && b.DisplayName == "PoppyDITarget")))
-                                {
-                                    return true;
-                                }
-                                break;
-                        }
-
-                        //Banshee's Veil, Sivir E or Noc W
-                        return target.Buffs.Any(b => b.IsValidBuff() && b.DisplayName == "bansheesveil") ||
-                               (target.Buffs.Any(b => b.IsValidBuff() && b.DisplayName == "SivirE") ||
-                                (target.Buffs.Any(b => b.IsValidBuff() && b.DisplayName == "NocturneW") ||
-                                 (target.HasBuffOfType(BuffType.Invulnerability)
-                                  || target.HasBuffOfType(BuffType.SpellImmunity)
-                                  || target.HasBuffOfType(BuffType.SpellShield))));
-                    }
-
-                    // Poppy R
-                    return true;
+                    case "Chrono Shift":
+                        return true;
+                    case "JudicatorIntervention":
+                        return true;
+                    case "Undying Rage":
+                        if (target.ChampionName == "Tryndamere")
+                            return true;
+                        continue;
+                    
+                   //Spell Shields
+                    case "bansheesveil":
+                        return true;
+                    case "SivirE":
+                        return true;
+                    case "NocturneW":
+                        return true;
+                        
                 }
-
-                // Kayle R
+            }
+            if (target.ChampionName == "Poppy" && HeroManager.Allies.Any(
+                o =>
+                {
+                    return !o.IsMe
+                           && o.Buffs.Any(
+                               b =>
+                                   b.Caster.NetworkId == target.NetworkId && b.IsValidBuff()
+                                   && b.DisplayName == "PoppyDITarget");
+                }))
+            {
                 return true;
             }
 
-            // Zilean R
-            return true;
+        
+            return (target.HasBuffOfType(BuffType.Invulnerability)
+                      || target.HasBuffOfType(BuffType.SpellImmunity)
+                      || target.HasBuffOfType(BuffType.SpellShield));
+
         }
 
         public static float GetRendDamage(Obj_AI_Base target)
