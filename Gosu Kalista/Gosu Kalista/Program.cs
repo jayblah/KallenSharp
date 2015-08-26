@@ -39,8 +39,10 @@ namespace Gosu_Kalista
             Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
 
             Properties.Drawing.DamageToUnit = DamageCalc.GetRendDamage;
+            Properties.Drawing.DamageToMonster = DamageCalc.GetRendDamage;
             Drawing.OnDraw += DrawingManager.Drawing_OnDraw;
             Drawing.OnDraw += DrawingManager.Drawing_OnDrawChamp;
+            Drawing.OnDraw += DrawingManager.Drawing_OnDrawMonster;
             Humanizer.AddAction("rendDelay",100);
             Humanizer.AddAction("generalDelay",125);
 

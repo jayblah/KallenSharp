@@ -19,10 +19,7 @@ namespace Gosu_Kalista
 
         internal class Drawing
         {
-            private static DamageToUnitDelegate _damageToUnit;
-            public static bool EnableFillDamage { get; set; }
-            public static bool EnableDrawingDamage { get; set; }
-            public static Color DamageFillColor { get; set; }
+            private static DamageToUnitDelegate _damageToUnit, _damageToMonster;
             public delegate float DamageToUnitDelegate(Obj_AI_Hero hero);
 
             public static DamageToUnitDelegate DamageToUnit
@@ -38,6 +35,21 @@ namespace Gosu_Kalista
                     _damageToUnit = value;
                 }
             }
+
+            public static DamageToUnitDelegate DamageToMonster
+            {
+                get { return _damageToMonster; }
+
+                set
+                {
+                    if (_damageToMonster == null)
+                    {
+                        LeagueSharp.Drawing.OnDraw += DrawingManager.Drawing_OnDrawMonster;
+                    }
+                    _damageToMonster = value;
+                }
+            }
+
 
         }
 

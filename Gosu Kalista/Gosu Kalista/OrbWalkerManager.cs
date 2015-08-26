@@ -18,6 +18,8 @@ namespace Gosu_Kalista
             // Console.WriteLine("Checking Epic Monsters");
             if (Properties.MainMenu.Item("bUseEToKillEpics").GetValue<bool>() && Properties.Champion.E.IsReady())
                 CheckEpicMonsters();
+            if (Properties.MainMenu.Item("bUseEToKillBuffs").GetValue<bool>() && Properties.Champion.E.IsReady())
+                CheckBuffMonsters();
             // Console.WriteLine("Checking Champions for kills");
             if (Properties.MainMenu.Item("bUseEToAutoKill").GetValue<bool>() && Properties.Champion.E.IsReady())
                 CheckEnemies();
@@ -31,6 +33,19 @@ namespace Gosu_Kalista
                 MinionTypes.All,
                 MinionTeam.Neutral,
                 MinionOrderTypes.MaxHealth).Where(mob => mob.Name.Contains("Baron") || mob.Name.Contains("Dragon")).Where(mob => DamageCalc.GetRendDamage(mob) > mob.Health))
+            {
+                Properties.Champion.E.Cast();
+            }
+        }
+
+        private static void CheckBuffMonsters()
+        {
+            // ReSharper disable once UnusedVariable
+            foreach (var mob in MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
+                Properties.Champion.E.Range,
+                MinionTypes.All,
+                MinionTeam.Neutral,
+                MinionOrderTypes.MaxHealth).Where(mob => mob.Name.Contains("Red") || mob.Name.Contains("Blue")).Where(mob => DamageCalc.GetRendDamage(mob) > mob.Health))
             {
                 Properties.Champion.E.Cast();
             }

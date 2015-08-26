@@ -62,15 +62,49 @@ namespace Gosu_Kalista
         mixedMenu.AddItem(new MenuItem("bUseECombo", "Auto E for kills").SetValue(false));
 
         return mixedMenu;
-    }
+        }
+
+    //    if (!Properties.MainMenu.Item("bDrawOnChamp").GetValue<bool>() || Properties.Drawing.DamageToUnit == null)
+    //            return;
+          
+    //        foreach (var unit in HeroManager.Enemies.Where(h => h.IsValid && h.IsHPBarRendered))
+    //        {
+    //            var barPos = unit.HPBarPosition;
+    //    var damage = DamageCalc.GetRendDamage(unit);
+    //    var percentHealthAfterDamage = Math.Max(0, unit.Health - damage) / unit.MaxHealth;
+    //    var yPos = barPos.Y + YOffset;
+    //    var xPosDamage = barPos.X + XOffset + Width * percentHealthAfterDamage;
+    //    var xPosCurrentHp = barPos.X + XOffset + Width * unit.Health / unit.MaxHealth;
+
+    //            if (Properties.MainMenu.Item("bDrawTextOnChamp").GetValue<bool>() && damage > unit.Health)
+    //            {
+    //                Console.WriteLine("Draw killable text");
+    //                RenderText.X = (int)barPos.X + XOffset;
+    //                RenderText.Y = (int)barPos.Y + YOffset - 13;
+    //                RenderText.text = "Rend Will Kill";
+    //                RenderText.OnEndScene();
+    //            }
+
+
+    //LeagueSharp.Drawing.DrawLine(xPosDamage, yPos, xPosDamage, yPos + Height, 1, Color.LightGray);
+
+    //            if (!Properties.MainMenu.Item("bDrawFillOnChamp").GetValue<bool>()) return;
+
     private static Menu DrawingMenu()
         {
             var drawMenu = new Menu("Drawing Settings", "Drawings");
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDraw", "Display Drawing").SetValue(true));
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawRendRange", "Draw Rend Range").SetValue(true));
-          //  drawMenu.SubMenu("Drawings")
+            //  drawMenu.SubMenu("Drawings")
             //    .AddItem(new MenuItem("bDrawAutoAttackRange", "Draw Auto Attack Range").SetValue(true));
-            drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawText", "Display Floating Text").SetValue(true));
+            drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawOnChamp", "Draw On Enemies").SetValue(true));
+            drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawTextOnChamp", "Display Floating Text (on enemies)").SetValue(true));
+            drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawFillOnChamp", "Fill Combo Damage On Champs").SetValue(true));
+
+            drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawOnMonsters", "Draw Damage On Monsters").SetValue(true));
+            //drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawOnCreep", "Display Damage On Creeps").SetValue(true));
+            drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawOnEpic", "Draw Damage On Epics").SetValue(true));
+
             return drawMenu;
         }
 
@@ -79,6 +113,7 @@ namespace Gosu_Kalista
             var autoEventsMenu = new Menu("Auto Events", "autoEvents");
             autoEventsMenu.AddItem(new MenuItem("bAutoLevel", "Auto Level Skills").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseEToKillEpics", "Auto Level Skills").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bUseEToKillBuffs", "Auto Level Skills").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKill", "Auto Level Skills").SetValue(true));
             return autoEventsMenu;
         }
