@@ -26,11 +26,18 @@ namespace Gosu_Kalista
                 CheckEnemies();
             if (Properties.MainMenu.Item("bUseEToAutoKillMinions").GetValue<bool>() && Properties.Champion.E.IsReady())
                 CheckMinions();
-            if (Properties.MainMenu.Item("bAutoSentinels").GetValue<bool>() && Properties.Champion.E.IsReady())
-                AutoSentinels();
+            if (Properties.MainMenu.Item("bAutoEOnStacksAndMinions").GetValue<bool>() && Properties.Champion.E.IsReady())
+                AutoEOnStacksAndMinions();
+
+            //Auto Sentinel
+            if (Properties.MainMenu.Item("bAutoSentinelDragon").GetValue<bool>() && Properties.Champion.E.IsReady())
+                AutoSentinels(true);
+            if (Properties.MainMenu.Item("bAutoSentinelBaron").GetValue<bool>() && Properties.Champion.E.IsReady())
+                AutoSentinels(false);
 
         }
 
+            
         public static void CheckNonKillables(AttackableUnit minion)
         {
             if(!Properties.MainMenu.Item("bUseENonKillables").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
@@ -38,21 +45,44 @@ namespace Gosu_Kalista
                 Properties.Champion.E.Cast();
         }
 
-        private static void AutoSentinels()
+        private static void AutoEOnStacksAndMinions()
+        {
+            foreach (var count in from stacks in (from target in HeroManager.Enemies where target.IsValid where target.IsValidTarget(Properties.Champion.E.Range)
+                     where !DamageCalc.CheckNoDamageBuffs(target) select target.GetBuffCount("kalistaexpungemarker") into stacks
+                            where stacks >= Properties.MainMenu.Item("sUseEOnChampStacks").GetValue<Slider>().Value select stacks)
+                                  select 0 into count let minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range)
+                                      select count + minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid) into count
+                                          where Properties.MainMenu.Item("sUseEOnMinionKilled").GetValue<Slider>().Value <= count select count)
+            {
+                Properties.Champion.E.Cast();
+            }
+        }
+
+        private static void AutoSentinels(bool dragon)
         {
             if (!Properties.Champion.W.IsReady()) return;
 
-            if (ObjectManager.Get<Obj_AI_Minion>().Where(minion => minion.CharData.BaseSkinName.Contains("Dragon")).Any(minion => minion.Team == GameObjectTeam.Neutral && !minion.IsDead))
+            if (dragon)
             {
-                if (ObjectManager.Player.Distance(SummonersRift.River.Dragon) <= Properties.Champion.W.Range)
-                    Properties.Champion.W.Cast(SummonersRift.River.Dragon);
+                if (!ObjectManager.Get<Obj_AI_Minion>()
+                    .Where(minion => minion.CharData.BaseSkinName.Contains("Dragon"))
+                    .Any(minion => minion.Team == GameObjectTeam.Neutral && !minion.IsDead)) return;
+                if (!(ObjectManager.Player.Distance(SummonersRift.River.Dragon) <= Properties.Champion.W.Range)) return;
+
+                Properties.Champion.W.Cast(SummonersRift.River.Dragon);
             }
-            else if (ObjectManager.Get<Obj_AI_Minion>().Where(minion => minion.CharData.BaseSkinName.Contains("Baron")).Any(minion => minion.Team == GameObjectTeam.Neutral && !minion.IsDead))
+            else
             {
-                if (ObjectManager.Player.Distance(SummonersRift.River.Baron) <= Properties.Champion.W.Range)
-                    Properties.Champion.W.Cast(SummonersRift.River.Baron);
+                if (!ObjectManager.Get<Obj_AI_Minion>()
+                    .Where(minion => minion.CharData.BaseSkinName.Contains("Baron"))
+                    .Any(minion => minion.Team == GameObjectTeam.Neutral && !minion.IsDead)) return;
+                if (!(ObjectManager.Player.Distance(SummonersRift.River.Baron) <= Properties.Champion.W.Range)) return;
+
+                Properties.Champion.W.Cast(SummonersRift.River.Baron);
             }
+
         }
+
         private static void CheckEpicMonsters()
         {
             // ReSharper disable once UnusedVariable
