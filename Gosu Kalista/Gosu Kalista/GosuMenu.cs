@@ -9,6 +9,7 @@ namespace Gosu_Kalista
         public static void GenerateMenu()
         {
             Properties.MainMenu = new Menu(MenuName, MenuName, true);
+            Properties.MainMenu.AddSubMenu(new Menu("Created by Kallen aka 0x0539", "ddsfhjsjhdfjhdsfjhdfsjhdf"));
             Properties.MainMenu.AddSubMenu(HumanizerMenu());
             Properties.MainMenu.AddSubMenu(DrawingMenu());
             Properties.MainMenu.AddSubMenu(AutoEvents());
@@ -86,8 +87,8 @@ namespace Gosu_Kalista
         {
             var autoEventsMenu = new Menu("Auto Events", "autoEvents");
             autoEventsMenu.AddItem(new MenuItem("bAutoLevel", "Auto Level Skills").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bAutoSentinelBaron", "Auto Sentinel Baron").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bAutoSentinelDragon", "Auto Sentinel").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bAutoSentinel", "Auto Sentinel").SetValue(new KeyBind('T', KeyBindType.Press)));
+            autoEventsMenu.AddItem(new MenuItem("bAutoSentinelDragon", "Auto Sentinel Dragon").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseEToKillEpics", "Auto E Epics").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseEToKillBuffs", "Auto E Buffs").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKill", "Auto E Kill Enemies").SetValue(true));

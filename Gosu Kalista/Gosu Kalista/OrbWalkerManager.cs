@@ -9,34 +9,31 @@ namespace Gosu_Kalista
 {
     internal class OrbWalkerManager
     {
-        
+
         public static void EventCheck()
         {
-            if (Properties.MainMenu.Item("doHuman").GetValue<bool>())
-            {
-                if (!Humanizer.CheckDelay("rendDelay")) // Wait for rend delay
-                    return;
-            }
 
+            if (!Humanizer.CheckDelay("rendDelay")) // Wait for rend delay
+                    return;        
             if (Properties.MainMenu.Item("bUseEToKillEpics").GetValue<bool>() && Properties.Champion.E.IsReady())
                 CheckEpicMonsters();
-            if (Properties.MainMenu.Item("bUseEToKillBuffs").GetValue<bool>() && Properties.Champion.E.IsReady())
+            else if (Properties.MainMenu.Item("bUseEToKillBuffs").GetValue<bool>() && Properties.Champion.E.IsReady())
                 CheckBuffMonsters();
-            if (Properties.MainMenu.Item("bUseEToAutoKill").GetValue<bool>() && Properties.Champion.E.IsReady())
+            else if (Properties.MainMenu.Item("bUseEToAutoKill").GetValue<bool>() && Properties.Champion.E.IsReady())
                 CheckEnemies();
-            if (Properties.MainMenu.Item("bUseEToAutoKillMinions").GetValue<bool>() && Properties.Champion.E.IsReady())
+            else if (Properties.MainMenu.Item("bUseEToAutoKillMinions").GetValue<bool>() && Properties.Champion.E.IsReady())
                 CheckMinions();
-            if (Properties.MainMenu.Item("bAutoEOnStacksAndMinions").GetValue<bool>() && Properties.Champion.E.IsReady())
+            else if (Properties.MainMenu.Item("bAutoEOnStacksAndMinions").GetValue<bool>() && Properties.Champion.E.IsReady())
                 AutoEOnStacksAndMinions();
+
+            if (!Properties.MainMenu.Item("bAutoSentinel").GetValue<KeyBind>().Active) return;
 
             //Auto Sentinel
             if (Properties.MainMenu.Item("bAutoSentinelDragon").GetValue<bool>() && Properties.Champion.E.IsReady())
                 AutoSentinels(true);
             if (Properties.MainMenu.Item("bAutoSentinelBaron").GetValue<bool>() && Properties.Champion.E.IsReady())
                 AutoSentinels(false);
-
         }
-
             
         public static void CheckNonKillables(AttackableUnit minion)
         {
@@ -64,18 +61,18 @@ namespace Gosu_Kalista
 
             if (dragon)
             {
-                if (!ObjectManager.Get<Obj_AI_Minion>()
-                    .Where(minion => minion.CharData.BaseSkinName.Contains("Dragon"))
-                    .Any(minion => minion.Team == GameObjectTeam.Neutral && !minion.IsDead)) return;
+                //if (!ObjectManager.Get<Obj_AI_Minion>()
+                //    .Where(minion => minion.CharData.BaseSkinName.Contains("Dragon"))
+                //    .Any(minion => minion.Team == GameObjectTeam.Neutral && !minion.IsDead)) return;
                 if (!(ObjectManager.Player.Distance(SummonersRift.River.Dragon) <= Properties.Champion.W.Range)) return;
 
                 Properties.Champion.W.Cast(SummonersRift.River.Dragon);
             }
             else
             {
-                if (!ObjectManager.Get<Obj_AI_Minion>()
-                    .Where(minion => minion.CharData.BaseSkinName.Contains("Baron"))
-                    .Any(minion => minion.Team == GameObjectTeam.Neutral && !minion.IsDead)) return;
+                //if (!ObjectManager.Get<Obj_AI_Minion>()
+                //    .Where(minion => minion.CharData.BaseSkinName.Contains("Baron"))
+                //    .Any(minion => minion.Team == GameObjectTeam.Neutral && !minion.IsDead)) return;
                 if (!(ObjectManager.Player.Distance(SummonersRift.River.Baron) <= Properties.Champion.W.Range)) return;
 
                 Properties.Champion.W.Cast(SummonersRift.River.Baron);
@@ -168,6 +165,7 @@ namespace Gosu_Kalista
             if (!Properties.MainMenu.Item("bUseECombo").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
 
             CheckEnemies();
+
         }
 
         private static void Mixed()
