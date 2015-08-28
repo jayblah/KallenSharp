@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 
@@ -12,7 +11,6 @@ namespace Gosu_Kalista
 
         public static void EventCheck()
         {
-
             if (!Humanizer.CheckDelay("rendDelay")) // Wait for rend delay
                     return;
 
@@ -68,6 +66,7 @@ namespace Gosu_Kalista
                 into count
                 where Properties.MainMenu.Item("sUseEOnMinionKilled").GetValue<Slider>().Value <= count
                 select count).Any()) return false;
+
             Properties.Champion.E.Cast();
             return true;
         }

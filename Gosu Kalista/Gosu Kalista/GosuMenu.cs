@@ -87,6 +87,7 @@ namespace Gosu_Kalista
         {
             var autoEventsMenu = new Menu("Auto Events", "autoEvents");
             autoEventsMenu.AddItem(new MenuItem("bAutoLevel", "Auto Level Skills").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bAutoBuyOrb", "Auto Buy Orb at 6").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bAutoSentinel", "Auto Sentinel").SetValue(new KeyBind('T', KeyBindType.Press)));
             autoEventsMenu.AddItem(new MenuItem("bAutoSentinelDragon", "Auto Sentinel Dragon").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseEToKillEpics", "Auto E Epics").SetValue(true));

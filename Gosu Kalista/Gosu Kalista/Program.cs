@@ -54,7 +54,7 @@ namespace Gosu_Kalista
         {
 
             if (sender == null || !sender.IsValid) return;
-                // Reset auto attack after 125 MS
+                // Allow more auto attacks after 150 MS after using Expunge
             if (sender.IsMe && args.SData.Name == "KalistaExpungeWrapper")
                 Utility.DelayAction.Add(150, Orbwalking.ResetAutoAttackTimer);
             
@@ -63,17 +63,20 @@ namespace Gosu_Kalista
         private static void Game_OnUpdate(EventArgs args)
         {
             //Auto Level in common is broken LOL
-
             //LeagueSharp.Common.AutoLevel.Enabled(Properties.MainMenu.Item("bAutoLevel").GetValue<bool>());
+
             if(Properties.MainMenu.Item("bAutoLevel").GetValue<bool>())
             AutoLevel.LevelUpSpells();
+
+            if (Properties.MainMenu.Item("bAutoBuyOrb").GetValue<bool>())
+                TrinketManager.BuyOrb();
 
             if (Properties.PlayerHero.IsDead)
                 return;
             if (Properties.PlayerHero.IsRecalling())
                 return;
 
-            OrbWalkerManager.EventCheck();
+           OrbWalkerManager.EventCheck();
            OrbWalkerManager.DoTheWalk();
 
         }
