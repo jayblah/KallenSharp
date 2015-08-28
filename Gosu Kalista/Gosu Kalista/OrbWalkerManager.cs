@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Linq;
+using LeagueSharp;
 using LeagueSharp.Common;
+
 
 
 namespace Gosu_Kalista
 {
     internal class OrbWalkerManager
     {
+        
         public static void EventCheck()
         {
             if (Properties.MainMenu.Item("doHuman").GetValue<bool>())
@@ -15,16 +18,41 @@ namespace Gosu_Kalista
                     return;
             }
 
-            // Console.WriteLine("Checking Epic Monsters");
             if (Properties.MainMenu.Item("bUseEToKillEpics").GetValue<bool>() && Properties.Champion.E.IsReady())
                 CheckEpicMonsters();
             if (Properties.MainMenu.Item("bUseEToKillBuffs").GetValue<bool>() && Properties.Champion.E.IsReady())
                 CheckBuffMonsters();
-            // Console.WriteLine("Checking Champions for kills");
             if (Properties.MainMenu.Item("bUseEToAutoKill").GetValue<bool>() && Properties.Champion.E.IsReady())
                 CheckEnemies();
+            if (Properties.MainMenu.Item("bUseEToAutoKillMinions").GetValue<bool>() && Properties.Champion.E.IsReady())
+                CheckMinions();
+            if (Properties.MainMenu.Item("bAutoSentinels").GetValue<bool>() && Properties.Champion.E.IsReady())
+                AutoSentinels();
+
         }
 
+        public static void CheckNonKillables(AttackableUnit minion)
+        {
+            if(!Properties.MainMenu.Item("bUseENonKillables").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
+                if(minion.Health <= DamageCalc.GetRendDamage((Obj_AI_Base)minion))
+                Properties.Champion.E.Cast();
+        }
+
+        private static void AutoSentinels()
+        {
+            if (!Properties.Champion.W.IsReady()) return;
+
+            if (ObjectManager.Get<Obj_AI_Minion>().Where(minion => minion.CharData.BaseSkinName.Contains("Dragon")).Any(minion => minion.Team == GameObjectTeam.Neutral && !minion.IsDead))
+            {
+                if (ObjectManager.Player.Distance(SummonersRift.River.Dragon) <= Properties.Champion.W.Range)
+                    Properties.Champion.W.Cast(SummonersRift.River.Dragon);
+            }
+            else if (ObjectManager.Get<Obj_AI_Minion>().Where(minion => minion.CharData.BaseSkinName.Contains("Baron")).Any(minion => minion.Team == GameObjectTeam.Neutral && !minion.IsDead))
+            {
+                if (ObjectManager.Player.Distance(SummonersRift.River.Baron) <= Properties.Champion.W.Range)
+                    Properties.Champion.W.Cast(SummonersRift.River.Baron);
+            }
+        }
         private static void CheckEpicMonsters()
         {
             // ReSharper disable once UnusedVariable
@@ -65,6 +93,15 @@ namespace Gosu_Kalista
             Properties.Champion.E.Cast();
         }
 
+        private static void CheckMinions()
+        {
+            var count = 0;
+            
+            var minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range);
+            count += minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid);
+            if (Properties.MainMenu.Item("sAutoEMinionsKilled").GetValue<Slider>().Value <= count)
+                Properties.Champion.E.Cast();
+        }
         public static void DoTheWalk()
         {
 

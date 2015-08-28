@@ -112,9 +112,13 @@ namespace Gosu_Kalista
         {
             var autoEventsMenu = new Menu("Auto Events", "autoEvents");
             autoEventsMenu.AddItem(new MenuItem("bAutoLevel", "Auto Level Skills").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bUseEToKillEpics", "Auto Level Skills").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bUseEToKillBuffs", "Auto Level Skills").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKill", "Auto Level Skills").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bAutoSentinels", "Auto Sentinel").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bUseEToKillEpics", "Auto E Epics").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bUseEToKillBuffs", "Auto E Buffs").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKill", "Auto E Kill Enemies").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bUseENonKillables", "Auto E NonKillables").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKillMinions", "Auto E Kill Minions").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("sAutoEMinionsKilled", "Required Minions Killed From E").SetValue(new Slider(3, 2, 10)));
             return autoEventsMenu;
         }
     }
