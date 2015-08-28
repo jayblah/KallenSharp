@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
@@ -103,8 +104,7 @@ namespace Gosu_Kalista
                         yOffset2 = 4;
                         break;
                 }
-
-                Drawing.DrawLine(new Vector2(hpBarPosition.X + xOffset + (barWidth*percentHealth), hpBarPosition.Y + yOffset), new Vector2(hpBarPosition.X + xOffset + (barWidth*percentHealth), hpBarPosition.Y + yOffset + yOffset2), 1, Color.LightGray);
+                Drawing.DrawLine(new Vector2(hpBarPosition.X + xOffset + (barWidth*percentHealth), hpBarPosition.Y + yOffset), new Vector2(hpBarPosition.X + xOffset + (barWidth*percentHealth), hpBarPosition.Y + yOffset + yOffset2), 4, Color.LightGray);
                 if (!(rendDamage > minion.Health)) continue;
 
                 Drawing.DrawText(hpBarPosition.X + xOffset, hpBarPosition.Y, Color.Red, "Killable");
