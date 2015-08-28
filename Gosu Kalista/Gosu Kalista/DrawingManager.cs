@@ -11,8 +11,6 @@ namespace Gosu_Kalista
     internal class DrawingManager
     {
         #region Variable Declaration
-
-        static Render.Text renderText = new Render.Text(0, 0, "", 13, SharpDX.Color.Red, "monospace");
         #endregion
 
         public static void Drawing_OnDraw(EventArgs args)
@@ -104,7 +102,7 @@ namespace Gosu_Kalista
                         yOffset2 = 4;
                         break;
                 }
-                Drawing.DrawLine(new Vector2(hpBarPosition.X + xOffset + (barWidth*percentHealth), hpBarPosition.Y + yOffset), new Vector2(hpBarPosition.X + xOffset + (barWidth*percentHealth), hpBarPosition.Y + yOffset + yOffset2), 4, Color.LightGray);
+                Drawing.DrawLine(new Vector2(hpBarPosition.X + xOffset + (barWidth*percentHealth), hpBarPosition.Y + yOffset), new Vector2(hpBarPosition.X + xOffset + (barWidth*percentHealth), hpBarPosition.Y + yOffset + yOffset2), 3, Color.LightGray);
                 if (!(rendDamage > minion.Health)) continue;
 
                 Drawing.DrawText(hpBarPosition.X + xOffset, hpBarPosition.Y, Color.Red, "Killable");
@@ -132,13 +130,7 @@ namespace Gosu_Kalista
                 var xPosCurrentHp = barPos.X + xOffset + width*unit.Health/unit.MaxHealth;
 
                 if (Properties.MainMenu.Item("bDrawTextOnChamp").GetValue<bool>() && damage > unit.Health)
-                {
-                    renderText.X = (int) barPos.X + xOffset;
-                    renderText.Y = (int) barPos.Y + yOffset - 13;
-                    renderText.text = "Rend Will Kill";
-                    renderText.OnEndScene();
-                }
-
+                    Drawing.DrawText(barPos.X + xOffset, barPos.Y + yOffset -13, Color.Red, "Killable");             
 
                 Drawing.DrawLine(xPosDamage, yPos, xPosDamage, yPos + height, 1, Color.LightGray);
 

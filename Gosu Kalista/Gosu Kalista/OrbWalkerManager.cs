@@ -14,45 +14,62 @@ namespace Gosu_Kalista
         {
 
             if (!Humanizer.CheckDelay("rendDelay")) // Wait for rend delay
-                    return;        
-            if (Properties.MainMenu.Item("bUseEToKillEpics").GetValue<bool>() && Properties.Champion.E.IsReady())
-                CheckEpicMonsters();
-            else if (Properties.MainMenu.Item("bUseEToKillBuffs").GetValue<bool>() && Properties.Champion.E.IsReady())
-                CheckBuffMonsters();
-            else if (Properties.MainMenu.Item("bUseEToAutoKill").GetValue<bool>() && Properties.Champion.E.IsReady())
-                CheckEnemies();
-            else if (Properties.MainMenu.Item("bUseEToAutoKillMinions").GetValue<bool>() && Properties.Champion.E.IsReady())
-                CheckMinions();
-            else if (Properties.MainMenu.Item("bAutoEOnStacksAndMinions").GetValue<bool>() && Properties.Champion.E.IsReady())
-                AutoEOnStacksAndMinions();
+                    return;
 
-            if (!Properties.MainMenu.Item("bAutoSentinel").GetValue<KeyBind>().Active) return;
+            if (!Properties.Champion.E.IsReady()) return;
+
+            if (Properties.MainMenu.Item("bUseEToKillEpics").GetValue<bool>())
+                if (CheckEpicMonsters()) return;
+
+            if (Properties.MainMenu.Item("bUseEToKillBuffs").GetValue<bool>())
+                if(CheckBuffMonsters())return;
+
+            if (Properties.MainMenu.Item("bUseEToAutoKill").GetValue<bool>())
+                if (CheckEnemies()) return;
+
+            if (Properties.MainMenu.Item("bUseEToAutoKillMinions").GetValue<bool>())
+                if (CheckMinions()) return;
+            if (Properties.MainMenu.Item("bAutoEOnStacksAndMinions").GetValue<bool>())
+                if(AutoEOnStacksAndMinions())return;
+
 
             //Auto Sentinel
-            if (Properties.MainMenu.Item("bAutoSentinelDragon").GetValue<bool>() && Properties.Champion.E.IsReady())
+            if (!Properties.MainMenu.Item("bAutoSentinel").GetValue<KeyBind>().Active) return;
+            if (Properties.MainMenu.Item("bAutoSentinelDragon").GetValue<bool>())
                 AutoSentinels(true);
-            if (Properties.MainMenu.Item("bAutoSentinelBaron").GetValue<bool>() && Properties.Champion.E.IsReady())
+            if (Properties.MainMenu.Item("bAutoSentinelBaron").GetValue<bool>())
                 AutoSentinels(false);
         }
             
         public static void CheckNonKillables(AttackableUnit minion)
         {
             if(!Properties.MainMenu.Item("bUseENonKillables").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
-                if(minion.Health <= DamageCalc.GetRendDamage((Obj_AI_Base)minion))
-                Properties.Champion.E.Cast();
+            if (!(minion.Health <= DamageCalc.GetRendDamage((Obj_AI_Base) minion))) return;
+            if (!Humanizer.CheckDelay("rendDelay")) return;
+            Properties.Champion.E.Cast();
         }
 
-        private static void AutoEOnStacksAndMinions()
+        private static bool AutoEOnStacksAndMinions()
         {
-            foreach (var count in from stacks in (from target in HeroManager.Enemies where target.IsValid where target.IsValidTarget(Properties.Champion.E.Range)
-                     where !DamageCalc.CheckNoDamageBuffs(target) select target.GetBuffCount("kalistaexpungemarker") into stacks
-                            where stacks >= Properties.MainMenu.Item("sUseEOnChampStacks").GetValue<Slider>().Value select stacks)
-                                  select 0 into count let minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range)
-                                      select count + minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid) into count
-                                          where Properties.MainMenu.Item("sUseEOnMinionKilled").GetValue<Slider>().Value <= count select count)
-            {
-                Properties.Champion.E.Cast();
-            }
+            if (!(from stacks in (from target in HeroManager.Enemies
+                where target.IsValid
+                where target.IsValidTarget(Properties.Champion.E.Range)
+                where !DamageCalc.CheckNoDamageBuffs(target)
+                select target.GetBuffCount("kalistaexpungemarker")
+                into stacks
+                where stacks >= Properties.MainMenu.Item("sUseEOnChampStacks").GetValue<Slider>().Value
+                select stacks)
+                select 0
+                into count
+                let minions =
+                    MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range)
+                select
+                    count + minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid)
+                into count
+                where Properties.MainMenu.Item("sUseEOnMinionKilled").GetValue<Slider>().Value <= count
+                select count).Any()) return false;
+            Properties.Champion.E.Cast();
+            return true;
         }
 
         private static void AutoSentinels(bool dragon)
@@ -80,33 +97,34 @@ namespace Gosu_Kalista
 
         }
 
-        private static void CheckEpicMonsters()
+        private static bool CheckEpicMonsters()
         {
             // ReSharper disable once UnusedVariable
-            foreach (var mob in MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
+            if (!MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
                 Properties.Champion.E.Range,
                 MinionTypes.All,
                 MinionTeam.Neutral,
-                MinionOrderTypes.MaxHealth).Where(mob => mob.Name.Contains("Baron") || mob.Name.Contains("Dragon")).Where(mob => DamageCalc.GetRendDamage(mob) > mob.Health))
-            {
-                Properties.Champion.E.Cast();
-            }
+                MinionOrderTypes.MaxHealth)
+                .Where(mob => mob.Name.Contains("Baron") || mob.Name.Contains("Dragon")).Any(mob => DamageCalc.GetRendDamage(mob) > mob.Health)) return false;
+
+            Properties.Champion.E.Cast();
+            return true;
         }
 
-        private static void CheckBuffMonsters()
+        private static bool CheckBuffMonsters()
         {
             // ReSharper disable once UnusedVariable
-            foreach (var mob in MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
+            if (!MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
                 Properties.Champion.E.Range,
                 MinionTypes.All,
                 MinionTeam.Neutral,
-                MinionOrderTypes.MaxHealth).Where(mob => mob.Name.Contains("Red") || mob.Name.Contains("Blue")).Where(mob => DamageCalc.GetRendDamage(mob) > mob.Health))
-            {
-                Properties.Champion.E.Cast();
-            }
+                MinionOrderTypes.MaxHealth)
+                .Where(mob => mob.Name.Contains("Red") || mob.Name.Contains("Blue")).Any(mob => DamageCalc.GetRendDamage(mob) > mob.Health)) return false;
+            Properties.Champion.E.Cast();
+            return true;
         }
 
-        private static void CheckEnemies()
+        private static bool CheckEnemies()
         {
             // ReSharper disable once UnusedVariable
             if (!(from target in HeroManager.Enemies
@@ -114,20 +132,22 @@ namespace Gosu_Kalista
                 where !DamageCalc.CheckNoDamageBuffs(target)
                 where Properties.Champion.E.IsInRange(target)
                 where !(DamageCalc.GetRendDamage(target) < target.Health)
-                select target).Any()) return;
+                select target).Any()) return false;
 
-            Console.WriteLine("Killing champion(s)");
+           
             Properties.Champion.E.Cast();
+            return true;
         }
 
-        private static void CheckMinions()
+        private static bool CheckMinions()
         {
             var count = 0;
             
             var minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range);
             count += minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid);
-            if (Properties.MainMenu.Item("sAutoEMinionsKilled").GetValue<Slider>().Value <= count)
-                Properties.Champion.E.Cast();
+            if (Properties.MainMenu.Item("sAutoEMinionsKilled").GetValue<Slider>().Value > count) return false;
+            Properties.Champion.E.Cast();
+            return true;
         }
         public static void DoTheWalk()
         {
