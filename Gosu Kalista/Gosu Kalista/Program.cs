@@ -65,7 +65,7 @@ namespace Gosu_Kalista
             //Auto Level in common is broken LOL
 
             //LeagueSharp.Common.AutoLevel.Enabled(Properties.MainMenu.Item("bAutoLevel").GetValue<bool>());
-
+            if(Properties.MainMenu.Item("bAutoLevel").GetValue<bool>())
             AutoLevel.LevelUpSpells();
 
             if (Properties.PlayerHero.IsDead)
