@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
@@ -10,6 +11,7 @@ namespace Gosu_Kalista
     {
         #region Variable Declaration
 
+        static Render.Text renderText = new Render.Text(0, 0, "", 13, SharpDX.Color.Red, "monospace");
         #endregion
 
         public static void Drawing_OnDraw(EventArgs args)
@@ -115,15 +117,12 @@ namespace Gosu_Kalista
             if (!Properties.MainMenu.Item("bDrawOnChamp").GetValue<bool>() || Properties.Drawing.DamageToUnit == null)
                 return;
             // For every enemis in E range
-            foreach (var unit in HeroManager.Enemies)
+            foreach (var unit in HeroManager.Enemies.Where(unit => unit.IsValid && unit.IsHPBarRendered && Properties.Champion.E.IsInRange(unit)))
             {
-                if (!unit.IsValid || !unit.IsHPBarRendered || !Properties.Champion.E.IsInRange(unit)) continue;
                 const int xOffset = 10;
                 const int yOffset = 20;
                 const int width = 103;
                 const int height = 8;
-
-                var renderText = new Render.Text(0, 0, "", 13, SharpDX.Color.Red, "monospace");
 
                 var barPos = unit.HPBarPosition;
                 var damage = DamageCalc.GetRendDamage(unit);

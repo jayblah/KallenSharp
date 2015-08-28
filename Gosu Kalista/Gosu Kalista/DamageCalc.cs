@@ -77,5 +77,7 @@ namespace Gosu_Kalista
         {
             return !Properties.Champion.E.IsReady() ? 0f : CalculateRendDamage(target);
         }
+
+
     }
 }

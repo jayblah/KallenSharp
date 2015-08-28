@@ -64,32 +64,6 @@ namespace Gosu_Kalista
         return mixedMenu;
         }
 
-    //    if (!Properties.MainMenu.Item("bDrawOnChamp").GetValue<bool>() || Properties.Drawing.DamageToUnit == null)
-    //            return;
-          
-    //        foreach (var unit in HeroManager.Enemies.Where(h => h.IsValid && h.IsHPBarRendered))
-    //        {
-    //            var barPos = unit.HPBarPosition;
-    //    var damage = DamageCalc.GetRendDamage(unit);
-    //    var percentHealthAfterDamage = Math.Max(0, unit.Health - damage) / unit.MaxHealth;
-    //    var yPos = barPos.Y + YOffset;
-    //    var xPosDamage = barPos.X + XOffset + Width * percentHealthAfterDamage;
-    //    var xPosCurrentHp = barPos.X + XOffset + Width * unit.Health / unit.MaxHealth;
-
-    //            if (Properties.MainMenu.Item("bDrawTextOnChamp").GetValue<bool>() && damage > unit.Health)
-    //            {
-    //                Console.WriteLine("Draw killable text");
-    //                RenderText.X = (int)barPos.X + XOffset;
-    //                RenderText.Y = (int)barPos.Y + YOffset - 13;
-    //                RenderText.text = "Rend Will Kill";
-    //                RenderText.OnEndScene();
-    //            }
-
-
-    //LeagueSharp.Drawing.DrawLine(xPosDamage, yPos, xPosDamage, yPos + Height, 1, Color.LightGray);
-
-    //            if (!Properties.MainMenu.Item("bDrawFillOnChamp").GetValue<bool>()) return;
-
     private static Menu DrawingMenu()
         {
             var drawMenu = new Menu("Drawing Settings", "Drawings");

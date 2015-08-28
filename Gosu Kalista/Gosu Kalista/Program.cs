@@ -73,17 +73,6 @@ namespace Gosu_Kalista
             if (Properties.PlayerHero.IsRecalling())
                 return;
 
-            if (Properties.MainMenu.Item("doHuman").GetValue<bool>())
-            {
-                if (!Humanizer.CheckDelay("generalDelay")) // Wait for delay for all other events
-                {
-                    //Console.WriteLine(@"Waiting on Human delay");
-                    return;
-                }
-                var nDelay = Seeder.Next(Properties.MainMenu.Item("minDelay").GetValue<Slider>().Value, Properties.MainMenu.Item("maxDelay").GetValue<Slider>().Value); // set a new random delay :D
-                Humanizer.ChangeDelay("generalDelay", nDelay);
-            }
-
             OrbWalkerManager.EventCheck();
            OrbWalkerManager.DoTheWalk();
 
