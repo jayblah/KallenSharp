@@ -117,13 +117,12 @@ namespace Gosu_Kalista
             autoEventsMenu.AddItem(new MenuItem("bUseEToKillEpics", "Auto E Epics").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseEToKillBuffs", "Auto E Buffs").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKill", "Auto E Kill Enemies").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bUseENonKillables", "Auto E NonKillables").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bUseENonKillables", "Auto E NonKillable Minions").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKillMinions", "Auto E Kill Minions").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("sAutoEMinionsKilled", "Required Minions Killed From E").SetValue(new Slider(3, 2, 10)));
-
             autoEventsMenu.AddItem(new MenuItem("bAutoEOnStacksAndMinions", "Auto E When Stacks On Champ And Minions Killed").SetValue(false));
-            autoEventsMenu.AddItem(new MenuItem("sUseEOnMinionKilled", "Required Minions Killed From E").SetValue(new Slider(3, 1, 10)));
-            autoEventsMenu.AddItem(new MenuItem("sUseEOnChampStacks", "Required Minions Killed From E").SetValue(new Slider(1, 0, 3)));
+            autoEventsMenu.AddItem(new MenuItem("sUseEOnMinionKilled", "Required Minions Killed From E + Champ Stacks").SetValue(new Slider(3, 1, 10)));
+            autoEventsMenu.AddItem(new MenuItem("sUseEOnChampStacks", "Required Stacks On Champion(").SetValue(new Slider(1, 1, 3)));
 
             return autoEventsMenu;
         }
