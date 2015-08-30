@@ -118,7 +118,7 @@ namespace Gosu_Kalista
                 MinionTypes.All,
                 MinionTeam.Neutral,
                 MinionOrderTypes.MaxHealth)
-                .Where(mob => mob.Name.Contains("SRU_Red") || mob.Name.Contains("SRU_Blue")).Any(mob => DamageCalc.GetRendDamage(mob) > mob.Health)) return false;
+                .Where(mob => mob.CharData.BaseSkinName.Contains("SRU_Red") || mob.CharData.BaseSkinName.Contains("SRU_Blue")).Any(mob => DamageCalc.GetRendDamage(mob) > mob.Health)) return false;
             Properties.Champion.E.Cast();
             return true;
         }
