@@ -1,6 +1,4 @@
-﻿
-using System.Net;
-using LeagueSharp;
+﻿using LeagueSharp;
 using LeagueSharp.Common;
 
 namespace Gosu_Kalista

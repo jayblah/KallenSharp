@@ -2,7 +2,6 @@
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
-using SharpDX;
 using Color = System.Drawing.Color;
 
 namespace Gosu_Kalista
@@ -56,10 +55,7 @@ namespace Gosu_Kalista
                 if (minion.Team != GameObjectTeam.Neutral || !minion.IsValidTarget() || !minion.IsHPBarRendered)
                     continue;
 
-                var hpBarPosition = minion.HPBarPosition;
-                var maxHealth = minion.MaxHealth;
                 var rendDamage = DamageCalc.GetRendDamage(minion);
-                var percentHealth = rendDamage/maxHealth;
 
                 var barWidth = 75;
                 var xOffset = 54;
@@ -101,10 +97,30 @@ namespace Gosu_Kalista
                         yOffset2 = 4;
                         break;
                 }
-                Drawing.DrawLine(new Vector2(hpBarPosition.X + xOffset + (barWidth*percentHealth), hpBarPosition.Y + yOffset), new Vector2(hpBarPosition.X + xOffset + (barWidth*percentHealth), hpBarPosition.Y + yOffset + yOffset2), 3, Color.LightGray);
+
+                var barPos = minion.HPBarPosition;
+                var percentHealthAfterDamage = Math.Max(0, minion.Health - rendDamage) / minion.MaxHealth;
+                var yPos = barPos.Y + yOffset;
+                var xPosDamage = barPos.X + xOffset + barWidth * percentHealthAfterDamage;
+                var xPosCurrentHp = barPos.X + xOffset + barWidth * minion.Health / minion.MaxHealth;
+
+                if (Properties.MainMenu.Item("bFillMonster").GetValue<bool>())
+                {
+                    var differenceInHp = xPosCurrentHp - xPosDamage;
+                    var pos1 = barPos.X + xOffset;
+
+                    for (var i = 0; i < differenceInHp; i++)
+                    {
+                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + yOffset2, 1, Color.DarkGray);
+                    }
+                    
+                }
+
+                else Drawing.DrawLine(xPosDamage, yPos, xPosDamage, yPos + yOffset2, 1, Color.LightGray);
+
                 if (!(rendDamage > minion.Health)) continue;
 
-                Drawing.DrawText(hpBarPosition.X + xOffset, hpBarPosition.Y, Color.Red, "Killable");
+                Drawing.DrawText(minion.HPBarPosition.X + xOffset, minion.HPBarPosition.Y, Color.Red, "Killable");
             }
         }
 

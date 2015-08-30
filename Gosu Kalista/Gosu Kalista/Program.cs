@@ -6,7 +6,7 @@ namespace Gosu_Kalista
 {
     internal class Program
     {
-        readonly static Random Seeder = new Random();
+        //readonly static Random Seeder = new Random();
 
         private static void Main(string[] args)
         {
@@ -68,7 +68,7 @@ namespace Gosu_Kalista
             if(Properties.MainMenu.Item("bAutoLevel").GetValue<bool>())
             AutoLevel.LevelUpSpells();
 
-            if (Properties.MainMenu.Item("bAutoBuyOrb").GetValue<bool>())
+            if (Properties.MainMenu.Item("bAutoBuyOrb").GetValue<bool>() &&Properties.PlayerHero.Level >= 6)
                 TrinketManager.BuyOrb();
 
             if (Properties.PlayerHero.IsDead)

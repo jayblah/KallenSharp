@@ -109,7 +109,7 @@ namespace Gosu_Kalista
             Properties.Champion.E.Cast();
             return true;
         }
-
+                
         private static bool CheckBuffMonsters()
         {
             // ReSharper disable once UnusedVariable
@@ -118,7 +118,7 @@ namespace Gosu_Kalista
                 MinionTypes.All,
                 MinionTeam.Neutral,
                 MinionOrderTypes.MaxHealth)
-                .Where(mob => mob.Name.Contains("Red") || mob.Name.Contains("Blue")).Any(mob => DamageCalc.GetRendDamage(mob) > mob.Health)) return false;
+                .Where(mob => mob.Name.Contains("SRU_Red") || mob.Name.Contains("SRU_Blue")).Any(mob => DamageCalc.GetRendDamage(mob) > mob.Health)) return false;
             Properties.Champion.E.Cast();
             return true;
         }

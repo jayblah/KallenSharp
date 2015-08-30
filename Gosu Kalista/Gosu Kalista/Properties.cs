@@ -1,6 +1,5 @@
 ﻿using LeagueSharp;
 using LeagueSharp.Common;
-using System.Drawing;
 namespace Gosu_Kalista
 {
     internal class Properties
