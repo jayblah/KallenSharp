@@ -22,7 +22,7 @@ namespace Gosu_Kalista
 
         private static Menu HumanizerMenu()
         {
-            var humanizerMenu = new Menu("Humanizer", "Humanizer");
+            var humanizerMenu = new Menu("Humanizer", "Humanizer Not Implimented");
             humanizerMenu.SubMenu("Humanizer")
                 .AddItem(new MenuItem("minDelay", "Minimum delay for actions (ms)").SetValue(new Slider(10, 0, 200)));
             humanizerMenu.SubMenu("Humanizer")
