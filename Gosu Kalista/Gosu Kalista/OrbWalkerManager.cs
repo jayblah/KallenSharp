@@ -30,12 +30,11 @@ namespace Gosu_Kalista
             if (Properties.MainMenu.Item("bAutoEOnStacksAndMinions").GetValue<bool>())
                 if(AutoEOnStacksAndMinions())return;
 
-
-            //Auto Sentinel
-            if (!Properties.MainMenu.Item("bAutoSentinel").GetValue<KeyBind>().Active) return;
-            if (Properties.MainMenu.Item("bAutoSentinelDragon").GetValue<bool>())
+            //Sentinel
+            if (!Properties.MainMenu.Item("bSentinel").GetValue<KeyBind>().Active) return;
+            if (Properties.MainMenu.Item("bSentinelDragon").GetValue<bool>())
                 AutoSentinels(true);
-            if (Properties.MainMenu.Item("bAutoSentinelBaron").GetValue<bool>())
+            if (Properties.MainMenu.Item("bSentinelBaron").GetValue<bool>())
                 AutoSentinels(false);
         }
             

@@ -16,6 +16,7 @@ namespace Gosu_Kalista
             Properties.MainMenu.AddSubMenu(OrbWalkingMenu());
             Properties.MainMenu.AddSubMenu(MixedMenu());
             Properties.MainMenu.AddSubMenu(ComboMenu());
+            Properties.MainMenu.AddSubMenu(MiscMenu());
             Properties.LukeOrbWalker = new Orbwalking.Orbwalker(Properties.MainMenu.SubMenu("Orbwalking"));
         }
 
@@ -63,21 +64,19 @@ namespace Gosu_Kalista
         mixedMenu.AddItem(new MenuItem("bUseECombo", "Auto E for kills").SetValue(false));
 
         return mixedMenu;
-        }
+    }
 
     private static Menu DrawingMenu()
         {
             var drawMenu = new Menu("Drawing Settings", "Drawings");
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDraw", "Display Drawing").SetValue(true));
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawRendRange", "Draw Rend Range").SetValue(true));
-            //  drawMenu.SubMenu("Drawings")
-            //    .AddItem(new MenuItem("bDrawAutoAttackRange", "Draw Auto Attack Range").SetValue(true));
+
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawOnChamp", "Draw On Enemies").SetValue(true));
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawTextOnChamp", "Display Floating Text (on enemies)").SetValue(true));
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawFillOnChamp", "Fill Combo Damage On Champs").SetValue(true));
 
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawOnMonsters", "Draw Damage On Monsters").SetValue(true));
-            //drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawOnCreep", "Display Damage On Creeps").SetValue(true));
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawOnEpic", "Draw Damage On Epics").SetValue(true));
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bFillMonster", "Fill Damage On Monsters").SetValue(true));
 
@@ -89,8 +88,6 @@ namespace Gosu_Kalista
             var autoEventsMenu = new Menu("Auto Events", "autoEvents");
             autoEventsMenu.AddItem(new MenuItem("bAutoLevel", "Auto Level Skills").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bAutoBuyOrb", "Auto Buy Orb at 6").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bAutoSentinel", "Auto Sentinel").SetValue(new KeyBind('T', KeyBindType.Press)));
-            autoEventsMenu.AddItem(new MenuItem("bAutoSentinelDragon", "Auto Sentinel Dragon").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseEToKillEpics", "Auto E Epics").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseEToKillBuffs", "Auto E Buffs").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKill", "Auto E Kill Enemies").SetValue(true));
@@ -100,7 +97,15 @@ namespace Gosu_Kalista
             autoEventsMenu.AddItem(new MenuItem("bAutoEOnStacksAndMinions", "Auto E When Stacks On Champ And Minions Killed").SetValue(false));
             autoEventsMenu.AddItem(new MenuItem("sUseEOnMinionKilled", "Required Minions Killed From E + Champ Stacks").SetValue(new Slider(3, 1, 10)));
             autoEventsMenu.AddItem(new MenuItem("sUseEOnChampStacks", "Required Stacks On Champion(").SetValue(new Slider(1, 1, 3)));
+            return autoEventsMenu;
+        }
 
+        private static Menu MiscMenu()
+        {
+            var autoEventsMenu = new Menu("Misc Crap", "miscMenu");
+            autoEventsMenu.AddItem(new MenuItem("bSentinel", "Sentinel While In Range").SetValue(new KeyBind('T', KeyBindType.Press)));
+            autoEventsMenu.AddItem(new MenuItem("bSentinelDragon", "Sentinel Dragon").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bSentinelBaron", "Sentinel Baron").SetValue(true));
             return autoEventsMenu;
         }
     }
