@@ -9,45 +9,37 @@ namespace Gosu_Kalista
 {
     internal class OrbWalkerManager
     {
-        private static bool _eventChecking;
 
         public static void EventCheck()
         {
             if (Properties.MainMenu.Item("bAutoSaveSoul").GetValue<bool>())
                 SoulBound.CheckSoulBoundHero();
 
-            if (_eventChecking) return;
-
-            _eventChecking = true;
-
             if (!Humanizer.CheckDelay("rendDelay")) // Wait for rend delay
-                goto CheckEnd;
+                 return;
 
-            if (!Properties.Champion.E.IsReady()) goto CheckEnd; 
+            if (!Properties.Champion.E.IsReady()) return; 
 
             if (Properties.MainMenu.Item("bUseEToKillEpics").GetValue<bool>())
-                if (CheckEpicMonsters()) goto CheckEnd; 
+                if (CheckEpicMonsters()) return; 
 
             if (Properties.MainMenu.Item("bUseEToKillBuffs").GetValue<bool>())
-                if(CheckBuffMonsters()) goto CheckEnd; 
+                if(CheckBuffMonsters()) return; 
 
             if (Properties.MainMenu.Item("bUseEToAutoKill").GetValue<bool>())
-                if (CheckEnemies()) goto CheckEnd; 
+                if (CheckEnemies()) return; 
 
             if (Properties.MainMenu.Item("bUseEToAutoKillMinions").GetValue<bool>())
-                if (CheckMinions()) goto CheckEnd; 
+                if (CheckMinions()) return; 
             if (Properties.MainMenu.Item("bAutoEOnStacksAndMinions").GetValue<bool>())
-                if(AutoEOnStacksAndMinions()) goto CheckEnd; 
+                if(AutoEOnStacksAndMinions()) return; 
 
-            CheckEnd:
             //Sentinel
             if (!Properties.MainMenu.Item("bSentinel").GetValue<KeyBind>().Active) return;
             if (Properties.MainMenu.Item("bSentinelDragon").GetValue<bool>())
                 AutoSentinels(true);
             if (Properties.MainMenu.Item("bSentinelBaron").GetValue<bool>())
                 AutoSentinels(false);
-
-            _eventChecking = false;
         }
             
         public static void CheckNonKillables(AttackableUnit minion)
@@ -206,7 +198,7 @@ namespace Gosu_Kalista
             }
             if (!Properties.MainMenu.Item("bUseECombo").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
 
-            CheckEnemies();
+            //CheckEnemies();
 
         }
 
