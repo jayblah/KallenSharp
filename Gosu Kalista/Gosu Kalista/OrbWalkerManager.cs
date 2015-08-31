@@ -9,15 +9,17 @@ namespace Gosu_Kalista
 {
     internal class OrbWalkerManager
     {
-
+        private static int i = 0;
         public static void EventCheck()
         {
             if (Properties.MainMenu.Item("bAutoSaveSoul").GetValue<bool>())
                 SoulBound.CheckSoulBoundHero();
 
             if (!Humanizer.CheckDelay("rendDelay")) // Wait for rend delay
-                 return;
-
+            {
+                Console.WriteLine(i.ToString());
+                return;
+            }
             if (!Properties.Champion.E.IsReady()) return; 
 
             if (Properties.MainMenu.Item("bUseEToKillEpics").GetValue<bool>())
@@ -197,8 +199,10 @@ namespace Gosu_Kalista
                         Properties.Champion.Q.Cast(predictionPosition.CastPosition);
             }
             if (!Properties.MainMenu.Item("bUseECombo").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
-
-            //CheckEnemies();
+            if (!Humanizer.CheckDelay("rendDelay")) // Wait for rend delay
+                return;
+            //Allow for auto E ?
+            CheckEnemies();
 
         }
 
