@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 
@@ -69,6 +70,7 @@ namespace Gosu_Kalista
                 select count).Any()) return false;
 
             Properties.Champion.E.Cast();
+            Console.WriteLine("Using Stacks And Minions E:{0}", Utils.TickCount);
             return true;
         }
 
@@ -100,6 +102,7 @@ namespace Gosu_Kalista
                 .Where(mob => mob.Name.Contains("Baron") || mob.Name.Contains("Dragon")).Any(mob => DamageCalc.GetRendDamage(mob) > mob.Health)) return false;
 
             Properties.Champion.E.Cast();
+            Console.WriteLine("Using Baron and Dragon E:{0}", Utils.TickCount);
             return true;
         }
                 
@@ -112,6 +115,8 @@ namespace Gosu_Kalista
                 MinionTeam.Neutral,
                 MinionOrderTypes.MaxHealth)
                 .Where(mob => mob.CharData.BaseSkinName.Contains("SRU_Red") || mob.CharData.BaseSkinName.Contains("SRU_Blue")).Any(mob => DamageCalc.GetRendDamage(mob) > mob.Health)) return false;
+
+            Console.WriteLine("Using Buff E:{0}", Utils.TickCount);
             Properties.Champion.E.Cast();
             return true;
         }
@@ -126,7 +131,7 @@ namespace Gosu_Kalista
                 where !(DamageCalc.GetRendDamage(target) < target.Health)
                 select target).Any()) return false;
 
-           
+            Console.WriteLine("Using Killing Enemy E:{0}", Utils.TickCount);
             Properties.Champion.E.Cast();
             return true;
         }
@@ -138,6 +143,8 @@ namespace Gosu_Kalista
             var minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range);
             count += minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid);
             if (Properties.MainMenu.Item("sAutoEMinionsKilled").GetValue<Slider>().Value > count) return false;
+
+            Console.WriteLine("Using Minion E:{0}", Utils.TickCount);
             Properties.Champion.E.Cast();
             return true;
         }
@@ -208,6 +215,7 @@ namespace Gosu_Kalista
             // ReSharper disable once UnusedVariable
             foreach (var stacks in from target in HeroManager.Enemies where target.IsValid where target.IsValidTarget(Properties.Champion.E.Range) where !DamageCalc.CheckNoDamageBuffs(target) select target.GetBuffCount("kalistaexpungemarker") into stacks where stacks >= Properties.MainMenu.Item("sMixedStacks").GetValue<Slider>().Value select stacks)
             {
+                Console.WriteLine("Using Mixed E:{0}", Utils.TickCount);
                 Properties.Champion.E.Cast();
             }
 
