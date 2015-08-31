@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using LeagueSharp;
 using LeagueSharp.Common;
 
@@ -170,13 +171,26 @@ namespace Gosu_Kalista
             }
         }
 
+        private static HitChance GetHitChance()
+        {
+            switch (Properties.MainMenu.Item("slQprediction").GetValue<StringList>().SelectedIndex)
+            {
+                case 0:
+                    return HitChance.VeryHigh;
+                case 1:
+                    return HitChance.High;
+                case 2:
+                    return HitChance.Dashing;
+            }
+            return HitChance.VeryHigh;
+        }
         private static void Combo()
         {
             if (Properties.MainMenu.Item("bUseQCombo").GetValue<bool>() && Properties.Champion.Q.IsReady())
             {
                 var target = TargetSelector.GetTarget(Properties.Champion.Q.Range, TargetSelector.DamageType.Physical);
                 var predictionPosition = Properties.Champion.Q.GetPrediction(target);
-                if (predictionPosition.Hitchance >= HitChance.VeryHigh)
+                if (predictionPosition.Hitchance >= GetHitChance())
                     if (Properties.PlayerHero.IsWindingUp || Properties.PlayerHero.IsDashing())
                         Properties.Champion.Q.Cast(predictionPosition.CastPosition);
             }
@@ -192,7 +206,7 @@ namespace Gosu_Kalista
             {
                 var target = TargetSelector.GetTarget(Properties.Champion.Q.Range, TargetSelector.DamageType.Physical);
                 var predictionPosition = Properties.Champion.Q.GetPrediction(target);
-                if (predictionPosition.Hitchance >= HitChance.VeryHigh)
+                if (predictionPosition.Hitchance >= GetHitChance())
                     if (Properties.PlayerHero.IsWindingUp || Properties.PlayerHero.IsDashing())
                         Properties.Champion.Q.Cast(predictionPosition.CastPosition);
             }

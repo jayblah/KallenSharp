@@ -93,10 +93,10 @@ namespace Gosu_Kalista
             autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKill", "Auto E Kill Enemies").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseENonKillables", "Auto E NonKillable Minions").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKillMinions", "Auto E Kill Minions").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("sAutoEMinionsKilled", "Required Minions Killed From E").SetValue(new Slider(3, 2, 10)));
+            autoEventsMenu.AddItem(new MenuItem("sAutoEMinionsKilled", "Required Minions Killed From E").SetValue(new Slider(2, 2, 10)));
             autoEventsMenu.AddItem(new MenuItem("bAutoEOnStacksAndMinions", "Auto E When Stacks On Champ And Minions Killed").SetValue(false));
             autoEventsMenu.AddItem(new MenuItem("sUseEOnMinionKilled", "Required Minions Killed From E + Champ Stacks").SetValue(new Slider(3, 1, 10)));
-            autoEventsMenu.AddItem(new MenuItem("sUseEOnChampStacks", "Required Stacks On Champion(").SetValue(new Slider(1, 1, 3)));
+            autoEventsMenu.AddItem(new MenuItem("sUseEOnChampStacks", "Required Stacks On Champion(").SetValue(new Slider(1, 1, 10)));
             return autoEventsMenu;
         }
 
@@ -106,6 +106,8 @@ namespace Gosu_Kalista
             autoEventsMenu.AddItem(new MenuItem("bSentinel", "Sentinel While In Range").SetValue(new KeyBind('T', KeyBindType.Press)));
             autoEventsMenu.AddItem(new MenuItem("bSentinelDragon", "Sentinel Dragon").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bSentinelBaron", "Sentinel Baron").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("slQprediction", "Q Prediction").SetValue(
+                            new StringList(new[] { "Very High", "High", "Dashing" })));
             return autoEventsMenu;
         }
     }

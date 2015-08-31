@@ -21,12 +21,15 @@ namespace Gosu_Kalista
         // ReSharper disable once UnusedMember.Local
         private static void OnLoad(EventArgs args)
         {
+            //They wanted comments so i added this line
             Console.WriteLine(@"Generating Auto Properties...");
             Properties.GenerateProperties();
 
+            //Close If Assembly Not Needed
             if (Properties.PlayerHero.ChampionName != "Kalista")
                 return;
 
+            //Create Menu and Initialize spells
             Console.WriteLine(@"Generating Menu");
             GosuMenu.GenerateMenu();
             Console.WriteLine(@"Generating Spells...");
@@ -34,6 +37,7 @@ namespace Gosu_Kalista
             Properties.MainMenu.AddToMainMenu();
             Console.WriteLine(@"Linking Game Events...");
 
+            //Link Game evernts to functions
             Game.OnUpdate += Game_OnUpdate;
             //Properties.AutoLevel.InitilizeAutoLevel();
             Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
@@ -44,9 +48,12 @@ namespace Gosu_Kalista
             Drawing.OnDraw += DrawingManager.Drawing_OnDrawChamp;
             Drawing.OnDraw += DrawingManager.Drawing_OnDrawMonster;
             Orbwalking.OnNonKillableMinion += OrbWalkerManager.CheckNonKillables;
-            Humanizer.AddAction("rendDelay",100);
+
+            // Add Delays for later use
+            Humanizer.AddAction("rendDelay",200);
             Humanizer.AddAction("generalDelay",125);
 
+            //Loaded yay
             Console.WriteLine(@"Gosu Kalista Load Completed");
         }
 
