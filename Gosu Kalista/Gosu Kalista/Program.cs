@@ -48,7 +48,6 @@ namespace Gosu_Kalista
             Drawing.OnDraw += DrawingManager.Drawing_OnDrawChamp;
             Drawing.OnDraw += DrawingManager.Drawing_OnDrawMonster;
             Orbwalking.OnNonKillableMinion += OrbWalkerManager.CheckNonKillables;
-
             // Add Delays for later use
             Humanizer.AddAction("rendDelay",200);
             Humanizer.AddAction("generalDelay",125);

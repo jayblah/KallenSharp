@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using LeagueSharp.Common;
 
 namespace Gosu_Kalista
 {
@@ -24,11 +24,11 @@ namespace Gosu_Kalista
             ActionDelayList.Add(nAction);
         }
 
-        public static void DeleteAction(string actionName)
-        {
-            if (ActionDelayList.All(a => a.Name != actionName)) return; // ID is not in list
-            ActionDelayList.Remove(ActionDelayList.First(a => a.Name == actionName));
-        }
+        //public static void DeleteAction(string actionName)
+        //{
+        //    if (ActionDelayList.All(a => a.Name != actionName)) return; // ID is not in list
+        //    ActionDelayList.Remove(ActionDelayList.First(a => a.Name == actionName));
+        //}
 
         public static void ChangeDelay(string actionName, float nDelay)
         {
@@ -42,9 +42,9 @@ namespace Gosu_Kalista
             var cAction = ActionDelayList.Find(action => action.Name == actionName);
             if (cAction.Name == null) return false;
 
-            if (!(Utils.TickCount - cAction.LastTick >= cAction.Delay)) return false;
+            if (!(Environment.TickCount - cAction.LastTick >= cAction.Delay)) return false;
 
-            cAction.LastTick = Utils.TickCount;
+            cAction.LastTick = Environment.TickCount;
             return true;
         }
     }
