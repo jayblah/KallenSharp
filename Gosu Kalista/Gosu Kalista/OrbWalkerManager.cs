@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using LeagueSharp;
 using LeagueSharp.Common;
 
@@ -9,11 +8,13 @@ namespace Gosu_Kalista
 {
     internal class OrbWalkerManager
     {
-
         public static void EventCheck()
         {
-            if (!Humanizer.CheckDelay("rendDelay")) // Wait for rend delay
-                    return;
+            if (Properties.MainMenu.Item("bAutoSaveSoul").GetValue<bool>())
+                SoulBound.CheckSoulBoundHero();
+
+           if (!Humanizer.CheckDelay("rendDelay")) // Wait for rend delay
+                return;
 
             if (!Properties.Champion.E.IsReady()) return;
 
@@ -77,21 +78,13 @@ namespace Gosu_Kalista
 
             if (dragon)
             {
-                //if (!ObjectManager.Get<Obj_AI_Minion>()
-                //    .Where(minion => minion.CharData.BaseSkinName.Contains("Dragon"))
-                //    .Any(minion => minion.Team == GameObjectTeam.Neutral && !minion.IsDead)) return;
                 if (!(ObjectManager.Player.Distance(SummonersRift.River.Dragon) <= Properties.Champion.W.Range)) return;
-
-                Properties.Champion.W.Cast(SummonersRift.River.Dragon);
+                    Properties.Champion.W.Cast(SummonersRift.River.Dragon);
             }
             else
             {
-                //if (!ObjectManager.Get<Obj_AI_Minion>()
-                //    .Where(minion => minion.CharData.BaseSkinName.Contains("Baron"))
-                //    .Any(minion => minion.Team == GameObjectTeam.Neutral && !minion.IsDead)) return;
                 if (!(ObjectManager.Player.Distance(SummonersRift.River.Baron) <= Properties.Champion.W.Range)) return;
-
-                Properties.Champion.W.Cast(SummonersRift.River.Baron);
+                    Properties.Champion.W.Cast(SummonersRift.River.Baron);
             }
 
         }
