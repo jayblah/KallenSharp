@@ -9,17 +9,14 @@ namespace Gosu_Kalista
 {
     internal class OrbWalkerManager
     {
-        private static int i = 0;
         public static void EventCheck()
         {
             if (Properties.MainMenu.Item("bAutoSaveSoul").GetValue<bool>())
                 SoulBound.CheckSoulBoundHero();
 
             if (!Humanizer.CheckDelay("rendDelay")) // Wait for rend delay
-            {
-                Console.WriteLine(i.ToString());
                 return;
-            }
+
             if (!Properties.Champion.E.IsReady()) return; 
 
             if (Properties.MainMenu.Item("bUseEToKillEpics").GetValue<bool>())
@@ -33,6 +30,7 @@ namespace Gosu_Kalista
 
             if (Properties.MainMenu.Item("bUseEToAutoKillMinions").GetValue<bool>())
                 if (CheckMinions()) return; 
+
             if (Properties.MainMenu.Item("bAutoEOnStacksAndMinions").GetValue<bool>())
                 if(AutoEOnStacksAndMinions()) return; 
 
@@ -74,7 +72,7 @@ namespace Gosu_Kalista
                 select count).Any()) return false;
 
             Properties.Champion.E.Cast();
-            Console.WriteLine("Using Stacks And Minions E:{0}", Utils.TickCount);
+            Console.WriteLine("Using Stacks And Minions E:{0}", Environment.TickCount);
             return true;
         }
 
@@ -106,7 +104,7 @@ namespace Gosu_Kalista
                 .Where(mob => mob.Name.Contains("Baron") || mob.Name.Contains("Dragon")).Any(mob => DamageCalc.GetRendDamage(mob) > mob.Health)) return false;
 
             Properties.Champion.E.Cast();
-            Console.WriteLine("Using Baron and Dragon E:{0}", Utils.TickCount);
+            Console.WriteLine("Using Baron and Dragon E:{0}", Environment.TickCount);
             return true;
         }
                 
@@ -120,7 +118,7 @@ namespace Gosu_Kalista
                 MinionOrderTypes.MaxHealth)
                 .Where(mob => mob.CharData.BaseSkinName.Contains("SRU_Red") || mob.CharData.BaseSkinName.Contains("SRU_Blue")).Any(mob => DamageCalc.GetRendDamage(mob) > mob.Health)) return false;
 
-            Console.WriteLine("Using Buff E:{0}", Utils.TickCount);
+            Console.WriteLine("Using Buff E:{0}", Environment.TickCount);
             Properties.Champion.E.Cast();
             return true;
         }
@@ -128,16 +126,28 @@ namespace Gosu_Kalista
         private static bool CheckEnemies()
         {
             // ReSharper disable once UnusedVariable
-            if (!(from target in HeroManager.Enemies
-                where target.IsValid
-                where !DamageCalc.CheckNoDamageBuffs(target)
-                where Properties.Champion.E.IsInRange(target)
-                where !(DamageCalc.GetRendDamage(target) < target.Health)
-                select target).Any()) return false;
+            //if (!(from target in HeroManager.Enemies
+            //    where target.IsValid
+            //    where !DamageCalc.CheckNoDamageBuffs(target)
+            //    where Properties.Champion.E.IsInRange(target)
+            //    where !(DamageCalc.GetRendDamage(target) < target.Health)
+            //      where target.IsDead
+            //    select target).Any()) return false;
 
-            Console.WriteLine("Using Killing Enemy E:{0}", Utils.TickCount);
-            Properties.Champion.E.Cast();
-            return true;
+            foreach (var target in HeroManager.Enemies)
+            {
+                if (!target.IsValid) continue;
+                if (!target.IsValidTarget(Properties.Champion.E.Range)) continue;
+                if (DamageCalc.CheckNoDamageBuffs(target)) continue;
+                if(!Properties.Champion.E.IsInRange(target))continue;
+                if (DamageCalc.GetRendDamage(target) < target.Health) continue;
+                if (target.IsDead) continue;
+
+                Console.WriteLine("Using Killing Enemy E:{0}", Environment.TickCount);
+                Properties.Champion.E.Cast();
+                return true;
+            }
+            return false;
         }
 
         private static bool CheckMinions()
@@ -148,7 +158,7 @@ namespace Gosu_Kalista
             count += minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid);
             if (Properties.MainMenu.Item("sAutoEMinionsKilled").GetValue<Slider>().Value > count) return false;
 
-            Console.WriteLine("Using Minion E:{0}", Utils.TickCount);
+            Console.WriteLine("Using Minion E:{0}", Environment.TickCount);
             Properties.Champion.E.Cast();
             return true;
         }
