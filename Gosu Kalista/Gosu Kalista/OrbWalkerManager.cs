@@ -215,6 +215,8 @@ namespace Gosu_Kalista
             // ReSharper disable once UnusedVariable
             foreach (var stacks in from target in HeroManager.Enemies where target.IsValid where target.IsValidTarget(Properties.Champion.E.Range) where !DamageCalc.CheckNoDamageBuffs(target) select target.GetBuffCount("kalistaexpungemarker") into stacks where stacks >= Properties.MainMenu.Item("sMixedStacks").GetValue<Slider>().Value select stacks)
             {
+                if (!Humanizer.CheckDelay("rendDelay")) // Wait for rend delay
+                    return;
                 Console.WriteLine("Using Mixed E:{0}", Utils.TickCount);
                 Properties.Champion.E.Cast();
             }
