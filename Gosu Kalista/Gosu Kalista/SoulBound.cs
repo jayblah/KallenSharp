@@ -7,7 +7,6 @@ namespace Gosu_Kalista
     class SoulBound
     {
 
-        //autoEventsMenu.AddItem(new MenuItem("sSoulBoundPercent", "Soul Bound HP% Remaining").SetValue(new Slider(10, 1, 90)));
         public static void CheckSoulBoundHero()
         {
             if (!Properties.Champion.R.IsReady()) return;
