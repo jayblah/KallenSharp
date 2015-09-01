@@ -46,7 +46,7 @@ namespace S_Class_Kalista
         public static void CheckNonKillables(AttackableUnit minion)
         {
             if (!Properties.MainMenu.Item("bUseENonKillables").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
-            if (!(minion.Health <= DamageCalc.GetRendDamage((Obj_AI_Base)minion)) || minion.Health > 35) return;
+            if (!(minion.Health <= DamageCalc.GetRendDamage((Obj_AI_Base)minion)) || minion.Health > 60) return;
 
             if (!Properties.Time.CheckNonKillable()) return;
 
