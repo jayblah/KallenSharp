@@ -11,30 +11,32 @@ namespace Gosu_Kalista
     {
         private static bool CheckRendDelay()
         {
-            return !(Properties.Time.TickCount - Properties.Time.LastRendTick < 500);
+            return !(Properties.Time.TickCount - Properties.Time.LastRendTick < 1000);
         }
 
-        private static void SetRendDelay()
+        private static void UseRend()
         {
+            Properties.Champion.E.Cast();
             Console.WriteLine("Last Rend Tick:{0} Current Tick{1}", Properties.Time.LastRendTick,
     Properties.Time.TickCount);
             Properties.Time.LastRendTick = Properties.Time.TickCount;
-        }
 
+        }
     public static void EventCheck()
         {
             if (Properties.MainMenu.Item("bAutoSaveSoul").GetValue<bool>())
                 SoulBound.CheckSoulBoundHero();
 
             //Sentinel
-            if (!Properties.MainMenu.Item("bSentinel").GetValue<KeyBind>().Active) return;
+        if (Properties.MainMenu.Item("bSentinel").GetValue<KeyBind>().Active)
+        {
             if (Properties.MainMenu.Item("bSentinelDragon").GetValue<bool>())
                 AutoSentinels(true);
             if (Properties.MainMenu.Item("bSentinelBaron").GetValue<bool>())
                 AutoSentinels(false);
+        }
 
-
-            if (!CheckRendDelay()) return;
+        if (!CheckRendDelay()) return;
 
             if (!Properties.Champion.E.IsReady()) return; 
 
@@ -64,8 +66,7 @@ namespace Gosu_Kalista
                 return;
 
             Console.WriteLine("Killing NonKillables");
-            SetRendDelay();
-            Properties.Champion.E.Cast();
+            UseRend();
         }
 
         private static bool AutoEOnStacksAndMinions()
@@ -88,8 +89,7 @@ namespace Gosu_Kalista
                 where Properties.MainMenu.Item("sUseEOnMinionKilled").GetValue<Slider>().Value <= count
                 select count).Any()) return false;
 
-            SetRendDelay();
-            Properties.Champion.E.Cast();
+            UseRend();
             Console.WriteLine("Using Stacks And Minions E:{0}", Environment.TickCount);
             return true;
         }
@@ -114,6 +114,7 @@ namespace Gosu_Kalista
         private static bool CheckEpicMonsters()
         {
             // ReSharper disable once UnusedVariable
+
             if (!MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
                 Properties.Champion.E.Range,
                 MinionTypes.All,
@@ -121,26 +122,30 @@ namespace Gosu_Kalista
                 MinionOrderTypes.MaxHealth)
                 .Where(mob => mob.Name.Contains("Baron") || mob.Name.Contains("Dragon")).Any(mob => DamageCalc.GetRendDamage(mob) > mob.Health)) return false;
 
-            SetRendDelay();
-            Properties.Champion.E.Cast();
-            Console.WriteLine("Using Baron and Dragon E:{0}", Environment.TickCount);
+            UseRend();
+            Console.WriteLine("Using Baron and Dragon E:{0}", Properties.Time.TickCount);
             return true;
         }
                 
         private static bool CheckBuffMonsters()
         {
             // ReSharper disable once UnusedVariable
-            if (!MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
+            foreach (var monster in MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
                 Properties.Champion.E.Range,
                 MinionTypes.All,
                 MinionTeam.Neutral,
-                MinionOrderTypes.MaxHealth)
-                .Where(mob => mob.CharData.BaseSkinName.Contains("SRU_Red") || mob.CharData.BaseSkinName.Contains("SRU_Blue")).Any(mob => DamageCalc.GetRendDamage(mob) > mob.Health)) return false;
+                MinionOrderTypes.MaxHealth))
+            {
+                if (!monster.CharData.BaseSkinName.Equals("SRU_Red") &&
+                    !monster.CharData.BaseSkinName.Equals("SRU_Blue")) continue;
 
-            SetRendDelay();
-            Console.WriteLine("Using Buff E:{0}", Environment.TickCount);
-            Properties.Champion.E.Cast();
-            return true;
+                if (!(DamageCalc.GetRendDamage(monster) > monster.Health)) continue;
+
+                Console.WriteLine("Using Buff E:{0}", Properties.Time.TickCount);
+                UseRend();
+                return true;
+            }
+            return false;
         }
 
         private static bool CheckEnemies()
@@ -163,9 +168,8 @@ namespace Gosu_Kalista
                 if (DamageCalc.GetRendDamage(target) < target.Health) continue;
                 if (target.IsDead) continue;
 
-                Console.WriteLine("Using Killing Enemy E:{0}", Environment.TickCount);
-                SetRendDelay();
-                Properties.Champion.E.Cast();
+                Console.WriteLine("Using Killing Enemy E:{0}", Properties.Time.TickCount);
+                UseRend();
                 return true;
             }
             return false;
@@ -179,9 +183,9 @@ namespace Gosu_Kalista
             count += minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid);
             if (Properties.MainMenu.Item("sAutoEMinionsKilled").GetValue<Slider>().Value > count) return false;
 
-            SetRendDelay();
-            Console.WriteLine("Using Minion E:{0}", Environment.TickCount);
-            Properties.Champion.E.Cast();
+           
+            Console.WriteLine("Using Minion E:{0}", Properties.Time.TickCount);
+            UseRend();
             return true;
         }
         public static void DoTheWalk()
@@ -234,7 +238,6 @@ namespace Gosu_Kalista
 
             if (!CheckRendDelay()) // Wait for rend delay
                 return;
-            SetRendDelay();
             //Allow for auto E ?
             CheckEnemies();
 
@@ -257,9 +260,9 @@ namespace Gosu_Kalista
             {
                 if (!CheckRendDelay()) // Wait for rend delay
                     continue;
-                SetRendDelay();
-                Console.WriteLine("Using Mixed E:{0}", Utils.TickCount);
-                Properties.Champion.E.Cast();
+                
+                Console.WriteLine("Using Mixed E:{0}", Properties.Time.TickCount);
+                UseRend();
             }
 
         }
