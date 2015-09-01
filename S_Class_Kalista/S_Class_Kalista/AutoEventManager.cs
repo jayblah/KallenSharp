@@ -39,16 +39,19 @@ namespace S_Class_Kalista
             if (Properties.MainMenu.Item("bUseEToAutoKillMinions").GetValue<bool>())
                 if (CheckMinions()) return;
 
-            if (!Properties.MainMenu.Item("bAutoEOnStacksAndMinions").GetValue<bool>()) return;
-            AutoEOnStacksAndMinions();
+            if (Properties.MainMenu.Item("bAutoEOnStacksAndMinions").GetValue<bool>())
+                if (AutoEOnStacksAndMinions()) return;
+
+            if(Properties.MainMenu.Item("bUseEOnLeave").GetValue<bool>())
+                if (AutoEOnLeave()) return;
+
         }
 
         public static void CheckNonKillables(AttackableUnit minion)
         {
+            if (!Properties.Time.CheckNonKillable()) return;
             if (!Properties.MainMenu.Item("bUseENonKillables").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
             if (!(minion.Health <= DamageCalc.GetRendDamage((Obj_AI_Base)minion)) || minion.Health > 60) return;
-
-            if (!Properties.Time.CheckNonKillable()) return;
 
             Console.WriteLine("Killing NonKillables");
             Properties.Champion.UseNonKillableRend();
@@ -65,6 +68,8 @@ namespace S_Class_Kalista
             //      where target.IsDead
             //    select target).Any()) return false;
 
+            if (!Properties.Time.CheckRendDelay()) return false;
+
             foreach (var target in HeroManager.Enemies)
             {
                 if (!target.IsValid) continue;
@@ -73,7 +78,6 @@ namespace S_Class_Kalista
                 if (!Properties.Champion.E.IsInRange(target)) continue;
                 if (DamageCalc.GetRendDamage(target) < target.Health) continue;
                 if (target.IsDead) continue;
-                if (!Properties.Time.CheckRendDelay()) continue;
                 Console.WriteLine("Using Killing Enemy E:{0}", Properties.Time.TickCount);
                 Properties.Champion.UseRend();
                 return true;
@@ -88,6 +92,9 @@ namespace S_Class_Kalista
         // ReSharper disable once UnusedMethodReturnValue.Local
         private static bool AutoEOnStacksAndMinions()
         {
+
+            if (!Properties.Time.CheckRendDelay()) return false;
+
             if (!(from stacks in (from target in HeroManager.Enemies
                                   where target.IsValid
                                   where target.IsValidTarget(Properties.Champion.E.Range)
@@ -106,8 +113,6 @@ namespace S_Class_Kalista
                   where Properties.MainMenu.Item("sUseEOnMinionKilled").GetValue<Slider>().Value <= count
                   select count).Any())
                 return false;
-
-            if (!Properties.Time.CheckRendDelay()) return false;
 
             Properties.Champion.UseRend();
             Console.WriteLine("Using Stacks And Minions E:{0}", Environment.TickCount);
@@ -133,6 +138,8 @@ namespace S_Class_Kalista
         {
             // ReSharper disable once UnusedVariable
 
+            if (!Properties.Time.CheckRendDelay()) return false;
+
             if (!MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
                 Properties.Champion.E.Range,
                 MinionTypes.All,
@@ -141,15 +148,36 @@ namespace S_Class_Kalista
                 .Where(mob => mob.Name.Contains("Baron") || mob.Name.Contains("Dragon")).Any(mob => DamageCalc.GetRendDamage(mob) > mob.Health))
                 return false;
 
-            if (!Properties.Time.CheckRendDelay()) return false;
             Properties.Champion.UseRend();
             Console.WriteLine("Using Baron and Dragon E:{0}", Properties.Time.TickCount);
             return true;
         }
+        private static bool AutoEOnLeave()
+        {
+            if (!Properties.Time.CheckRendDelay()) return false;
 
+            foreach (var target in HeroManager.Enemies)
+            {
+                if (!target.IsValid) continue;
+                if (!target.IsValidTarget(Properties.Champion.E.Range)) continue;
+                if (DamageCalc.CheckNoDamageBuffs(target)) continue;
+                if (!Properties.Champion.E.IsInRange(target)) continue;
+                if (target.IsDead) continue;
+                if (target.Distance(Properties.PlayerHero) < Properties.Champion.E.Range - 100)continue;
+                if (!Properties.Time.CheckRendDelay()) continue;
+                var stacks = target.GetBuffCount("kalistaexpungemarker");
+                if(stacks <= Properties.MainMenu.Item("sStacksOnLeave").GetValue<Slider>().Value)continue;
+                Console.WriteLine("Using Rend On Long  E:{0}", Properties.Time.TickCount);
+                Properties.Champion.UseRend();
+                return true;
+            }
+            return false;
+        }
         private static bool CheckBuffMonsters()
         {
             // ReSharper disable once UnusedVariable
+            if (!Properties.Time.CheckRendDelay()) return false;
+
             foreach (var monster in MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
                 Properties.Champion.E.Range,
                 MinionTypes.All,
@@ -171,13 +199,12 @@ namespace S_Class_Kalista
 
         private static bool CheckMinions()
         {
+            if (!Properties.Time.CheckRendDelay()) return false;
             var count = 0;
 
             var minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range);
             count += minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid);
             if (Properties.MainMenu.Item("sAutoEMinionsKilled").GetValue<Slider>().Value > count) return false;
-
-            if (!Properties.Time.CheckRendDelay()) return false;
             Console.WriteLine("Using Minion E:{0}", Properties.Time.TickCount);
             Properties.Champion.UseRend();
             return true;

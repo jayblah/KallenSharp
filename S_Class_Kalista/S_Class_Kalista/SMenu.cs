@@ -107,6 +107,8 @@ namespace S_Class_Kalista
             autoEventsMenu.AddItem(new MenuItem("bAutoEOnStacksAndMinions", "Auto E When Stacks On Champ And Minions Killed").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("sUseEOnMinionKilled", "Required Minions Killed From E + Champ Stacks").SetValue(new Slider(3, 1, 10)));
             autoEventsMenu.AddItem(new MenuItem("sUseEOnChampStacks", "Required Stacks On Champion").SetValue(new Slider(1, 1, 10)));
+            autoEventsMenu.AddItem(new MenuItem("bUseEOnLeave", "Auto E On Range Leave").SetValue(false));
+            autoEventsMenu.AddItem(new MenuItem("sStacksOnLeave", "Required Stacks For Range Leave").SetValue(new Slider(4, 1, 10)));
             autoEventsMenu.AddItem(new MenuItem("bAutoSaveSoul", "Auto Save SoulBound partner").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bBalista", "Balista?").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("sSoulBoundPercent", "Soul Bound HP% Remaining").SetValue(new Slider(10, 1, 90)));
