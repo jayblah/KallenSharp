@@ -140,11 +140,6 @@ namespace S_Class_Kalista
 
                 Q.SetSkillshot(0.25f, 40f, 1200f, true, SkillshotType.SkillshotLine);
                 R.SetSkillshot(0.50f, 1500f, float.MaxValue, false, SkillshotType.SkillshotCircle);
-
-                //Console.WriteLine(Q.Range);
-                //Console.WriteLine(W.Range);
-                //Console.WriteLine(E.Range);
-                //Console.WriteLine(R.Range);
             }
         }
     }

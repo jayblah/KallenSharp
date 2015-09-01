@@ -91,16 +91,6 @@ namespace S_Class_Kalista
             }
         }
 
-        //private static Menu LaneClearMenu()
-        //{
-        //    var laneClearMenu = new Menu("Lane Clear Options", "laneClearOptions");
-        //    laneClearMenu.AddItem(new MenuItem("bUseELaneClear", "Auto E On Minions Killed").SetValue(true));
-        //    laneClearMenu.AddItem(new MenuItem("sLaneClearMinionsKilled", "Required Minions Killed").SetValue(new Slider(3, 2, 10)));
-        //    laneClearMenu.AddItem(new MenuItem("bUseJungleClear", "Jungle Clear").SetValue(true));
-        //    return laneClearMenu;
-        //}
-
-
         private static void LaneClear()
         {
 
@@ -136,6 +126,7 @@ namespace S_Class_Kalista
 
         private static void LastHit()
         {
+            // Fuck that
         }
 
         #endregion Private Functions
