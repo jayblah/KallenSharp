@@ -1,4 +1,5 @@
-#S Class Kalista, Welcome to the future of scripting.
+#S Class Kalista
+#Welcome to the future of scripting.
 #About
 
 S Class Kalista is a assembly focused on stability ,customization along with bring advanced features. With the addition of many automatic functions and advanced logic and structuring, you will be able to bring out the maximum potential of Kalista.Displaying all the knowledge you will ever need including but not limited to displaying rend damage to enemies and jungle creep, displaying rend range with minimalist clean display first. With the features and customization S Class Kalista brings, there is endless potential and opportunities ready to be discovered.
