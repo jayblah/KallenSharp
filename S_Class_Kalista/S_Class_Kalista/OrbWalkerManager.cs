@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
+using S_Class_Kalista;
 using LeagueSharp;
 using LeagueSharp.Common;
 
-
-
-namespace Gosu_Kalista
+namespace S_Class_Kalista
 {
     internal class OrbWalkerManager
     {

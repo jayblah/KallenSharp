@@ -1,7 +1,7 @@
-﻿using LeagueSharp;
+﻿using S_Class_Kalista;
+using LeagueSharp;
 
-
-namespace Gosu_Kalista
+namespace S_Class_Kalista
 {
     class AutoLevel
     {

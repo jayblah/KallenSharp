@@ -7,8 +7,8 @@
     <ProjectGuid>{933F5501-CA11-469B-AEAA-E6EEE16B171A}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Gosu_Kalista</RootNamespace>
-    <AssemblyName>Gosu Kalista</AssemblyName>
+    <RootNamespace>S_Class_Kalista</RootNamespace>
+    <AssemblyName>S Class Kalista</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

@@ -2,7 +2,9 @@
 using LeagueSharp;
 using LeagueSharp.Common;
 
-namespace Gosu_Kalista
+//using AutoLevel = S_Class_Kalista.AutoLevel;
+
+namespace S_Class_Kalista
 {
     internal class Program
     {
@@ -55,7 +57,7 @@ namespace Gosu_Kalista
            // Humanizer.AddAction("generalDelay",125);
 
             //Loaded yay
-            Console.WriteLine(@"Gosu Kalista Load Completed");
+            Console.WriteLine(@"S Class Kalista Load Completed");
         }
 
         private static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)

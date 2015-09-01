@@ -1,7 +1,7 @@
 ﻿using System;
 using LeagueSharp;
 using LeagueSharp.Common;
-namespace Gosu_Kalista
+namespace S_Class_Kalista
 {
     internal class Properties
     {
