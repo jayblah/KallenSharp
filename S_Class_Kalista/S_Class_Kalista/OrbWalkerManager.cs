@@ -91,8 +91,47 @@ namespace S_Class_Kalista
             }
         }
 
+        //private static Menu LaneClearMenu()
+        //{
+        //    var laneClearMenu = new Menu("Lane Clear Options", "laneClearOptions");
+        //    laneClearMenu.AddItem(new MenuItem("bUseELaneClear", "Auto E On Minions Killed").SetValue(true));
+        //    laneClearMenu.AddItem(new MenuItem("sLaneClearMinionsKilled", "Required Minions Killed").SetValue(new Slider(3, 2, 10)));
+        //    laneClearMenu.AddItem(new MenuItem("bUseJungleClear", "Jungle Clear").SetValue(true));
+        //    return laneClearMenu;
+        //}
+
+
         private static void LaneClear()
         {
+
+            if (Properties.MainMenu.Item("bUseELaneClear").GetValue<bool>())
+            {
+                var count = 0;
+                var minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range);
+                count += minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid);
+                if (Properties.MainMenu.Item("sLaneClearMinionsKilled").GetValue<Slider>().Value < count)
+                    if (Properties.Time.CheckRendDelay())
+                    {
+                        Console.WriteLine("Using Lane Clear E:{0}", Properties.Time.TickCount);
+                        Properties.Champion.UseRend();
+                    }
+            }
+
+            if (!Properties.MainMenu.Item("bUseJungleClear").GetValue<bool>()) return;
+
+
+            foreach (var monster in MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
+                Properties.Champion.E.Range,
+                MinionTypes.All,
+                MinionTeam.Neutral,
+                MinionOrderTypes.MaxHealth))
+            {
+                if (!(DamageCalc.GetRendDamage(monster) > monster.Health)) continue;
+                if (!Properties.Time.CheckRendDelay()) return;
+                Console.WriteLine("Using Jungle CLear E:{0}", Properties.Time.TickCount);
+                Properties.Champion.UseRend();
+                return;
+            }
         }
 
         private static void LastHit()

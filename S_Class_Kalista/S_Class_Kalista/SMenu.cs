@@ -16,6 +16,7 @@ namespace S_Class_Kalista
             Properties.MainMenu.AddSubMenu(OrbWalkingMenu());
             Properties.MainMenu.AddSubMenu(MixedMenu());
             Properties.MainMenu.AddSubMenu(ComboMenu());
+            Properties.MainMenu.AddSubMenu(LaneClearMenu());
             Properties.MainMenu.AddSubMenu(MiscMenu());
             Properties.LukeOrbWalker = new Orbwalking.Orbwalker(Properties.MainMenu.SubMenu("Orbwalking"));
         }
@@ -51,7 +52,7 @@ namespace S_Class_Kalista
         private static Menu MixedMenu()
         {
             var mixedMenu = new Menu("Mixed Options", "mixedOptions");
-            mixedMenu.AddItem(new MenuItem("bUseQMixed", "Auto Q").SetValue(false));
+            mixedMenu.AddItem(new MenuItem("bUseQMixed", "Auto Q").SetValue(true));
             mixedMenu.AddItem(new MenuItem("bUseEMixed", "Auto E on Stacks").SetValue(false));
             mixedMenu.AddItem(new MenuItem("sMixedStacks", "Required E stacks").SetValue(new Slider(4, 2, 15)));
 
@@ -65,6 +66,15 @@ namespace S_Class_Kalista
             mixedMenu.AddItem(new MenuItem("bUseECombo", "Auto E for kills").SetValue(false));
 
             return mixedMenu;
+        }
+
+        private static Menu LaneClearMenu()
+        {
+            var laneClearMenu = new Menu("Lane Clear Options", "laneClearOptions");
+            laneClearMenu.AddItem(new MenuItem("bUseELaneClear", "Auto E On Minions Killed").SetValue(true));
+            laneClearMenu.AddItem(new MenuItem("sLaneClearMinionsKilled", "Required Minions Killed").SetValue(new Slider(3, 2, 10)));
+            laneClearMenu.AddItem(new MenuItem("bUseJungleClear", "Jungle Clear").SetValue(true));
+            return laneClearMenu;
         }
 
         private static Menu DrawingMenu()
@@ -94,7 +104,7 @@ namespace S_Class_Kalista
             autoEventsMenu.AddItem(new MenuItem("bUseENonKillables", "Auto E NonKillable Minions").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKillMinions", "Auto E Kill Minions").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("sAutoEMinionsKilled", "Required Minions Killed From E").SetValue(new Slider(2, 2, 10)));
-            autoEventsMenu.AddItem(new MenuItem("bAutoEOnStacksAndMinions", "Auto E When Stacks On Champ And Minions Killed").SetValue(false));
+            autoEventsMenu.AddItem(new MenuItem("bAutoEOnStacksAndMinions", "Auto E When Stacks On Champ And Minions Killed").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("sUseEOnMinionKilled", "Required Minions Killed From E + Champ Stacks").SetValue(new Slider(3, 1, 10)));
             autoEventsMenu.AddItem(new MenuItem("sUseEOnChampStacks", "Required Stacks On Champion").SetValue(new Slider(1, 1, 10)));
             autoEventsMenu.AddItem(new MenuItem("bAutoSaveSoul", "Auto Save SoulBound partner").SetValue(true));

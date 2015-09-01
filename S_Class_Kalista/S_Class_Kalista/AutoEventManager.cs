@@ -39,8 +39,8 @@ namespace S_Class_Kalista
             if (Properties.MainMenu.Item("bUseEToAutoKillMinions").GetValue<bool>())
                 if (CheckMinions()) return;
 
-            if (Properties.MainMenu.Item("bAutoEOnStacksAndMinions").GetValue<bool>())
-                if (AutoEOnStacksAndMinions()) return;
+            if (!Properties.MainMenu.Item("bAutoEOnStacksAndMinions").GetValue<bool>()) return;
+            AutoEOnStacksAndMinions();
         }
 
         public static void CheckNonKillables(AttackableUnit minion)
@@ -85,6 +85,7 @@ namespace S_Class_Kalista
 
         #region Private Functions
 
+        // ReSharper disable once UnusedMethodReturnValue.Local
         private static bool AutoEOnStacksAndMinions()
         {
             if (!(from stacks in (from target in HeroManager.Enemies
