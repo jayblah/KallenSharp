@@ -46,12 +46,12 @@ namespace S_Class_Kalista
         public static void CheckNonKillables(AttackableUnit minion)
         {
             if (!Properties.MainMenu.Item("bUseENonKillables").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
-            if (!(minion.Health <= DamageCalc.GetRendDamage((Obj_AI_Base)minion))) return;
+            if (!(minion.Health <= DamageCalc.GetRendDamage((Obj_AI_Base)minion)) || minion.Health > 35) return;
 
-            if (!Properties.Time.CheckRendDelay()) return;
+            if (!Properties.Time.CheckNonKillable()) return;
 
             Console.WriteLine("Killing NonKillables");
-            Properties.Champion.UseRend();
+            Properties.Champion.UseNonKillableRend();
         }
 
         public static bool CheckEnemies()

@@ -24,7 +24,7 @@ namespace S_Class_Kalista
         {
             private static readonly DateTime AssemblyLoadTime = DateTime.Now;
             public static float LastRendTick { get; set; }
-
+            public static float LastNonKillable { get; set; }
             public static float TickCount
             {
                 get
@@ -35,8 +35,14 @@ namespace S_Class_Kalista
 
             public static bool CheckRendDelay()
             {
-                return !(TickCount - LastRendTick < 1000);
+                return !(TickCount - LastRendTick < 750);
             }
+
+            public static bool CheckNonKillable()
+            {
+                return !(TickCount - LastNonKillable < 2000);
+            }
+
         }
 
         internal class Drawing
@@ -118,6 +124,12 @@ namespace S_Class_Kalista
                 Time.LastRendTick = Time.TickCount;
             }
 
+            public static void UseNonKillableRend()
+            {
+                E.Cast();
+                Console.WriteLine("Last Nonkillable Tick:{0} Current Tick{1}", Time.LastNonKillable, Time.TickCount);
+                Time.LastNonKillable = Time.TickCount;
+            }
             public static void LoadSpells()
             {
                 //Loads range and shit
