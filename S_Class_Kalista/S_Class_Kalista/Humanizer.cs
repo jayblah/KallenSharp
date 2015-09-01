@@ -6,7 +6,6 @@
 //{
 //    class Humanizer
 //    {
-
 //        private struct Action
 //        {
 //            public string Name { get; set; }
@@ -32,7 +31,6 @@
 //            ActionDelayList.Add(nAction);
 //        }
 
-
 //        public static void ChangeDelay(string actionName, float nDelay)
 //        {
 //            var cAction = ActionDelayList.Find(action => action.Name == actionName);
@@ -44,7 +42,7 @@
 //        {
 //            var cAction = ActionDelayList.Find(action => action.Name == actionName);
 //            if (cAction.Name == null) return false;
-            
+
 //            Console.WriteLine("Current Last Tick{0} Current Tick{1}" ,cAction.LastTick,TickCount);
 //            if (!(TickCount - cAction.LastTick >= cAction.Delay)) return false;
 //            float delay = cAction.Delay;

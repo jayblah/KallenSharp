@@ -1,12 +1,14 @@
-﻿using System;
-using System.Linq;
-using LeagueSharp;
+﻿using LeagueSharp;
 using LeagueSharp.Common;
+using System;
+using System.Linq;
+
 namespace S_Class_Kalista
 {
-    class AutoEventManager
+    internal class AutoEventManager
     {
         #region Public Functions
+
         public static void EventCheck()
         {
             if (Properties.MainMenu.Item("bAutoSaveSoul").GetValue<bool>())
@@ -39,7 +41,6 @@ namespace S_Class_Kalista
 
             if (Properties.MainMenu.Item("bAutoEOnStacksAndMinions").GetValue<bool>())
                 if (AutoEOnStacksAndMinions()) return;
-
         }
 
         public static void CheckNonKillables(AttackableUnit minion)
@@ -52,7 +53,6 @@ namespace S_Class_Kalista
             Console.WriteLine("Killing NonKillables");
             Properties.Champion.UseRend();
         }
-
 
         public static bool CheckEnemies()
         {
@@ -81,8 +81,10 @@ namespace S_Class_Kalista
             return false;
         }
 
-        #endregion
+        #endregion Public Functions
+
         #region Private Functions
+
         private static bool AutoEOnStacksAndMinions()
         {
             if (!(from stacks in (from target in HeroManager.Enemies
@@ -125,7 +127,6 @@ namespace S_Class_Kalista
                 if (!(ObjectManager.Player.Distance(SummonersRift.River.Baron) <= Properties.Champion.W.Range)) return;
                 Properties.Champion.W.Cast(SummonersRift.River.Baron);
             }
-
         }
 
         private static bool CheckEpicMonsters()
@@ -181,6 +182,7 @@ namespace S_Class_Kalista
             Properties.Champion.UseRend();
             return true;
         }
-        #endregion
+
+        #endregion Private Functions
     }
 }

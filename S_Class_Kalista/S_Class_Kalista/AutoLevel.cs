@@ -2,17 +2,20 @@
 
 namespace S_Class_Kalista
 {
-    class AutoLevel
+    internal class AutoLevel
     {
         #region Structures
-        struct Abilitys // So you can refeer to spell to level by slot rather than 1,2,3,4
+
+        private struct Abilitys // So you can refeer to spell to level by slot rather than 1,2,3,4
         {
             public const int Q = 1;
             public const int W = 2;
             public const int E = 3;
             public const int R = 4;
         }
-        #endregion
+
+        #endregion Structures
+
         #region Variable Declaration
 
         private static readonly int[] AbilitySequence ={
@@ -27,8 +30,11 @@ namespace S_Class_Kalista
         private static int WOff = 0;
         private static int EOff = 0;
         private static int ROff = 0;
-        #endregion
+
+        #endregion Variable Declaration
+
         #region Public Functions
+
         public static void LevelUpSpells()
         {
             var qL = Properties.PlayerHero.Spellbook.GetSpell(Properties.Champion.Q.Slot).Level + QOff;
@@ -50,7 +56,7 @@ namespace S_Class_Kalista
             if (eL < level[2]) Properties.PlayerHero.Spellbook.LevelSpell(SpellSlot.E);
             if (rL < level[3]) Properties.PlayerHero.Spellbook.LevelSpell(SpellSlot.R);
         }
-        #endregion
+
+        #endregion Public Functions
     }
 }
-

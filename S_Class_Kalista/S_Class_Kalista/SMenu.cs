@@ -47,6 +47,7 @@ namespace S_Class_Kalista
             orbWalkingMenu.AddSubMenu(targetSelectorMenu);
             return orbWalkingMenu;
         }
+
         private static Menu MixedMenu()
         {
             var mixedMenu = new Menu("Mixed Options", "mixedOptions");
@@ -57,16 +58,16 @@ namespace S_Class_Kalista
             return mixedMenu;
         }
 
-    private static Menu ComboMenu()
-    {
-        var mixedMenu = new Menu("Combo Options", "comboMenu");
-        mixedMenu.AddItem(new MenuItem("bUseQCombo", "Auto Q").SetValue(false));
-        mixedMenu.AddItem(new MenuItem("bUseECombo", "Auto E for kills").SetValue(false));
+        private static Menu ComboMenu()
+        {
+            var mixedMenu = new Menu("Combo Options", "comboMenu");
+            mixedMenu.AddItem(new MenuItem("bUseQCombo", "Auto Q").SetValue(false));
+            mixedMenu.AddItem(new MenuItem("bUseECombo", "Auto E for kills").SetValue(false));
 
-        return mixedMenu;
-    }
+            return mixedMenu;
+        }
 
-    private static Menu DrawingMenu()
+        private static Menu DrawingMenu()
         {
             var drawMenu = new Menu("Drawing Settings", "Drawings");
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDraw", "Display Drawing").SetValue(true));
@@ -77,7 +78,6 @@ namespace S_Class_Kalista
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawFillOnChamp", "Fill Combo Damage On Champs").SetValue(true));
 
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawOnMonsters", "Draw Damage On Monsters").SetValue(true));
-            drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawOnEpic", "Draw Damage On Epics").SetValue(true));
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bFillMonster", "Fill Damage On Monsters").SetValue(true));
 
             return drawMenu;

@@ -1,6 +1,7 @@
-﻿using System;
-using LeagueSharp;
+﻿using LeagueSharp;
 using LeagueSharp.Common;
+using System;
+
 namespace S_Class_Kalista
 {
     internal class Properties
@@ -16,7 +17,8 @@ namespace S_Class_Kalista
         public static Menu MainMenu { get; set; }
         public static Obj_AI_Hero PlayerHero { get; set; }
         public static Obj_AI_Hero SoulBoundHero { get; set; }
-        #endregion
+
+        #endregion Auto Properties
 
         internal class Time
         {
@@ -35,12 +37,12 @@ namespace S_Class_Kalista
             {
                 return !(TickCount - LastRendTick < 1000);
             }
-
         }
 
         internal class Drawing
         {
             private static DamageToUnitDelegate _damageToUnit, _damageToMonster;
+
             public delegate float DamageToUnitDelegate(Obj_AI_Hero hero);
 
             public static DamageToUnitDelegate DamageToUnit
@@ -70,8 +72,6 @@ namespace S_Class_Kalista
                     _damageToMonster = value;
                 }
             }
-
-
         }
 
         //internal class AutoLevel
@@ -116,7 +116,6 @@ namespace S_Class_Kalista
                 E.Cast();
                 Console.WriteLine("Last Rend Tick:{0} Current Tick{1}", Time.LastRendTick, Time.TickCount);
                 Time.LastRendTick = Time.TickCount;
-
             }
 
             public static void LoadSpells()
@@ -135,7 +134,6 @@ namespace S_Class_Kalista
                 //Console.WriteLine(E.Range);
                 //Console.WriteLine(R.Range);
             }
-            
         }
     }
 }

@@ -1,16 +1,15 @@
-﻿using System;
-using System.Linq;
-using LeagueSharp;
+﻿using LeagueSharp;
 using LeagueSharp.Common;
+using System;
+using System.Linq;
 using Color = System.Drawing.Color;
 
 namespace S_Class_Kalista
 {
     internal class DrawingManager
     {
-        #region Variable Declaration
-        #endregion
         #region Public Functions
+
         public static void Drawing_OnDraw(EventArgs args)
         {
             if (Properties.PlayerHero.IsDead)
@@ -25,7 +24,6 @@ namespace S_Class_Kalista
             if (Properties.MainMenu.Item("bDrawRendRange").GetValue<bool>() && Properties.Champion.E.Level > 0)
                 Render.Circle.DrawCircle(Properties.PlayerHero.Position, Properties.Champion.E.Range,
                     Color.DarkSlateBlue, 2);
-
         }
 
         public static void Drawing_OnDrawMonster(EventArgs args)
@@ -43,12 +41,8 @@ namespace S_Class_Kalista
             //                .Where(creep => (creep.GetBuff("kalistaexpungemarker").Count > 0)
             //                ))
             //    {
-
-
             //    }
             //}
-
-            if (!Properties.MainMenu.Item("bDrawOnEpic").GetValue<bool>()) return;
 
             foreach (var minion in ObjectManager.Get<Obj_AI_Minion>())
             {
@@ -57,11 +51,11 @@ namespace S_Class_Kalista
 
                 var rendDamage = DamageCalc.GetRendDamage(minion);
 
-                var barWidth = 75;
-                var xOffset = 54;
-                var yOffset = 19;
-                var yOffset2 = 4;
-
+                var barWidth = 0;
+                var xOffset = 0;
+                var yOffset = 0;
+                var yOffset2 = 0;
+                var display = true;
                 switch (minion.CharData.BaseSkinName)
                 {
                     case "SRU_Red":
@@ -72,32 +66,51 @@ namespace S_Class_Kalista
                         yOffset = 18;
                         yOffset2 = 10;
                         break;
+
                     case "SRU_Baron":
                         barWidth = 194;
                         xOffset = -22;
                         yOffset = 13;
                         yOffset2 = 16;
                         break;
+
                     case "Sru_Crab":
                         barWidth = 61;
                         xOffset = 45;
                         yOffset = 34;
                         yOffset2 = 3;
                         break;
+
                     case "SRU_Krug":
                         barWidth = 81;
                         xOffset = 58;
                         yOffset = 18;
                         yOffset2 = 4;
                         break;
+
                     case "SRU_Gromp":
                         barWidth = 87;
                         xOffset = 62;
                         yOffset = 18;
                         yOffset2 = 4;
                         break;
+                    case "SRU_Murkwolf":
+                        barWidth = 75;
+                        xOffset = 54;
+                        yOffset = 19;
+                        yOffset2 = 4;
+                        break;
+                    case "SRU_Razorbeak":
+                        barWidth = 75;
+                        xOffset = 54;
+                        yOffset = 18;
+                        yOffset2 = 4;
+                        break;
+                    default:
+                        display = false;
+                        break;
                 }
-
+                if(!display)continue;
                 var barPos = minion.HPBarPosition;
                 var percentHealthAfterDamage = Math.Max(0, minion.Health - rendDamage) / minion.MaxHealth;
                 var yPos = barPos.Y + yOffset;
@@ -113,9 +126,7 @@ namespace S_Class_Kalista
                     {
                         Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + yOffset2, 1, Color.DarkGray);
                     }
-                    
                 }
-
                 else Drawing.DrawLine(xPosDamage, yPos, xPosDamage, yPos + yOffset2, 1, Color.LightGray);
 
                 if (!(rendDamage > minion.Health)) continue;
@@ -123,7 +134,6 @@ namespace S_Class_Kalista
                 Drawing.DrawText(minion.HPBarPosition.X + xOffset, minion.HPBarPosition.Y, Color.Red, "Killable");
             }
         }
-
 
         public static void Drawing_OnDrawChamp(EventArgs args)
         {
@@ -139,20 +149,20 @@ namespace S_Class_Kalista
 
                 var barPos = unit.HPBarPosition;
                 var damage = DamageCalc.GetRendDamage(unit);
-                var percentHealthAfterDamage = Math.Max(0, unit.Health - damage)/unit.MaxHealth;
+                var percentHealthAfterDamage = Math.Max(0, unit.Health - damage) / unit.MaxHealth;
                 var yPos = barPos.Y + yOffset;
-                var xPosDamage = barPos.X + xOffset + width*percentHealthAfterDamage;
-                var xPosCurrentHp = barPos.X + xOffset + width*unit.Health/unit.MaxHealth;
+                var xPosDamage = barPos.X + xOffset + width * percentHealthAfterDamage;
+                var xPosCurrentHp = barPos.X + xOffset + width * unit.Health / unit.MaxHealth;
 
                 if (Properties.MainMenu.Item("bDrawTextOnChamp").GetValue<bool>() && damage > unit.Health)
-                    Drawing.DrawText(barPos.X + xOffset, barPos.Y + yOffset -13, Color.Red, "Killable");             
+                    Drawing.DrawText(barPos.X + xOffset, barPos.Y + yOffset - 13, Color.Red, "Killable");
 
                 Drawing.DrawLine(xPosDamage, yPos, xPosDamage, yPos + height, 1, Color.LightGray);
 
                 if (!Properties.MainMenu.Item("bDrawFillOnChamp").GetValue<bool>()) return;
 
                 var differenceInHp = xPosCurrentHp - xPosDamage;
-                var pos1 = barPos.X + 9 + (107*percentHealthAfterDamage);
+                var pos1 = barPos.X + 9 + (107 * percentHealthAfterDamage);
 
                 for (var i = 0; i < differenceInHp; i++)
                 {
@@ -160,6 +170,7 @@ namespace S_Class_Kalista
                 }
             }
         }
-        #endregion
+
+        #endregion Public Functions
     }
 }

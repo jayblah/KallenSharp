@@ -1,15 +1,15 @@
-﻿using System;
+﻿using LeagueSharp.Common;
+using System;
 using System.Linq;
-using LeagueSharp.Common;
 
 namespace S_Class_Kalista
 {
     internal class OrbWalkerManager
     {
         #region Public Functions
+
         public static void DoTheWalk()
         {
-
             switch (Properties.LukeOrbWalker.ActiveMode)
             {
                 case Orbwalking.OrbwalkingMode.Combo:
@@ -29,21 +29,27 @@ namespace S_Class_Kalista
                     break;
             }
         }
-        #endregion
+
+        #endregion Public Functions
+
         #region Private Functions
+
         private static HitChance GetHitChance()
         {
             switch (Properties.MainMenu.Item("slQprediction").GetValue<StringList>().SelectedIndex)
             {
                 case 0:
                     return HitChance.VeryHigh;
+
                 case 1:
                     return HitChance.High;
+
                 case 2:
                     return HitChance.Dashing;
             }
             return HitChance.VeryHigh;
         }
+
         private static void Combo()
         {
             if (Properties.MainMenu.Item("bUseQCombo").GetValue<bool>() && Properties.Champion.Q.IsReady())
@@ -60,7 +66,6 @@ namespace S_Class_Kalista
                 return;
 
             AutoEventManager.CheckEnemies();
-
         }
 
         private static void Mixed()
@@ -80,23 +85,20 @@ namespace S_Class_Kalista
             {
                 if (!Properties.Time.CheckRendDelay()) // Wait for rend delay
                     continue;
-                
+
                 Console.WriteLine("Using Mixed E:{0}", Properties.Time.TickCount);
                 Properties.Champion.UseRend();
             }
-
         }
-    
 
         private static void LaneClear()
         {
-
         }
 
         private static void LastHit()
         {
-           
         }
-        #endregion
+
+        #endregion Private Functions
     }
 }

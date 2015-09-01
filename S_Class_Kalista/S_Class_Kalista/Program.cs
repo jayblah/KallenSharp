@@ -1,6 +1,6 @@
-﻿using System;
-using LeagueSharp;
+﻿using LeagueSharp;
 using LeagueSharp.Common;
+using System;
 
 //using AutoLevel = S_Class_Kalista.AutoLevel;
 
@@ -54,7 +54,7 @@ namespace S_Class_Kalista
             // Add Delays for later use
             //Humanizer needs to be reworked
             //Humanizer.AddAction("rendDelay",200);
-           // Humanizer.AddAction("generalDelay",125);
+            // Humanizer.AddAction("generalDelay",125);
 
             //Loaded yay
             Console.WriteLine(@"S Class Kalista Load Completed");
@@ -62,12 +62,10 @@ namespace S_Class_Kalista
 
         private static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-
             if (sender == null || !sender.IsValid) return;
-                // Allow more auto attacks after 150 MS after using Expunge
+            // Allow more auto attacks after 150 MS after using Expunge
             if (sender.IsMe && args.SData.Name == "KalistaExpungeWrapper")
                 Utility.DelayAction.Add(150, Orbwalking.ResetAutoAttackTimer);
-            
         }
 
         private static void Game_OnUpdate(EventArgs args)
@@ -75,10 +73,10 @@ namespace S_Class_Kalista
             //Auto Level in common is broken LOL
             //LeagueSharp.Common.AutoLevel.Enabled(Properties.MainMenu.Item("bAutoLevel").GetValue<bool>());
 
-            if(Properties.MainMenu.Item("bAutoLevel").GetValue<bool>())
-            AutoLevel.LevelUpSpells();
+            if (Properties.MainMenu.Item("bAutoLevel").GetValue<bool>())
+                AutoLevel.LevelUpSpells();
 
-            if (Properties.MainMenu.Item("bAutoBuyOrb").GetValue<bool>() &&Properties.PlayerHero.Level >= 6)
+            if (Properties.MainMenu.Item("bAutoBuyOrb").GetValue<bool>() && Properties.PlayerHero.Level >= 6)
                 TrinketManager.BuyOrb();
 
             if (Properties.PlayerHero.IsDead)
@@ -86,9 +84,8 @@ namespace S_Class_Kalista
             if (Properties.PlayerHero.IsRecalling())
                 return;
 
-           AutoEventManager.EventCheck();
-           OrbWalkerManager.DoTheWalk();
-
+            AutoEventManager.EventCheck();
+            OrbWalkerManager.DoTheWalk();
         }
     }
 }
