@@ -17,7 +17,7 @@ namespace S_Class_Kalista
             if (!Properties.Champion.R.IsInRange(Properties.SoulBoundHero) || Properties.SoulBoundHero.IsDead) return;
             if (Properties.SoulBoundHero.ChampionName == "Blitzcrank" && Properties.MainMenu.Item("bBalista").GetValue<bool>())
             {
-                foreach (var target in ObjectManager.Get<Obj_AI_Hero>().Where(enem => enem.IsValid && enem.IsEnemy && enem.Distance(ObjectManager.Player) <= 2450f).Where(target => target.Buffs != null && target.Health > 200 && Properties.SoulBoundHero.Distance(target) > 450f))
+                foreach (var target in ObjectManager.Get<Obj_AI_Hero>().Where(enem => enem.IsValid && enem.IsEnemy && enem.Distance(ObjectManager.Player) <= 2450f).Where(target => target.Buffs != null && target.Health > 300 && Properties.SoulBoundHero.Distance(target) > 450f))
                 {
                     for (var i = 0; i < target.Buffs.Count(); i++)
                     {

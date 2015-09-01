@@ -33,7 +33,7 @@ namespace S_Class_Kalista
 
             //Create Menu and Initialize spells
             Console.WriteLine(@"Generating Menu");
-            GosuMenu.GenerateMenu();
+            SMenu.GenerateMenu();
             Console.WriteLine(@"Generating Spells...");
             Properties.Champion.LoadSpells();
             Properties.MainMenu.AddToMainMenu();
@@ -49,7 +49,7 @@ namespace S_Class_Kalista
             Drawing.OnDraw += DrawingManager.Drawing_OnDraw;
             Drawing.OnDraw += DrawingManager.Drawing_OnDrawChamp;
             Drawing.OnDraw += DrawingManager.Drawing_OnDrawMonster;
-            Orbwalking.OnNonKillableMinion += OrbWalkerManager.CheckNonKillables;
+            Orbwalking.OnNonKillableMinion += AutoEventManager.CheckNonKillables;
 
             // Add Delays for later use
             //Humanizer needs to be reworked
@@ -86,7 +86,7 @@ namespace S_Class_Kalista
             if (Properties.PlayerHero.IsRecalling())
                 return;
 
-           OrbWalkerManager.EventCheck();
+           AutoEventManager.EventCheck();
            OrbWalkerManager.DoTheWalk();
 
         }

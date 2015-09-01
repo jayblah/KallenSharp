@@ -1,5 +1,4 @@
-﻿using S_Class_Kalista;
-using LeagueSharp;
+﻿using LeagueSharp;
 
 namespace S_Class_Kalista
 {

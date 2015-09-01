@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using S_Class_Kalista;
 using LeagueSharp;
 using LeagueSharp.Common;
 
@@ -7,7 +6,59 @@ namespace S_Class_Kalista
 {
     class DamageCalc
     {
+        #region Public Functions
 
+        public static bool CheckNoDamageBuffs(Obj_AI_Hero target)// From Asuna
+        {
+            foreach (var b in target.Buffs.Where(b => b.IsValidBuff()))
+            {
+                switch (b.DisplayName)
+                {
+                    case "Chrono Shift":
+                        return true;
+                    case "JudicatorIntervention":
+                        return true;
+                    case "Undying Rage":
+                        if (target.ChampionName == "Tryndamere")
+                            return true;
+                        continue;
+
+                    //Spell Shields
+                    case "bansheesveil":
+                        return true;
+                    case "SivirE":
+                        return true;
+                    case "NocturneW":
+                        return true;
+
+                }
+            }
+            if (target.ChampionName == "Poppy" && HeroManager.Allies.Any(
+                o =>
+                {
+                    return !o.IsMe
+                           && o.Buffs.Any(
+                               b =>
+                                   b.Caster.NetworkId == target.NetworkId && b.IsValidBuff()
+                                   && b.DisplayName == "PoppyDITarget");
+                }))
+            {
+                return true;
+            }
+
+
+            return (target.HasBuffOfType(BuffType.Invulnerability)
+                      || target.HasBuffOfType(BuffType.SpellImmunity)
+                      || target.HasBuffOfType(BuffType.SpellShield));
+
+        }
+
+        public static float GetRendDamage(Obj_AI_Base target)
+        {
+            return !Properties.Champion.E.IsReady() ? 0f : CalculateRendDamage(target);
+        }
+        #endregion
+        #region Private Functions
         private static float CalculateRendDamage(Obj_AI_Base target)
         {
             var defuffer = 1f;
@@ -28,57 +79,6 @@ namespace S_Class_Kalista
 
             return Properties.Champion.E.GetDamage(target)*defuffer;
         }
-
-        public static bool CheckNoDamageBuffs(Obj_AI_Hero target)// From Asuna
-        {
-            foreach (var b in target.Buffs.Where(b => b.IsValidBuff()))
-            {
-                switch (b.DisplayName)
-                {
-                    case "Chrono Shift":
-                        return true;
-                    case "JudicatorIntervention":
-                        return true;
-                    case "Undying Rage":
-                        if (target.ChampionName == "Tryndamere")
-                            return true;
-                        continue;
-                    
-                   //Spell Shields
-                    case "bansheesveil":
-                        return true;
-                    case "SivirE":
-                        return true;
-                    case "NocturneW":
-                        return true;
-                        
-                }
-            }
-            if (target.ChampionName == "Poppy" && HeroManager.Allies.Any(
-                o =>
-                {
-                    return !o.IsMe
-                           && o.Buffs.Any(
-                               b =>
-                                   b.Caster.NetworkId == target.NetworkId && b.IsValidBuff()
-                                   && b.DisplayName == "PoppyDITarget");
-                }))
-            {
-                return true;
-            }
-
-        
-            return (target.HasBuffOfType(BuffType.Invulnerability)
-                      || target.HasBuffOfType(BuffType.SpellImmunity)
-                      || target.HasBuffOfType(BuffType.SpellShield));
-
-        }
-
-        public static float GetRendDamage(Obj_AI_Base target)
-        {
-            return !Properties.Champion.E.IsReady() ? 0f : CalculateRendDamage(target);
-        }
-
-
+        #endregion
     }
 }

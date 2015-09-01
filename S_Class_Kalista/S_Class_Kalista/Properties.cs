@@ -22,6 +22,7 @@ namespace S_Class_Kalista
         {
             private static readonly DateTime AssemblyLoadTime = DateTime.Now;
             public static float LastRendTick { get; set; }
+
             public static float TickCount
             {
                 get
@@ -29,8 +30,14 @@ namespace S_Class_Kalista
                     return (int)DateTime.Now.Subtract(AssemblyLoadTime).TotalMilliseconds;
                 }
             }
- 
+
+            public static bool CheckRendDelay()
+            {
+                return !(TickCount - LastRendTick < 1000);
+            }
+
         }
+
         internal class Drawing
         {
             private static DamageToUnitDelegate _damageToUnit, _damageToMonster;
@@ -103,6 +110,14 @@ namespace S_Class_Kalista
             public Obj_AI_Hero SoulBound { get; set; }
             //public static Spell D { get; set; }
             //public static Spell F { get; set; }
+
+            public static void UseRend()
+            {
+                E.Cast();
+                Console.WriteLine("Last Rend Tick:{0} Current Tick{1}", Time.LastRendTick, Time.TickCount);
+                Time.LastRendTick = Time.TickCount;
+
+            }
 
             public static void LoadSpells()
             {

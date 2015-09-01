@@ -56,10 +56,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoEventManager.cs" />
     <Compile Include="AutoLevel.cs" />
     <Compile Include="DamageCalc.cs" />
     <Compile Include="DrawingManager.cs" />
-    <Compile Include="GosuMenu.cs" />
+    <Compile Include="SMenu.cs" />
     <Compile Include="Humanizer.cs" />
     <Compile Include="OrbWalkerManager.cs" />
     <Compile Include="Program.cs" />

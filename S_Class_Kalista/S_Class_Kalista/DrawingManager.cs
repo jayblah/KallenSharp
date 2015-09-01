@@ -10,7 +10,7 @@ namespace S_Class_Kalista
     {
         #region Variable Declaration
         #endregion
-
+        #region Public Functions
         public static void Drawing_OnDraw(EventArgs args)
         {
             if (Properties.PlayerHero.IsDead)
@@ -160,5 +160,6 @@ namespace S_Class_Kalista
                 }
             }
         }
+        #endregion
     }
 }
