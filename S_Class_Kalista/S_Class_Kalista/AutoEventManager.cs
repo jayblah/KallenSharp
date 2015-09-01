@@ -119,8 +119,7 @@ namespace S_Class_Kalista
 
             if (dragon)
             {
-                if (!(ObjectManager.Player.Distance(SummonersRift.River.Dragon) <= Properties.Champion.W.Range)) return;
-                Properties.Champion.W.Cast(SummonersRift.River.Dragon);
+                if (!(ObjectManager.Player.Distance(SummonersRift.River.Dragon) <= Properties.Champion.W.Range)) return; Properties.Champion.W.Cast(SummonersRift.River.Dragon);
             }
             else
             {

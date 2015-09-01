@@ -63,7 +63,7 @@ namespace S_Class_Kalista
         private static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (sender == null || !sender.IsValid) return;
-            // Allow more auto attacks after 150 MS after using Expunge
+
             if (sender.IsMe && args.SData.Name == "KalistaExpungeWrapper")
                 Utility.DelayAction.Add(150, Orbwalking.ResetAutoAttackTimer);
         }
