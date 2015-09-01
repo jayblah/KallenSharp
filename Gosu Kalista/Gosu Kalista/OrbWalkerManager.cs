@@ -9,13 +9,32 @@ namespace Gosu_Kalista
 {
     internal class OrbWalkerManager
     {
-        public static void EventCheck()
+        private static bool CheckRendDelay()
+        {
+            return !(Properties.Time.TickCount - Properties.Time.LastRendTick < 500);
+        }
+
+        private static void SetRendDelay()
+        {
+            Console.WriteLine("Last Rend Tick:{0} Current Tick{1}", Properties.Time.LastRendTick,
+    Properties.Time.TickCount);
+            Properties.Time.LastRendTick = Properties.Time.TickCount;
+        }
+
+    public static void EventCheck()
         {
             if (Properties.MainMenu.Item("bAutoSaveSoul").GetValue<bool>())
                 SoulBound.CheckSoulBoundHero();
 
-            if (!Humanizer.CheckDelay("rendDelay")) // Wait for rend delay
-                return;
+            //Sentinel
+            if (!Properties.MainMenu.Item("bSentinel").GetValue<KeyBind>().Active) return;
+            if (Properties.MainMenu.Item("bSentinelDragon").GetValue<bool>())
+                AutoSentinels(true);
+            if (Properties.MainMenu.Item("bSentinelBaron").GetValue<bool>())
+                AutoSentinels(false);
+
+
+            if (!CheckRendDelay()) return;
 
             if (!Properties.Champion.E.IsReady()) return; 
 
@@ -34,25 +53,23 @@ namespace Gosu_Kalista
             if (Properties.MainMenu.Item("bAutoEOnStacksAndMinions").GetValue<bool>())
                 if(AutoEOnStacksAndMinions()) return; 
 
-            //Sentinel
-            if (!Properties.MainMenu.Item("bSentinel").GetValue<KeyBind>().Active) return;
-            if (Properties.MainMenu.Item("bSentinelDragon").GetValue<bool>())
-                AutoSentinels(true);
-            if (Properties.MainMenu.Item("bSentinelBaron").GetValue<bool>())
-                AutoSentinels(false);
         }
             
         public static void CheckNonKillables(AttackableUnit minion)
         {
             if(!Properties.MainMenu.Item("bUseENonKillables").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
             if (!(minion.Health <= DamageCalc.GetRendDamage((Obj_AI_Base) minion))) return;
-            if (!Humanizer.CheckDelay("rendDelay")) return;
+
+            if (!CheckRendDelay()) // Wait for rend delay
+                return;
+
             Console.WriteLine("Killing NonKillables");
+            SetRendDelay();
             Properties.Champion.E.Cast();
         }
 
         private static bool AutoEOnStacksAndMinions()
-        {
+        {       
             if (!(from stacks in (from target in HeroManager.Enemies
                 where target.IsValid
                 where target.IsValidTarget(Properties.Champion.E.Range)
@@ -71,6 +88,7 @@ namespace Gosu_Kalista
                 where Properties.MainMenu.Item("sUseEOnMinionKilled").GetValue<Slider>().Value <= count
                 select count).Any()) return false;
 
+            SetRendDelay();
             Properties.Champion.E.Cast();
             Console.WriteLine("Using Stacks And Minions E:{0}", Environment.TickCount);
             return true;
@@ -103,6 +121,7 @@ namespace Gosu_Kalista
                 MinionOrderTypes.MaxHealth)
                 .Where(mob => mob.Name.Contains("Baron") || mob.Name.Contains("Dragon")).Any(mob => DamageCalc.GetRendDamage(mob) > mob.Health)) return false;
 
+            SetRendDelay();
             Properties.Champion.E.Cast();
             Console.WriteLine("Using Baron and Dragon E:{0}", Environment.TickCount);
             return true;
@@ -118,6 +137,7 @@ namespace Gosu_Kalista
                 MinionOrderTypes.MaxHealth)
                 .Where(mob => mob.CharData.BaseSkinName.Contains("SRU_Red") || mob.CharData.BaseSkinName.Contains("SRU_Blue")).Any(mob => DamageCalc.GetRendDamage(mob) > mob.Health)) return false;
 
+            SetRendDelay();
             Console.WriteLine("Using Buff E:{0}", Environment.TickCount);
             Properties.Champion.E.Cast();
             return true;
@@ -144,6 +164,7 @@ namespace Gosu_Kalista
                 if (target.IsDead) continue;
 
                 Console.WriteLine("Using Killing Enemy E:{0}", Environment.TickCount);
+                SetRendDelay();
                 Properties.Champion.E.Cast();
                 return true;
             }
@@ -158,6 +179,7 @@ namespace Gosu_Kalista
             count += minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid);
             if (Properties.MainMenu.Item("sAutoEMinionsKilled").GetValue<Slider>().Value > count) return false;
 
+            SetRendDelay();
             Console.WriteLine("Using Minion E:{0}", Environment.TickCount);
             Properties.Champion.E.Cast();
             return true;
@@ -209,8 +231,10 @@ namespace Gosu_Kalista
                         Properties.Champion.Q.Cast(predictionPosition.CastPosition);
             }
             if (!Properties.MainMenu.Item("bUseECombo").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
-            if (!Humanizer.CheckDelay("rendDelay")) // Wait for rend delay
+
+            if (!CheckRendDelay()) // Wait for rend delay
                 return;
+            SetRendDelay();
             //Allow for auto E ?
             CheckEnemies();
 
@@ -231,8 +255,9 @@ namespace Gosu_Kalista
             // ReSharper disable once UnusedVariable
             foreach (var stacks in from target in HeroManager.Enemies where target.IsValid where target.IsValidTarget(Properties.Champion.E.Range) where !DamageCalc.CheckNoDamageBuffs(target) select target.GetBuffCount("kalistaexpungemarker") into stacks where stacks >= Properties.MainMenu.Item("sMixedStacks").GetValue<Slider>().Value select stacks)
             {
-                if (!Humanizer.CheckDelay("rendDelay")) // Wait for rend delay
-                    return;
+                if (!CheckRendDelay()) // Wait for rend delay
+                    continue;
+                SetRendDelay();
                 Console.WriteLine("Using Mixed E:{0}", Utils.TickCount);
                 Properties.Champion.E.Cast();
             }

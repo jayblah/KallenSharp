@@ -1,4 +1,5 @@
-﻿using LeagueSharp;
+﻿using System;
+using LeagueSharp;
 using LeagueSharp.Common;
 namespace Gosu_Kalista
 {
@@ -17,6 +18,19 @@ namespace Gosu_Kalista
         public static Obj_AI_Hero SoulBoundHero { get; set; }
         #endregion
 
+        internal class Time
+        {
+            private static readonly DateTime AssemblyLoadTime = DateTime.Now;
+            public static float LastRendTick { get; set; }
+            public static float TickCount
+            {
+                get
+                {
+                    return (int)DateTime.Now.Subtract(AssemblyLoadTime).TotalMilliseconds;
+                }
+            }
+ 
+        }
         internal class Drawing
         {
             private static DamageToUnitDelegate _damageToUnit, _damageToMonster;
