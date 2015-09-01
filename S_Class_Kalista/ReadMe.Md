@@ -1,8 +1,9 @@
-0x0539Sharp
-About
+#S Class Kalista, Welcome to the future of scripting.
+#About
 
 S Class Kalista is a assembly focused on stability ,customization along with bring advanced features. With the addition of many automatic functions and advanced logic and structuring, you will be able to bring out the maximum potential of Kalista.Displaying all the knowledge you will ever need including but not limited to displaying rend damage to enemies and jungle creep, displaying rend range with minimalist clean display first. With the features and customization S Class Kalista brings, there is endless potential and opportunities ready to be discovered.
-Features
+
+#Features
 
 Customization With options for almost everything, each user can create there own unique experience.
 
@@ -18,4 +19,3 @@ Customization: Change almost every setting, from how many minions are required t
 
 Humanizer Advanced delay and logic system will make your play seem more like a professional is playing rather than a computer SOON TM
 
-Slogan after : Welcome to the future of scripting.
