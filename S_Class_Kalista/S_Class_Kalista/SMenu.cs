@@ -19,7 +19,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 using LeagueSharp.Common;
-
+//.GetValue<KeyBind>().Active
 namespace S_Class_Kalista
 {
     internal class SMenu
@@ -65,7 +65,6 @@ namespace S_Class_Kalista
             var mixedMenu = new Menu("Combo Options", "comboMenu");
             mixedMenu.AddItem(new MenuItem("bUseQCombo", "Auto Q").SetValue(false));
             mixedMenu.AddItem(new MenuItem("bUseECombo", "Auto E for kills").SetValue(false));
-
             return mixedMenu;
         }
 
@@ -74,7 +73,7 @@ namespace S_Class_Kalista
             var laneClearMenu = new Menu("Lane Clear Options", "laneClearOptions");
             laneClearMenu.AddItem(new MenuItem("bUseELaneClear", "Auto E On Minions Killed").SetValue(true));
             laneClearMenu.AddItem(new MenuItem("sLaneClearMinionsKilled", "Required Minions Killed").SetValue(new Slider(3, 2, 10)));
-            laneClearMenu.AddItem(new MenuItem("bUseJungleClear", "Jungle Clear").SetValue(true));
+            laneClearMenu.AddItem(new MenuItem("bUseJungleClear", "Jungle Clear").SetValue(new KeyBind('G', KeyBindType.Toggle)));
             return laneClearMenu;
         }
 

@@ -127,7 +127,7 @@ namespace S_Class_Kalista
                     }
             }
 
-            if (!Properties.MainMenu.Item("bUseJungleClear").GetValue<bool>()) return;
+            if (!Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active) return;
 
 
             foreach (var monster in MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,

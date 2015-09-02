@@ -62,9 +62,10 @@ namespace S_Class_Kalista
             if (Properties.MainMenu.Item("bAutoEOnStacksAndMinions").GetValue<bool>())
                 if (AutoEOnStacksAndMinions()) return;
 
-            if(Properties.MainMenu.Item("bUseEOnLeave").GetValue<bool>())
-                if (AutoEOnLeave()) return;
-
+            
+           
+            // ReSharper disable once RedundantJumpStatement
+            if (Properties.MainMenu.Item("bUseEOnLeave").GetValue<bool>() && AutoEOnLeave()) return;
         }
 
         public static void CheckNonKillables(AttackableUnit minion)
@@ -79,15 +80,6 @@ namespace S_Class_Kalista
 
         public static bool CheckEnemies()
         {
-            // ReSharper disable once UnusedVariable
-            //if (!(from target in HeroManager.Enemies
-            //    where target.IsValid
-            //    where !DamageCalc.CheckNoDamageBuffs(target)
-            //    where Properties.Champion.E.IsInRange(target)
-            //    where !(DamageCalc.GetRendDamage(target) < target.Health)
-            //      where target.IsDead
-            //    select target).Any()) return false;
-
             if (!Properties.Time.CheckRendDelay()) return false;
 
             foreach (var target in HeroManager.Enemies)

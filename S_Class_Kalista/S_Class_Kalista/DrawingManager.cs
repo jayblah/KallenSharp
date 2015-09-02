@@ -22,6 +22,7 @@ using LeagueSharp;
 using LeagueSharp.Common;
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Color = System.Drawing.Color;
 
 namespace S_Class_Kalista
@@ -156,10 +157,22 @@ namespace S_Class_Kalista
             }
         }
 
+        private static Color GetColor(bool b)
+        {
+            return b ? Color.LightGreen : Color.LightCoral;
+        }
+
         public static void Drawing_OnDrawChamp(EventArgs args)
         {
             if (!Properties.MainMenu.Item("bDrawOnChamp").GetValue<bool>() || Properties.Drawing.DamageToUnit == null)
                 return;
+
+            var playerPos = Drawing.WorldToScreen(Properties.PlayerHero.Position);
+            var jungleBool = Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active ? "True" : "False";
+            var jungleClear = string.Format("Jungle Clear:{0}", jungleBool);
+            var vColor = GetColor(Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active);
+            Drawing.DrawText(playerPos.X - Drawing.GetTextExtent(jungleClear).Width + 50, playerPos.Y - Drawing.GetTextExtent(jungleClear).Height + 50, vColor, jungleClear);
+
             // For every enemis in E range
             foreach (var unit in HeroManager.Enemies.Where(unit => unit.IsValid && unit.IsHPBarRendered && Properties.Champion.E.IsInRange(unit)))
             {
