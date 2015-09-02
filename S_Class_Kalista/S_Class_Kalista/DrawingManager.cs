@@ -159,7 +159,7 @@ namespace S_Class_Kalista
 
         private static Color GetColor(bool b)
         {
-            return b ? Color.ForestGreen : Color.Red;
+            return b ? Color.White : Color.SlateGray;
         }
 
         public static void Drawing_OnDrawChamp(EventArgs args)
@@ -171,7 +171,7 @@ namespace S_Class_Kalista
             var jungleBool = Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active ? "True" : "False";
             var jungleClear = string.Format("Jungle Clear:{0}", jungleBool);
             var vColor = GetColor(Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active);
-            Drawing.DrawText(playerPos.X - Drawing.GetTextExtent(jungleClear).Width + 50, playerPos.Y - Drawing.GetTextExtent(jungleClear).Height + 50, vColor, jungleClear);
+            Drawing.DrawText(playerPos.X - Drawing.GetTextExtent(jungleClear).Width + 50, playerPos.Y - Drawing.GetTextExtent(jungleClear).Height + 30, vColor, jungleClear);
 
             // For every enemis in E range
             foreach (var unit in HeroManager.Enemies.Where(unit => unit.IsValid && unit.IsHPBarRendered && Properties.Champion.E.IsInRange(unit)))
