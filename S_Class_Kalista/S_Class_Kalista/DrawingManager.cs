@@ -159,7 +159,7 @@ namespace S_Class_Kalista
 
         private static Color GetColor(bool b)
         {
-            return b ? Color.LightGreen : Color.LightCoral;
+            return b ? Color.ForestGreen : Color.Red;
         }
 
         public static void Drawing_OnDrawChamp(EventArgs args)
