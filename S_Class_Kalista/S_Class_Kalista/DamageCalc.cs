@@ -70,8 +70,8 @@ namespace S_Class_Kalista
             }
 
             return (target.HasBuffOfType(BuffType.Invulnerability)
-                      || target.HasBuffOfType(BuffType.SpellImmunity)
-                      || target.HasBuffOfType(BuffType.SpellShield));
+                    || target.HasBuffOfType(BuffType.SpellImmunity));
+            // || target.HasBuffOfType(BuffType.SpellShield));
         }
 
         public static float GetRendDamage(Obj_AI_Base target)
@@ -99,7 +99,7 @@ namespace S_Class_Kalista
             if (Properties.PlayerHero.HasBuff("summonerexhaust"))
                 defuffer *= .4f;
 
-            return Properties.Champion.E.GetDamage(target) * defuffer;
+            return Properties.Champion.E.GetDamage(target)*defuffer;
         }
 
         #endregion Private Functions

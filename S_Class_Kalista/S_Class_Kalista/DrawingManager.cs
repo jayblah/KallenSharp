@@ -22,7 +22,6 @@ using LeagueSharp;
 using LeagueSharp.Common;
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Color = System.Drawing.Color;
 
 namespace S_Class_Kalista

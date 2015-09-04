@@ -107,28 +107,21 @@ namespace S_Class_Kalista
 
             if (!Properties.Time.CheckRendDelay()) return false;
 
-            if (!(from stacks in (from target in HeroManager.Enemies
-                                  where target.IsValid
-                                  where target.IsValidTarget(Properties.Champion.E.Range)
-                                  where !DamageCalc.CheckNoDamageBuffs(target)
-                                  select target.GetBuffCount("kalistaexpungemarker")
-                into stacks
-                                  where stacks >= Properties.MainMenu.Item("sUseEOnChampStacks").GetValue<Slider>().Value
-                                  select stacks)
-                  select 0
-                into count
-                  let minions =
-                      MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range)
-                  select
-                      count + minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid)
-                into count
-                  where Properties.MainMenu.Item("sUseEOnMinionKilled").GetValue<Slider>().Value <= count
-                  select count).Any())
-                return false;
-
-            Properties.Champion.UseRend();
-            Console.WriteLine("Using Stacks And Minions E:{0}", Environment.TickCount);
-            return true;
+            foreach (var target in HeroManager.Enemies)
+            {
+                if (!target.IsValid) continue;
+                if (!target.IsValidTarget(Properties.Champion.E.Range)) continue;
+                if (DamageCalc.CheckNoDamageBuffs(target)) continue;
+                var stacks = target.GetBuffCount("kalistaexpungemarker");
+                if (stacks < Properties.MainMenu.Item("sUseEOnChampStacks").GetValue<Slider>().Value) continue;
+                var minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range);
+                var count = minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid);
+                if (Properties.MainMenu.Item("sUseEOnMinionKilled").GetValue<Slider>().Value > count) continue;
+                Properties.Champion.UseRend();
+                Console.WriteLine("Using Stacks And Minions E:{0}", Environment.TickCount);
+                return true;
+            }
+            return false;
         }
 
         private static void AutoSentinels(bool dragon)
