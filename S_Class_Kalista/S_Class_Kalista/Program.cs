@@ -93,6 +93,7 @@ namespace S_Class_Kalista
 
         private static void Game_OnUpdate(EventArgs args)
         {
+            //
             //Auto Level in common is broken LOL
             //LeagueSharp.Common.AutoLevel.Enabled(Properties.MainMenu.Item("bAutoLevel").GetValue<bool>());
             try
