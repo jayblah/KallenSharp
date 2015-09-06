@@ -60,6 +60,7 @@
     <Compile Include="AutoLevel.cs" />
     <Compile Include="DamageCalc.cs" />
     <Compile Include="DrawingManager.cs" />
+    <Compile Include="Net.cs" />
     <Compile Include="SMenu.cs" />
     <Compile Include="Humanizer.cs" />
     <Compile Include="OrbWalkerManager.cs" />

@@ -78,6 +78,9 @@ namespace S_Class_Kalista
 
             //Loaded yay
             Console.WriteLine(@"S Class Kalista Load Completed");
+
+            Game.PrintChat("<b> <font color=\"#F88017\">S</font> Class <font color=\"#F88017\">Kalista</font></b> - <font color=\"#008080\">Loaded and ready!</font>");
+            Net.CheckVersion();
         }
 
         private static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
@@ -92,20 +95,27 @@ namespace S_Class_Kalista
         {
             //Auto Level in common is broken LOL
             //LeagueSharp.Common.AutoLevel.Enabled(Properties.MainMenu.Item("bAutoLevel").GetValue<bool>());
+            try
+            {
 
-            if (Properties.MainMenu.Item("bAutoLevel").GetValue<bool>())
-                AutoLevel.LevelUpSpells();
+                if (Properties.MainMenu.Item("bAutoLevel").GetValue<bool>())
+                    AutoLevel.LevelUpSpells();
 
-            if (Properties.MainMenu.Item("bAutoBuyOrb").GetValue<bool>() && Properties.PlayerHero.Level >= 6)
-                TrinketManager.BuyOrb();
+                if (Properties.MainMenu.Item("bAutoBuyOrb").GetValue<bool>() && Properties.PlayerHero.Level >= 6)
+                    TrinketManager.BuyOrb();
 
-            if (Properties.PlayerHero.IsDead)
-                return;
-            if (Properties.PlayerHero.IsRecalling())
-                return;
+                if (Properties.PlayerHero.IsDead)
+                    return;
+                if (Properties.PlayerHero.IsRecalling())
+                    return;
 
-            AutoEventManager.EventCheck();
-            OrbWalkerManager.DoTheWalk();
+                AutoEventManager.EventCheck();
+                OrbWalkerManager.DoTheWalk();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

@@ -105,8 +105,9 @@ namespace S_Class_Kalista
             {
                 if (!Properties.Time.CheckRendDelay()) // Wait for rend delay
                     continue;
-
+                #if DEBUG_MODE
                 Console.WriteLine("Using Mixed E:{0}", Properties.Time.TickCount);
+#endif
                 Properties.Champion.UseRend();
             }
         }
@@ -122,7 +123,9 @@ namespace S_Class_Kalista
                 if (Properties.MainMenu.Item("sLaneClearMinionsKilled").GetValue<Slider>().Value < count)
                     if (Properties.Time.CheckRendDelay())
                     {
+                        #if DEBUG_MODE
                         Console.WriteLine("Using Lane Clear E:{0}", Properties.Time.TickCount);
+#endif
                         Properties.Champion.UseRend();
                     }
             }
@@ -138,7 +141,9 @@ namespace S_Class_Kalista
             {
                 if (!(DamageCalc.GetRendDamage(monster) > monster.Health)) continue;
                 if (!Properties.Time.CheckRendDelay()) return;
+                #if DEBUG_MODE
                 Console.WriteLine("Using Jungle CLear E:{0}", Properties.Time.TickCount);
+                #endif
                 Properties.Champion.UseRend();
                 return;
             }
@@ -149,6 +154,6 @@ namespace S_Class_Kalista
             // Fuck that
         }
 
-        #endregion Private Functions
+#endregion Private Functions
     }
 }

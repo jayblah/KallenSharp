@@ -140,14 +140,18 @@ namespace S_Class_Kalista
             public static void UseRend()
             {
                 E.Cast();
+                #if DEBUG_MODE
                 Console.WriteLine("Last Rend Tick:{0} Current Tick{1}", Time.LastRendTick, Time.TickCount);
+#endif
                 Time.LastRendTick = Time.TickCount;
             }
 
             public static void UseNonKillableRend()
             {
                 E.Cast();
+                #if DEBUG_MODE
                 Console.WriteLine("Last Nonkillable Tick:{0} Current Tick{1}", Time.LastNonKillable, Time.TickCount);
+#endif
                 Time.LastNonKillable = Time.TickCount;
             }
             public static void LoadSpells()

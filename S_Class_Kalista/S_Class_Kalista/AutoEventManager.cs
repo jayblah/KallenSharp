@@ -31,6 +31,10 @@ namespace S_Class_Kalista
 
         public static void EventCheck()
         {
+            try
+            {
+
+            
             if (Properties.MainMenu.Item("bAutoSaveSoul").GetValue<bool>())
                 SoulBound.CheckSoulBoundHero();
 
@@ -66,16 +70,33 @@ namespace S_Class_Kalista
            
             // ReSharper disable once RedundantJumpStatement
             if (Properties.MainMenu.Item("bUseEOnLeave").GetValue<bool>() && AutoEOnLeave()) return;
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public static void CheckNonKillables(AttackableUnit minion)
         {
+            try
+            {
+
+            
             if (!Properties.Time.CheckNonKillable()) return;
             if (!Properties.MainMenu.Item("bUseENonKillables").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
             if (!(minion.Health <= DamageCalc.GetRendDamage((Obj_AI_Base)minion)) || minion.Health > 60) return;
 
+#if DEBUG_MODE
             Console.WriteLine("Killing NonKillables");
+#endif
             Properties.Champion.UseNonKillableRend();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public static bool CheckEnemies()
@@ -90,16 +111,18 @@ namespace S_Class_Kalista
                 if (!Properties.Champion.E.IsInRange(target)) continue;
                 if (DamageCalc.GetRendDamage(target) < target.Health) continue;
                 if (target.IsDead) continue;
+#if DEBUG_MODE
                 Console.WriteLine("Using Killing Enemy E:{0}", Properties.Time.TickCount);
+#endif
                 Properties.Champion.UseRend();
                 return true;
             }
             return false;
         }
 
-        #endregion Public Functions
+#endregion Public Functions
 
-        #region Private Functions
+#region Private Functions
 
         // ReSharper disable once UnusedMethodReturnValue.Local
         private static bool AutoEOnStacksAndMinions()
@@ -118,7 +141,9 @@ namespace S_Class_Kalista
                 var count = minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid);
                 if (Properties.MainMenu.Item("sUseEOnMinionKilled").GetValue<Slider>().Value > count) continue;
                 Properties.Champion.UseRend();
+                #if DEBUG_MODE
                 Console.WriteLine("Using Stacks And Minions E:{0}", Environment.TickCount);
+#endif
                 return true;
             }
             return false;
@@ -154,7 +179,9 @@ namespace S_Class_Kalista
                 return false;
 
             Properties.Champion.UseRend();
+            #if DEBUG_MODE
             Console.WriteLine("Using Baron and Dragon E:{0}", Properties.Time.TickCount);
+#endif
             return true;
         }
         private static bool AutoEOnLeave()
@@ -172,7 +199,9 @@ namespace S_Class_Kalista
                 if (!Properties.Time.CheckRendDelay()) continue;
                 var stacks = target.GetBuffCount("kalistaexpungemarker");
                 if(stacks <= Properties.MainMenu.Item("sStacksOnLeave").GetValue<Slider>().Value)continue;
+                #if DEBUG_MODE
                 Console.WriteLine("Using Rend On Long  E:{0}", Properties.Time.TickCount);
+#endif
                 Properties.Champion.UseRend();
                 return true;
             }
@@ -195,7 +224,9 @@ namespace S_Class_Kalista
 
                 if (!(DamageCalc.GetRendDamage(monster) > monster.Health)) continue;
                 if (!Properties.Time.CheckRendDelay()) return false;
+                #if DEBUG_MODE
                 Console.WriteLine("Using Buff E:{0}", Properties.Time.TickCount);
+#endif
                 Properties.Champion.UseRend();
                 return true;
             }
@@ -210,11 +241,13 @@ namespace S_Class_Kalista
             var minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range);
             count += minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid);
             if (Properties.MainMenu.Item("sAutoEMinionsKilled").GetValue<Slider>().Value > count) return false;
+            #if DEBUG_MODE
             Console.WriteLine("Using Minion E:{0}", Properties.Time.TickCount);
+#endif
             Properties.Champion.UseRend();
             return true;
         }
 
-        #endregion Private Functions
+#endregion Private Functions
     }
 }
