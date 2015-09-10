@@ -66,16 +66,44 @@ namespace S_Class_Kalista
             if (Properties.MainMenu.Item("bAutoEOnStacksAndMinions").GetValue<bool>())
                 if (AutoEOnStacksAndMinions()) return;
 
-            
-           
-            // ReSharper disable once RedundantJumpStatement
-            if (Properties.MainMenu.Item("bUseEOnLeave").GetValue<bool>() && AutoEOnLeave()) return;
+            if (Properties.MainMenu.Item("bEBeforeDeath").GetValue<bool>())
+            {
+                if (EBeforeDeath()) return;
+            }
+
+
+                // ReSharper disable once RedundantJumpStatement
+                if (Properties.MainMenu.Item("bUseEOnLeave").GetValue<bool>() && AutoEOnLeave()) return;
             }
 
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
+        }
+
+        public static bool EBeforeDeath()
+        {
+            if (!Properties.Time.CheckRendDelay()) return false;
+
+            var champs = 0;
+            foreach (var target in HeroManager.Enemies)
+            {
+                if (!target.IsValid) continue;
+                if (!target.IsValidTarget(Properties.Champion.E.Range)) continue;
+                if(!target.HasBuff("KalistaExpungeMarker"))continue;
+                if(ObjectManager.Player.HealthPercent > Properties.MainMenu.Item("sEBeforeDeathMaxHP").GetValue<Slider>().Value)continue;
+                if (target.GetBuffCount("kalistaexpungemarker") < Properties.MainMenu.Item("sEBeforeDeathMinStacks").GetValue<Slider>().Value) continue;
+                champs++;
+                if(champs < Properties.MainMenu.Item("sEBeforeDeathChamps").GetValue<Slider>().Value) continue;
+
+                Properties.Champion.UseRend();
+#if DEBUG_MODE
+                Console.WriteLine("Using E Before Death E:{0}", Environment.TickCount);
+#endif
+                return true;
+            }
+            return false;
         }
 
         public static void CheckNonKillables(AttackableUnit minion)

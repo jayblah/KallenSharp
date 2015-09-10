@@ -86,7 +86,7 @@ namespace S_Class_Kalista
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawOnChamp", "Draw On Enemies").SetValue(true));
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawTextOnChamp", "Display Floating Text (on enemies)").SetValue(true));
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawFillOnChamp", "Fill Combo Damage On Champs").SetValue(true));
-
+            drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawTextOnSelf", "Display Floating Text (self)").SetValue(true));
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawOnMonsters", "Draw Damage On Monsters").SetValue(true));
             drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bFillMonster", "Fill Damage On Monsters").SetValue(true));
 
@@ -102,6 +102,10 @@ namespace S_Class_Kalista
             autoEventsMenu.AddItem(new MenuItem("bUseEToKillBuffs", "Auto E Buffs").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKill", "Auto E Kill Enemies").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseENonKillables", "Auto E NonKillable Minions").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bEBeforeDeath", "Auto E Before Death").SetValue(false));
+            autoEventsMenu.AddItem(new MenuItem("sEBeforeDeathChamps", "Champions With Stacks").SetValue(new Slider(1, 1, 5)));
+            autoEventsMenu.AddItem(new MenuItem("sEBeforeDeathMinStacks", "Min Stacks On Champs").SetValue(new Slider(3, 1, 10)));
+            autoEventsMenu.AddItem(new MenuItem("sEBeforeDeathMaxHP", "Max HP% To Activate E Before Death").SetValue(new Slider(10, 1, 30)));
             autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKillMinions", "Auto E Kill Minions").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("sAutoEMinionsKilled", "Required Minions Killed From E").SetValue(new Slider(2, 2, 10)));
             autoEventsMenu.AddItem(new MenuItem("bAutoEOnStacksAndMinions", "Auto E When Stacks On Champ And Minions Killed").SetValue(true));

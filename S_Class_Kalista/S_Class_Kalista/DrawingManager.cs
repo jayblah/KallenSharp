@@ -166,12 +166,6 @@ namespace S_Class_Kalista
             if (!Properties.MainMenu.Item("bDrawOnChamp").GetValue<bool>() || Properties.Drawing.DamageToUnit == null)
                 return;
 
-            var playerPos = Drawing.WorldToScreen(Properties.PlayerHero.Position);
-            var jungleBool = Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active ? "True" : "False";
-            var jungleClear = string.Format("Jungle Clear:{0}", jungleBool);
-            var vColor = GetColor(Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active);
-            Drawing.DrawText(playerPos.X - Drawing.GetTextExtent(jungleClear).Width + 50, playerPos.Y - Drawing.GetTextExtent(jungleClear).Height + 30, vColor, jungleClear);
-
             // For every enemis in E range
             foreach (var unit in HeroManager.Enemies.Where(unit => unit.IsValid && unit.IsHPBarRendered && Properties.Champion.E.IsInRange(unit)))
             {
@@ -202,6 +196,17 @@ namespace S_Class_Kalista
                     Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.DarkGray);
                 }
             }
+
+
+            if (!Properties.MainMenu.Item("bDrawTextOnSelf").GetValue<bool>())
+                return;
+
+            var playerPos = Drawing.WorldToScreen(Properties.PlayerHero.Position);
+            var jungleBool = Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active ? "True" : "False";
+            var jungleClear = string.Format("Jungle Clear:{0}", jungleBool);
+            var vColor = GetColor(Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active);
+            Drawing.DrawText(playerPos.X - Drawing.GetTextExtent(jungleClear).Width + 50, playerPos.Y - Drawing.GetTextExtent(jungleClear).Height + 30, vColor, jungleClear);
+
         }
 
         #endregion Public Functions
