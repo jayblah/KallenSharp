@@ -40,119 +40,143 @@ namespace S_Class_Kalista
 
             if (!Properties.PlayerHero.Position.IsOnScreen())
                 return;
+            try
+            {
 
-            if (Properties.MainMenu.Item("bDrawRendRange").GetValue<bool>() && Properties.Champion.E.Level > 0)
-                Render.Circle.DrawCircle(Properties.PlayerHero.Position, Properties.Champion.E.Range,
-                    Color.DarkSlateBlue, 2);
+                if (Properties.MainMenu.Item("cDrawRendRange").GetValue<Circle>().Active &&
+                    Properties.Champion.E.Level > 0)
+                    Render.Circle.DrawCircle(Properties.PlayerHero.Position, Properties.Champion.E.Range,
+                        Properties.MainMenu.Item("cDrawRendRange").GetValue<Circle>().Color, 2);
+            }
+            catch
+            {
+                // DUmb color picker
+            }
         }
 
         public static void Drawing_OnDrawMonster(EventArgs args)
         {
-            if (!Properties.MainMenu.Item("bDrawOnMonsters").GetValue<bool>() ||
-                Properties.Drawing.DamageToMonster == null)
-                return;
-
-            //if (Properties.MainMenu.Item("bDrawOnCreep").GetValue<bool>())
-            //{
-            //    //For every minion in range of E with E stacks on it
-            //    foreach (
-            //        var creep in
-            //            MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range)
-            //                .Where(creep => (creep.GetBuff("kalistaexpungemarker").Count > 0)
-            //                ))
-            //    {
-            //    }
-            //}
-
-            foreach (var minion in ObjectManager.Get<Obj_AI_Minion>())
+            try
             {
-                if (minion.Team != GameObjectTeam.Neutral || !minion.IsValidTarget() || !minion.IsHPBarRendered)
-                    continue;
 
-                var rendDamage = DamageCalc.GetRendDamage(minion);
 
-                // Monster bar widths and offsets from ElSmite
-                var barWidth = 0;
-                var xOffset = 0;
-                var yOffset = 0;
-                var yOffset2 = 0;
-                var display = true;
-                switch (minion.CharData.BaseSkinName)
+                if (!Properties.MainMenu.Item("cDrawOnMonsters").GetValue<Circle>().Active ||
+                    Properties.Drawing.DamageToMonster == null)
+                    return;
+
+                //if (Properties.MainMenu.Item("bDrawOnCreep").GetValue<bool>())
+                //{
+                //    //For every minion in range of E with E stacks on it
+                //    foreach (
+                //        var creep in
+                //            MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range)
+                //                .Where(creep => (creep.GetBuff("kalistaexpungemarker").Count > 0)
+                //                ))
+                //    {
+                //    }
+                //}
+
+                foreach (var minion in ObjectManager.Get<Obj_AI_Minion>())
                 {
-                    case "SRU_Red":
-                    case "SRU_Blue":
-                    case "SRU_Dragon":
-                        barWidth = 145;
-                        xOffset = 3;
-                        yOffset = 18;
-                        yOffset2 = 10;
-                        break;
+                    if (minion.Team != GameObjectTeam.Neutral || !minion.IsValidTarget() || !minion.IsHPBarRendered)
+                        continue;
 
-                    case "SRU_Baron":
-                        barWidth = 194;
-                        xOffset = -22;
-                        yOffset = 13;
-                        yOffset2 = 16;
-                        break;
+                    var rendDamage = DamageCalc.GetRendDamage(minion);
 
-                    case "Sru_Crab":
-                        barWidth = 61;
-                        xOffset = 45;
-                        yOffset = 34;
-                        yOffset2 = 3;
-                        break;
-
-                    case "SRU_Krug":
-                        barWidth = 81;
-                        xOffset = 58;
-                        yOffset = 18;
-                        yOffset2 = 4;
-                        break;
-
-                    case "SRU_Gromp":
-                        barWidth = 87;
-                        xOffset = 62;
-                        yOffset = 18;
-                        yOffset2 = 4;
-                        break;
-                    case "SRU_Murkwolf":
-                        barWidth = 75;
-                        xOffset = 54;
-                        yOffset = 19;
-                        yOffset2 = 4;
-                        break;
-                    case "SRU_Razorbeak":
-                        barWidth = 75;
-                        xOffset = 54;
-                        yOffset = 18;
-                        yOffset2 = 4;
-                        break;
-                    default:
-                        display = false;
-                        break;
-                }
-                if(!display)continue;
-                var barPos = minion.HPBarPosition;
-                var percentHealthAfterDamage = Math.Max(0, minion.Health - rendDamage) / minion.MaxHealth;
-                var yPos = barPos.Y + yOffset;
-                var xPosDamage = barPos.X + xOffset + barWidth * percentHealthAfterDamage;
-                var xPosCurrentHp = barPos.X + xOffset + barWidth * minion.Health / minion.MaxHealth;
-
-                if (Properties.MainMenu.Item("bFillMonster").GetValue<bool>())
-                {
-                    var differenceInHp = xPosCurrentHp - xPosDamage;
-                    var pos1 = barPos.X + xOffset;
-
-                    for (var i = 0; i < differenceInHp; i++)
+                    // Monster bar widths and offsets from ElSmite
+                    var barWidth = 0;
+                    var xOffset = 0;
+                    var yOffset = 0;
+                    var yOffset2 = 0;
+                    var display = true;
+                    switch (minion.CharData.BaseSkinName)
                     {
-                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + yOffset2, 1, Color.DarkGray);
+                        case "SRU_Red":
+                        case "SRU_Blue":
+                        case "SRU_Dragon":
+                            barWidth = 145;
+                            xOffset = 3;
+                            yOffset = 18;
+                            yOffset2 = 10;
+                            break;
+
+                        case "SRU_Baron":
+                            barWidth = 194;
+                            xOffset = -22;
+                            yOffset = 13;
+                            yOffset2 = 16;
+                            break;
+
+                        case "Sru_Crab":
+                            barWidth = 61;
+                            xOffset = 45;
+                            yOffset = 34;
+                            yOffset2 = 3;
+                            break;
+
+                        case "SRU_Krug":
+                            barWidth = 81;
+                            xOffset = 58;
+                            yOffset = 18;
+                            yOffset2 = 4;
+                            break;
+
+                        case "SRU_Gromp":
+                            barWidth = 87;
+                            xOffset = 62;
+                            yOffset = 18;
+                            yOffset2 = 4;
+                            break;
+                        case "SRU_Murkwolf":
+                            barWidth = 75;
+                            xOffset = 54;
+                            yOffset = 19;
+                            yOffset2 = 4;
+                            break;
+                        case "SRU_Razorbeak":
+                            barWidth = 75;
+                            xOffset = 54;
+                            yOffset = 18;
+                            yOffset2 = 4;
+                            break;
+                        default:
+                            display = false;
+                            break;
                     }
+                    if (!display) continue;
+                    var barPos = minion.HPBarPosition;
+                    var percentHealthAfterDamage = Math.Max(0, minion.Health - rendDamage)/minion.MaxHealth;
+                    var yPos = barPos.Y + yOffset;
+                    var xPosDamage = barPos.X + xOffset + barWidth*percentHealthAfterDamage;
+                    var xPosCurrentHp = barPos.X + xOffset + barWidth*minion.Health/minion.MaxHealth;
+
+
+
+                    if (Properties.MainMenu.Item("cFillMonster").GetValue<Circle>().Active)
+                    {
+                        var differenceInHp = xPosCurrentHp - xPosDamage;
+                        var pos1 = barPos.X + xOffset;
+
+                        for (var i = 0; i < differenceInHp; i++)
+                        {
+                            Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + yOffset2, 1,
+                                Properties.MainMenu.Item("cFillMonster").GetValue<Circle>().Color);
+                        }
+                    }
+                    else
+                        Drawing.DrawLine(xPosDamage, yPos, xPosDamage, yPos + yOffset2, 1,
+                            Properties.MainMenu.Item("cDrawOnMonsters").GetValue<Circle>().Color);
+
+                    if (!(rendDamage > minion.Health)) continue;
+                    if (!Properties.MainMenu.Item("cKillableText").GetValue<Circle>().Active) return;
+
+                    Drawing.DrawText(minion.HPBarPosition.X + xOffset, minion.HPBarPosition.Y,
+                        Properties.MainMenu.Item("cKillableText").GetValue<Circle>().Color, "Killable");
                 }
-                else Drawing.DrawLine(xPosDamage, yPos, xPosDamage, yPos + yOffset2, 1, Color.LightGray);
-
-                if (!(rendDamage > minion.Health)) continue;
-
-                Drawing.DrawText(minion.HPBarPosition.X + xOffset, minion.HPBarPosition.Y, Color.Red, "Killable");
+            }
+            catch
+            {
+                //Dumb color picker
             }
         }
 
@@ -163,50 +187,67 @@ namespace S_Class_Kalista
 
         public static void Drawing_OnDrawChamp(EventArgs args)
         {
-            if (!Properties.MainMenu.Item("bDrawOnChamp").GetValue<bool>() || Properties.Drawing.DamageToUnit == null)
-                return;
-
-            // For every enemis in E range
-            foreach (var unit in HeroManager.Enemies.Where(unit => unit.IsValid && unit.IsHPBarRendered && Properties.Champion.E.IsInRange(unit)))
+            try
             {
-                const int xOffset = 10;
-                const int yOffset = 20;
-                const int width = 103;
-                const int height = 8;
 
-                var barPos = unit.HPBarPosition;
-                var damage = DamageCalc.GetRendDamage(unit);
-                var percentHealthAfterDamage = Math.Max(0, unit.Health - damage) / unit.MaxHealth;
-                var yPos = barPos.Y + yOffset;
-                var xPosDamage = barPos.X + xOffset + width * percentHealthAfterDamage;
-                var xPosCurrentHp = barPos.X + xOffset + width * unit.Health / unit.MaxHealth;
 
-                if (Properties.MainMenu.Item("bDrawTextOnChamp").GetValue<bool>() && damage > unit.Health)
-                    Drawing.DrawText(barPos.X + xOffset, barPos.Y + yOffset - 13, Color.Red, "Killable");
+                if (!Properties.MainMenu.Item("bDrawOnChamp").GetValue<bool>() ||
+                    Properties.Drawing.DamageToUnit == null)
+                    return;
 
-                Drawing.DrawLine(xPosDamage, yPos, xPosDamage, yPos + height, 1, Color.LightGray);
-
-                if (!Properties.MainMenu.Item("bDrawFillOnChamp").GetValue<bool>()) return;
-
-                var differenceInHp = xPosCurrentHp - xPosDamage;
-                var pos1 = barPos.X + 9 + (107 * percentHealthAfterDamage);
-
-                for (var i = 0; i < differenceInHp; i++)
+                // For every enemis in E range
+                foreach (
+                    var unit in
+                        HeroManager.Enemies.Where(
+                            unit => unit.IsValid && unit.IsHPBarRendered && Properties.Champion.E.IsInRange(unit)))
                 {
-                    Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.DarkGray);
+                    const int xOffset = 10;
+                    const int yOffset = 20;
+                    const int width = 103;
+                    const int height = 8;
+
+                    var barPos = unit.HPBarPosition;
+                    var damage = DamageCalc.GetRendDamage(unit);
+                    var percentHealthAfterDamage = Math.Max(0, unit.Health - damage)/unit.MaxHealth;
+                    var yPos = barPos.Y + yOffset;
+                    var xPosDamage = barPos.X + xOffset + width*percentHealthAfterDamage;
+                    var xPosCurrentHp = barPos.X + xOffset + width*unit.Health/unit.MaxHealth;
+
+                    if (Properties.MainMenu.Item("cDrawTextOnChamp").GetValue<Circle>().Active && damage > unit.Health)
+                        Drawing.DrawText(barPos.X + xOffset, barPos.Y + yOffset - 13,
+                            Properties.MainMenu.Item("cDrawTextOnChamp").GetValue<Circle>().Color, "Killable");
+
+                    Drawing.DrawLine(xPosDamage, yPos, xPosDamage, yPos + height, 1, Color.LightGray);
+
+                    if (!Properties.MainMenu.Item("cDrawFillOnChamp").GetValue<Circle>().Active) return;
+
+                    var differenceInHp = xPosCurrentHp - xPosDamage;
+                    var pos1 = barPos.X + 9 + (107*percentHealthAfterDamage);
+
+                    for (var i = 0; i < differenceInHp; i++)
+                    {
+                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1,
+                            Properties.MainMenu.Item("cDrawFillOnChamp").GetValue<Circle>().Color);
+                    }
                 }
+
+
+                if (!Properties.MainMenu.Item("bDrawTextOnSelf").GetValue<bool>())
+                    return;
+
+                var playerPos = Drawing.WorldToScreen(Properties.PlayerHero.Position);
+                var jungleBool = Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active
+                    ? "True"
+                    : "False";
+                var jungleClear = string.Format("Jungle Clear:{0}", jungleBool);
+                var vColor = GetColor(Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active);
+                Drawing.DrawText(playerPos.X - Drawing.GetTextExtent(jungleClear).Width + 50,
+                    playerPos.Y - Drawing.GetTextExtent(jungleClear).Height + 30, vColor, jungleClear);
             }
-
-
-            if (!Properties.MainMenu.Item("bDrawTextOnSelf").GetValue<bool>())
-                return;
-
-            var playerPos = Drawing.WorldToScreen(Properties.PlayerHero.Position);
-            var jungleBool = Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active ? "True" : "False";
-            var jungleClear = string.Format("Jungle Clear:{0}", jungleBool);
-            var vColor = GetColor(Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active);
-            Drawing.DrawText(playerPos.X - Drawing.GetTextExtent(jungleClear).Width + 50, playerPos.Y - Drawing.GetTextExtent(jungleClear).Height + 30, vColor, jungleClear);
-
+            catch
+            {
+                //Dumb Color Picker
+            }
         }
 
         #endregion Public Functions

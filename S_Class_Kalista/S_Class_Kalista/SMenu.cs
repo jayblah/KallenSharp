@@ -19,7 +19,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 using LeagueSharp.Common;
-//.GetValue<KeyBind>().Active
+using Color = System.Drawing.Color;
 namespace S_Class_Kalista
 {
     internal class SMenu
@@ -80,15 +80,20 @@ namespace S_Class_Kalista
         private static Menu DrawingMenu()
         {
             var drawMenu = new Menu("Drawing Settings", "Drawings");
-            drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDraw", "Display Drawing").SetValue(true));
-            drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawRendRange", "Draw Rend Range").SetValue(true));
 
-            drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawOnChamp", "Draw On Enemies").SetValue(true));
-            drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawTextOnChamp", "Display Floating Text (on enemies)").SetValue(true));
-            drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawFillOnChamp", "Fill Combo Damage On Champs").SetValue(true));
-            drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawTextOnSelf", "Display Floating Text (self)").SetValue(true));
-            drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bDrawOnMonsters", "Draw Damage On Monsters").SetValue(true));
-            drawMenu.SubMenu("Drawings").AddItem(new MenuItem("bFillMonster", "Fill Damage On Monsters").SetValue(true));
+            drawMenu.AddItem(new MenuItem("bDraw", "Display Drawing").SetValue(true));
+            drawMenu.AddItem(new MenuItem("cDrawRendRange", "Draw Rend Range").SetValue(new Circle(true, Color.LightSkyBlue)));
+
+            drawMenu.AddItem(new MenuItem("bDrawOnChamp", "Draw On Enemies").SetValue(true));
+            drawMenu.AddItem(new MenuItem("cDrawTextOnChamp", "Display Killable Text On Enemies").SetValue(new Circle(true, Color.Red)));
+
+            drawMenu.AddItem(new MenuItem("cDrawFillOnChamp", "Draw Combo Damage On Champs").SetValue(new Circle(true, Color.DarkGray)));
+
+            drawMenu.AddItem(new MenuItem("bDrawTextOnSelf", "Display Floating Text (self)").SetValue(true));
+
+            drawMenu.AddItem(new MenuItem("cDrawOnMonsters", "Draw Damage On Monsters").SetValue(new Circle(true, Color.LightSlateGray)));
+            drawMenu.AddItem(new MenuItem("cFillMonster", "Damage Fill On Monsters").SetValue(new Circle(true, Color.DarkGray)));
+            drawMenu.AddItem(new MenuItem("cKillableText", "Display Killable Text On Monsters").SetValue(new Circle(true, Color.Red)));
 
             return drawMenu;
         }
