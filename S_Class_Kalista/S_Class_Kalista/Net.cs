@@ -28,7 +28,7 @@ namespace S_Class_Kalista
                         match.Groups[3],
                         match.Groups[4]));
 
-                if (gitVersion == Assembly.GetExecutingAssembly().GetName().Version) return;
+                if (gitVersion <= Assembly.GetExecutingAssembly().GetName().Version) return;
                 Game.PrintChat("<b> <font color=\"#F88017\">S</font> Class <font color=\"#F88017\">Kalista</font></b> - <font color=\"#008080\">Version:</font>{0} Available!",gitVersion);
             }
             catch (Exception ex)
