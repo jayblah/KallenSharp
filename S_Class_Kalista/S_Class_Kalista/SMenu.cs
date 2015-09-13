@@ -72,7 +72,11 @@ namespace S_Class_Kalista
         {
             var laneClearMenu = new Menu("Lane Clear Options", "laneClearOptions");
             laneClearMenu.AddItem(new MenuItem("bUseELaneClear", "Auto E On Minions Killed").SetValue(true));
-            laneClearMenu.AddItem(new MenuItem("sLaneClearMinionsKilled", "Required Minions Killed").SetValue(new Slider(3, 2, 10)));
+            laneClearMenu.AddItem(new MenuItem("sLaneClearMinionsKilled", "Required Minions Killed By E").SetValue(new Slider(3, 2, 10)));
+
+            laneClearMenu.AddItem(new MenuItem("bUseQLaneClear", "Kill Minions With Q").SetValue(false));
+            laneClearMenu.AddItem(new MenuItem("sLaneClearMinionsKilledQ", "Required Minions Killed By Q").SetValue(new Slider(3, 2, 10)));
+
             laneClearMenu.AddItem(new MenuItem("bUseJungleClear", "Jungle Clear").SetValue(new KeyBind('G', KeyBindType.Toggle)));
             return laneClearMenu;
         }

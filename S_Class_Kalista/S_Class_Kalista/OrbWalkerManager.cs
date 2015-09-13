@@ -19,8 +19,11 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 using LeagueSharp.Common;
-using System;
+using System.Collections.Generic;
 using System.Linq;
+using LeagueSharp;
+using SharpDX;
+using Collision = LeagueSharp.Common.Collision;
 
 namespace S_Class_Kalista
 {
@@ -77,7 +80,7 @@ namespace S_Class_Kalista
                 var target = TargetSelector.GetTarget(Properties.Champion.Q.Range, TargetSelector.DamageType.Physical);
                 var predictionPosition = Properties.Champion.Q.GetPrediction(target);
                 if (predictionPosition.Hitchance >= GetHitChance())
-                    if (Properties.PlayerHero.IsWindingUp || Properties.PlayerHero.IsDashing())
+                    if (!Properties.PlayerHero.IsWindingUp && !Properties.PlayerHero.IsDashing())
                         Properties.Champion.Q.Cast(predictionPosition.CastPosition);
             }
             if (!Properties.MainMenu.Item("bUseECombo").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
@@ -112,22 +115,77 @@ namespace S_Class_Kalista
             }
         }
 
+        private static IEnumerable<Obj_AI_Base> GetCollisionMinions(Obj_AI_Base source, Vector3 targetPosition, Spell champSpell)
+        {
+            var hitAbleObjects = new PredictionInput()
+            {
+                From = champSpell.From,
+                Collision = champSpell.Collision,
+                Delay = champSpell.Delay,
+                Radius = champSpell.Width,
+                Range = champSpell.Range,
+                RangeCheckFrom = champSpell.RangeCheckFrom,
+                Speed = champSpell.Speed,
+                Type = champSpell.Type,
+                CollisionObjects =
+                                new[]
+                                {
+                                    CollisionableObjects.Heroes, CollisionableObjects.Minions,
+                                    CollisionableObjects.YasuoWall
+                                }
+            };
+
+            hitAbleObjects.CollisionObjects[0] = CollisionableObjects.Minions;
+
+            return
+                Collision.GetCollision(new List<Vector3> { targetPosition }, hitAbleObjects)
+                    .OrderBy(obj => obj.Distance(source))
+                    .ToList();
+        }
+
+
         private static void LaneClear()
         {
+            if (Properties.MainMenu.Item("bUseQLaneClear").GetValue<bool>())
+            {
+                if (!Properties.PlayerHero.IsWindingUp && !Properties.PlayerHero.IsDashing())
+                {
+                    var minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
+                        Properties.Champion.Q.Range);
+
+                    var count =  minions.Count(minion => minion.Health <= Properties.Champion.Q.GetDamage(minion) && minion.IsValid);
+
+                    if (Properties.MainMenu.Item("sLaneClearMinionsKilledQ").GetValue<Slider>().Value <= count)
+                    {
+                        foreach (var minion in minions)
+                        {
+                            if (!minion.IsValid) continue;
+                            if (minion.Health > Properties.Champion.Q.GetDamage(minion)) continue;
+                            var killcount = GetCollisionMinions(ObjectManager.Player, ObjectManager.Player.ServerPosition.Extend(minion.ServerPosition, Properties.Champion.Q.Range), Properties.Champion.Q).Count(collisionMinion => collisionMinion.Health < Properties.Champion.Q.GetDamage(collisionMinion));
+                            if (killcount < Properties.MainMenu.Item("sLaneClearMinionsKilledQ").GetValue<Slider>().Value) continue;
+
+                            Properties.Champion.Q.Cast(minion.ServerPosition);
+                            break;
+                        }
+                    }
+                }
+
+            }
 
             if (Properties.MainMenu.Item("bUseELaneClear").GetValue<bool>())
             {
                 var count = 0;
                 var minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range);
                 count += minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid);
-                if (Properties.MainMenu.Item("sLaneClearMinionsKilled").GetValue<Slider>().Value < count)
-                    if (Properties.Time.CheckRendDelay())
-                    {
-                        #if DEBUG_MODE
+                if (Properties.MainMenu.Item("sLaneClearMinionsKilled").GetValue<Slider>().Value > count) return;
+                if (!Properties.Time.CheckRendDelay()) return;
+#if DEBUG_MODE
                         Console.WriteLine("Using Lane Clear E:{0}", Properties.Time.TickCount);
 #endif
-                        Properties.Champion.UseRend();
-                    }
+                Properties.Champion.UseRend();
+                    
+
+
             }
 
             if (!Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active) return;

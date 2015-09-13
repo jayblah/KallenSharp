@@ -92,7 +92,8 @@ namespace S_Class_Kalista
                 if (!target.IsValid) continue;
                 if (!target.IsValidTarget(Properties.Champion.E.Range)) continue;
                 if(!target.HasBuff("KalistaExpungeMarker"))continue;
-                if(ObjectManager.Player.HealthPercent > Properties.MainMenu.Item("sEBeforeDeathMaxHP").GetValue<Slider>().Value)continue;
+                if (!Properties.Time.CheckRendDelay()) continue;
+                if (ObjectManager.Player.HealthPercent > Properties.MainMenu.Item("sEBeforeDeathMaxHP").GetValue<Slider>().Value)continue;
                 if (target.GetBuffCount("kalistaexpungemarker") < Properties.MainMenu.Item("sEBeforeDeathMinStacks").GetValue<Slider>().Value) continue;
                 champs++;
                 if(champs < Properties.MainMenu.Item("sEBeforeDeathChamps").GetValue<Slider>().Value) continue;
@@ -136,6 +137,7 @@ namespace S_Class_Kalista
                 if (!target.IsValid) continue;
                 if (!target.IsValidTarget(Properties.Champion.E.Range)) continue;
                 if (DamageCalc.CheckNoDamageBuffs(target)) continue;
+                if (!Properties.Time.CheckRendDelay()) continue;
                 if (!Properties.Champion.E.IsInRange(target)) continue;
                 if (DamageCalc.GetRendDamage(target) < target.Health) continue;
                 if (target.IsDead) continue;
@@ -163,6 +165,7 @@ namespace S_Class_Kalista
                 if (!target.IsValid) continue;
                 if (!target.IsValidTarget(Properties.Champion.E.Range)) continue;
                 if (DamageCalc.CheckNoDamageBuffs(target)) continue;
+                if (!Properties.Time.CheckRendDelay()) continue;
                 var stacks = target.GetBuffCount("kalistaexpungemarker");
                 if (stacks < Properties.MainMenu.Item("sUseEOnChampStacks").GetValue<Slider>().Value) continue;
                 var minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range);
@@ -220,11 +223,11 @@ namespace S_Class_Kalista
             {
                 if (!target.IsValid) continue;
                 if (!target.IsValidTarget(Properties.Champion.E.Range)) continue;
+                if (!Properties.Time.CheckRendDelay()) continue;
                 if (DamageCalc.CheckNoDamageBuffs(target)) continue;
                 if (!Properties.Champion.E.IsInRange(target)) continue;
                 if (target.IsDead) continue;
                 if (target.Distance(Properties.PlayerHero) < Properties.Champion.E.Range - 100)continue;
-                if (!Properties.Time.CheckRendDelay()) continue;
                 var stacks = target.GetBuffCount("kalistaexpungemarker");
                 if(stacks <= Properties.MainMenu.Item("sStacksOnLeave").GetValue<Slider>().Value)continue;
                 #if DEBUG_MODE
@@ -251,7 +254,6 @@ namespace S_Class_Kalista
                     continue;
 
                 if (!(DamageCalc.GetRendDamage(monster) > monster.Health)) continue;
-                if (!Properties.Time.CheckRendDelay()) return false;
                 #if DEBUG_MODE
                 Console.WriteLine("Using Buff E:{0}", Properties.Time.TickCount);
 #endif

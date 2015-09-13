@@ -64,18 +64,6 @@ namespace S_Class_Kalista
                     Properties.Drawing.DamageToMonster == null)
                     return;
 
-                //if (Properties.MainMenu.Item("bDrawOnCreep").GetValue<bool>())
-                //{
-                //    //For every minion in range of E with E stacks on it
-                //    foreach (
-                //        var creep in
-                //            MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range)
-                //                .Where(creep => (creep.GetBuff("kalistaexpungemarker").Count > 0)
-                //                ))
-                //    {
-                //    }
-                //}
-
                 foreach (var minion in ObjectManager.Get<Obj_AI_Minion>())
                 {
                     if (minion.Team != GameObjectTeam.Neutral || !minion.IsValidTarget() || !minion.IsHPBarRendered)
