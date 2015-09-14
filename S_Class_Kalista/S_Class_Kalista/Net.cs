@@ -1,35 +1,34 @@
-﻿using System;
+﻿using LeagueSharp;
+using System;
 using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using LeagueSharp;
 
 namespace S_Class_Kalista
 {
-    class Net
+    internal class Net
     {
         public static void CheckVersion()
         {
             try
             {
+                var match =
+                                   new Regex(
+                                       @"\[assembly\: AssemblyVersion\(""(\d{1,})\.(\d{1,})\.(\d{1,})\.(\d{1,})""\)\]")
+                                       .Match(DownloadServerVersion());
 
-            var match =
-                               new Regex(
-                                   @"\[assembly\: AssemblyVersion\(""(\d{1,})\.(\d{1,})\.(\d{1,})\.(\d{1,})""\)\]")
-                                   .Match(DownloadServerVersion());
-
-            if (!match.Success) return;
-            var gitVersion =
-                new Version(
-                    string.Format(
-                        "{0}.{1}.{2}.{3}",
-                        match.Groups[1],
-                        match.Groups[2],
-                        match.Groups[3],
-                        match.Groups[4]));
+                if (!match.Success) return;
+                var gitVersion =
+                    new Version(
+                        string.Format(
+                            "{0}.{1}.{2}.{3}",
+                            match.Groups[1],
+                            match.Groups[2],
+                            match.Groups[3],
+                            match.Groups[4]));
 
                 if (gitVersion <= Assembly.GetExecutingAssembly().GetName().Version) return;
-                Game.PrintChat("<b> <font color=\"#F88017\">S</font> Class <font color=\"#F88017\">Kalista</font></b> - <font color=\"#008080\">Version:</font>{0} Available!",gitVersion);
+                Game.PrintChat("<b> <font color=\"#F88017\">S</font> Class <font color=\"#F88017\">Kalista</font></b> - <font color=\"#008080\">Version:</font>{0} Available!", gitVersion);
             }
             catch (Exception ex)
             {
@@ -37,10 +36,10 @@ namespace S_Class_Kalista
                 Game.PrintChat("<b> <font color=\"#008080\">S Class Kalista Unable to check for updates</font></b>");
             }
         }
+
         private static string DownloadServerVersion()
         {
             using (var wC = new WebClient()) return wC.DownloadString("https://raw.githubusercontent.com/TheReal0x0539/0x0539Sharp/master/S_Class_Kalista/S_Class_Kalista/Properties/AssemblyInfo.cs");
         }
     }
-
 }

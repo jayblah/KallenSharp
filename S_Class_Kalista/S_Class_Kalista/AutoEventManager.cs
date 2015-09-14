@@ -1,16 +1,16 @@
 ﻿// <copyright file="AutoEventManager.cs" company="Kallen">
 //   Copyright (C) 2015 LeagueSharp Kallen
-//   
+//
 //             This program is free software: you can redistribute it and/or modify
 //             it under the terms of the GNU General Public License as published by
 //             the Free Software Foundation, either version 3 of the License, or
 //             (at your option) any later version.
-//   
+//
 //             This program is distributed in the hope that it will be useful,
 //             but WITHOUT ANY WARRANTY; without even the implied warranty of
 //             MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //             GNU General Public License for more details.
-//   
+//
 //             You should have received a copy of the GNU General Public License
 //             along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // </copyright>
@@ -33,49 +33,45 @@ namespace S_Class_Kalista
         {
             try
             {
+                if (Properties.MainMenu.Item("bAutoSaveSoul").GetValue<bool>())
+                    SoulBound.CheckSoulBoundHero();
 
-            
-            if (Properties.MainMenu.Item("bAutoSaveSoul").GetValue<bool>())
-                SoulBound.CheckSoulBoundHero();
+                //Sentinel
+                if (Properties.MainMenu.Item("bSentinel").GetValue<KeyBind>().Active)
+                {
+                    if (Properties.MainMenu.Item("bSentinelDragon").GetValue<bool>())
+                        AutoSentinels(true);
+                    if (Properties.MainMenu.Item("bSentinelBaron").GetValue<bool>())
+                        AutoSentinels(false);
+                }
 
-            //Sentinel
-            if (Properties.MainMenu.Item("bSentinel").GetValue<KeyBind>().Active)
-            {
-                if (Properties.MainMenu.Item("bSentinelDragon").GetValue<bool>())
-                    AutoSentinels(true);
-                if (Properties.MainMenu.Item("bSentinelBaron").GetValue<bool>())
-                    AutoSentinels(false);
-            }
+                if (!Properties.Time.CheckRendDelay()) return;
 
-            if (!Properties.Time.CheckRendDelay()) return;
+                if (!Properties.Champion.E.IsReady()) return;
 
-            if (!Properties.Champion.E.IsReady()) return;
+                if (Properties.MainMenu.Item("bUseEToKillEpics").GetValue<bool>())
+                    if (CheckEpicMonsters()) return;
 
-            if (Properties.MainMenu.Item("bUseEToKillEpics").GetValue<bool>())
-                if (CheckEpicMonsters()) return;
+                if (Properties.MainMenu.Item("bUseEToKillBuffs").GetValue<bool>())
+                    if (CheckBuffMonsters()) return;
 
-            if (Properties.MainMenu.Item("bUseEToKillBuffs").GetValue<bool>())
-                if (CheckBuffMonsters()) return;
+                if (Properties.MainMenu.Item("bUseEToAutoKill").GetValue<bool>())
+                    if (CheckEnemies()) return;
 
-            if (Properties.MainMenu.Item("bUseEToAutoKill").GetValue<bool>())
-                if (CheckEnemies()) return;
+                if (Properties.MainMenu.Item("bUseEToAutoKillMinions").GetValue<bool>())
+                    if (CheckMinions()) return;
 
-            if (Properties.MainMenu.Item("bUseEToAutoKillMinions").GetValue<bool>())
-                if (CheckMinions()) return;
+                if (Properties.MainMenu.Item("bAutoEOnStacksAndMinions").GetValue<bool>())
+                    if (AutoEOnStacksAndMinions()) return;
 
-            if (Properties.MainMenu.Item("bAutoEOnStacksAndMinions").GetValue<bool>())
-                if (AutoEOnStacksAndMinions()) return;
-
-            if (Properties.MainMenu.Item("bEBeforeDeath").GetValue<bool>())
-            {
-                if (EBeforeDeath()) return;
-            }
-
+                if (Properties.MainMenu.Item("bEBeforeDeath").GetValue<bool>())
+                {
+                    if (EBeforeDeath()) return;
+                }
 
                 // ReSharper disable once RedundantJumpStatement
                 if (Properties.MainMenu.Item("bUseEOnLeave").GetValue<bool>() && AutoEOnLeave()) return;
             }
-
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
@@ -91,12 +87,12 @@ namespace S_Class_Kalista
             {
                 if (!target.IsValid) continue;
                 if (!target.IsValidTarget(Properties.Champion.E.Range)) continue;
-                if(!target.HasBuff("KalistaExpungeMarker"))continue;
+                if (!target.HasBuff("KalistaExpungeMarker")) continue;
                 if (!Properties.Time.CheckRendDelay()) continue;
-                if (ObjectManager.Player.HealthPercent > Properties.MainMenu.Item("sEBeforeDeathMaxHP").GetValue<Slider>().Value)continue;
+                if (ObjectManager.Player.HealthPercent > Properties.MainMenu.Item("sEBeforeDeathMaxHP").GetValue<Slider>().Value) continue;
                 if (target.GetBuffCount("kalistaexpungemarker") < Properties.MainMenu.Item("sEBeforeDeathMinStacks").GetValue<Slider>().Value) continue;
                 champs++;
-                if(champs < Properties.MainMenu.Item("sEBeforeDeathChamps").GetValue<Slider>().Value) continue;
+                if (champs < Properties.MainMenu.Item("sEBeforeDeathChamps").GetValue<Slider>().Value) continue;
 
                 Properties.Champion.UseRend();
 #if DEBUG_MODE
@@ -111,16 +107,14 @@ namespace S_Class_Kalista
         {
             try
             {
-
-            
-            if (!Properties.Time.CheckNonKillable()) return;
-            if (!Properties.MainMenu.Item("bUseENonKillables").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
-            if (!(minion.Health <= DamageCalc.GetRendDamage((Obj_AI_Base)minion)) || minion.Health > 60) return;
+                if (!Properties.Time.CheckNonKillable()) return;
+                if (!Properties.MainMenu.Item("bUseENonKillables").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
+                if (!(minion.Health <= DamageCalc.GetRendDamage((Obj_AI_Base)minion)) || minion.Health > 60) return;
 
 #if DEBUG_MODE
             Console.WriteLine("Killing NonKillables");
 #endif
-            Properties.Champion.UseNonKillableRend();
+                Properties.Champion.UseNonKillableRend();
             }
             catch (Exception ex)
             {
@@ -150,14 +144,13 @@ namespace S_Class_Kalista
             return false;
         }
 
-#endregion Public Functions
+        #endregion Public Functions
 
-#region Private Functions
+        #region Private Functions
 
         // ReSharper disable once UnusedMethodReturnValue.Local
         private static bool AutoEOnStacksAndMinions()
         {
-
             if (!Properties.Time.CheckRendDelay()) return false;
 
             foreach (var target in HeroManager.Enemies)
@@ -172,7 +165,7 @@ namespace S_Class_Kalista
                 var count = minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid);
                 if (Properties.MainMenu.Item("sUseEOnMinionKilled").GetValue<Slider>().Value > count) continue;
                 Properties.Champion.UseRend();
-                #if DEBUG_MODE
+#if DEBUG_MODE
                 Console.WriteLine("Using Stacks And Minions E:{0}", Environment.TickCount);
 #endif
                 return true;
@@ -210,11 +203,12 @@ namespace S_Class_Kalista
                 return false;
 
             Properties.Champion.UseRend();
-            #if DEBUG_MODE
+#if DEBUG_MODE
             Console.WriteLine("Using Baron and Dragon E:{0}", Properties.Time.TickCount);
 #endif
             return true;
         }
+
         private static bool AutoEOnLeave()
         {
             if (!Properties.Time.CheckRendDelay()) return false;
@@ -227,10 +221,10 @@ namespace S_Class_Kalista
                 if (DamageCalc.CheckNoDamageBuffs(target)) continue;
                 if (!Properties.Champion.E.IsInRange(target)) continue;
                 if (target.IsDead) continue;
-                if (target.Distance(Properties.PlayerHero) < Properties.Champion.E.Range - 100)continue;
+                if (target.Distance(Properties.PlayerHero) < Properties.Champion.E.Range - 100) continue;
                 var stacks = target.GetBuffCount("kalistaexpungemarker");
-                if(stacks <= Properties.MainMenu.Item("sStacksOnLeave").GetValue<Slider>().Value)continue;
-                #if DEBUG_MODE
+                if (stacks <= Properties.MainMenu.Item("sStacksOnLeave").GetValue<Slider>().Value) continue;
+#if DEBUG_MODE
                 Console.WriteLine("Using Rend On Long  E:{0}", Properties.Time.TickCount);
 #endif
                 Properties.Champion.UseRend();
@@ -238,6 +232,7 @@ namespace S_Class_Kalista
             }
             return false;
         }
+
         private static bool CheckBuffMonsters()
         {
             // ReSharper disable once UnusedVariable
@@ -254,7 +249,7 @@ namespace S_Class_Kalista
                     continue;
 
                 if (!(DamageCalc.GetRendDamage(monster) > monster.Health)) continue;
-                #if DEBUG_MODE
+#if DEBUG_MODE
                 Console.WriteLine("Using Buff E:{0}", Properties.Time.TickCount);
 #endif
                 Properties.Champion.UseRend();
@@ -271,13 +266,13 @@ namespace S_Class_Kalista
             var minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range);
             count += minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid);
             if (Properties.MainMenu.Item("sAutoEMinionsKilled").GetValue<Slider>().Value > count) return false;
-            #if DEBUG_MODE
+#if DEBUG_MODE
             Console.WriteLine("Using Minion E:{0}", Properties.Time.TickCount);
 #endif
             Properties.Champion.UseRend();
             return true;
         }
 
-#endregion Private Functions
+        #endregion Private Functions
     }
 }

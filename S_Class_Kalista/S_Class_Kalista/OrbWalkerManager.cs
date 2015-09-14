@@ -1,16 +1,16 @@
 ﻿// <copyright file="OrbWalkerManager.cs" company="Kallen">
 //   Copyright (C) 2015 LeagueSharp Kallen
-//   
+//
 //             This program is free software: you can redistribute it and/or modify
 //             it under the terms of the GNU General Public License as published by
 //             the Free Software Foundation, either version 3 of the License, or
 //             (at your option) any later version.
-//   
+//
 //             This program is distributed in the hope that it will be useful,
 //             but WITHOUT ANY WARRANTY; without even the implied warranty of
 //             MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //             GNU General Public License for more details.
-//   
+//
 //             You should have received a copy of the GNU General Public License
 //             along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // </copyright>
@@ -18,11 +18,11 @@
 //   Assembly to be use with LeagueSharp for champion Kalista
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
+using LeagueSharp;
 using LeagueSharp.Common;
+using SharpDX;
 using System.Collections.Generic;
 using System.Linq;
-using LeagueSharp;
-using SharpDX;
 using Collision = LeagueSharp.Common.Collision;
 
 namespace S_Class_Kalista
@@ -90,6 +90,7 @@ namespace S_Class_Kalista
 
             AutoEventManager.CheckEnemies();
         }
+
         //Cool Q in mid Auto
         //if (Properties.PlayerHero.IsWindingUp || Properties.PlayerHero.IsDashing())
         //Properties.Champion.Q.Cast(predictionPosition.CastPosition);
@@ -111,7 +112,7 @@ namespace S_Class_Kalista
             {
                 if (!Properties.Time.CheckRendDelay()) // Wait for rend delay
                     continue;
-                #if DEBUG_MODE
+#if DEBUG_MODE
                 Console.WriteLine("Using Mixed E:{0}", Properties.Time.TickCount);
 #endif
                 Properties.Champion.UseRend();
@@ -146,7 +147,6 @@ namespace S_Class_Kalista
                     .ToList();
         }
 
-
         private static void LaneClear()
         {
             if (Properties.MainMenu.Item("bUseQLaneClear").GetValue<bool>())
@@ -156,7 +156,7 @@ namespace S_Class_Kalista
                     var minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
                         Properties.Champion.Q.Range);
 
-                    var count =  minions.Count(minion => minion.Health <= Properties.Champion.Q.GetDamage(minion) && minion.IsValid);
+                    var count = minions.Count(minion => minion.Health <= Properties.Champion.Q.GetDamage(minion) && minion.IsValid);
 
                     if (Properties.MainMenu.Item("sLaneClearMinionsKilledQ").GetValue<Slider>().Value <= count)
                     {
@@ -172,7 +172,6 @@ namespace S_Class_Kalista
                         }
                     }
                 }
-
             }
 
             if (Properties.MainMenu.Item("bUseELaneClear").GetValue<bool>())
@@ -186,13 +185,9 @@ namespace S_Class_Kalista
                         Console.WriteLine("Using Lane Clear E:{0}", Properties.Time.TickCount);
 #endif
                 Properties.Champion.UseRend();
-                    
-
-
             }
 
             if (!Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active) return;
-
 
             foreach (var monster in MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
                 Properties.Champion.E.Range,
@@ -202,9 +197,9 @@ namespace S_Class_Kalista
             {
                 if (!(DamageCalc.GetRendDamage(monster) > monster.Health)) continue;
                 if (!Properties.Time.CheckRendDelay()) return;
-                #if DEBUG_MODE
+#if DEBUG_MODE
                 Console.WriteLine("Using Jungle CLear E:{0}", Properties.Time.TickCount);
-                #endif
+#endif
                 Properties.Champion.UseRend();
                 return;
             }
@@ -215,6 +210,6 @@ namespace S_Class_Kalista
             // Fuck that
         }
 
-#endregion Private Functions
+        #endregion Private Functions
     }
 }

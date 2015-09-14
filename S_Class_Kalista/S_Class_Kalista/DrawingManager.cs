@@ -1,16 +1,16 @@
 ﻿// <copyright file="DrawingManager.cs" company="Kallen">
 //   Copyright (C) 2015 LeagueSharp Kallen
-//   
+//
 //             This program is free software: you can redistribute it and/or modify
 //             it under the terms of the GNU General Public License as published by
 //             the Free Software Foundation, either version 3 of the License, or
 //             (at your option) any later version.
-//   
+//
 //             This program is distributed in the hope that it will be useful,
 //             but WITHOUT ANY WARRANTY; without even the implied warranty of
 //             MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //             GNU General Public License for more details.
-//   
+//
 //             You should have received a copy of the GNU General Public License
 //             along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // </copyright>
@@ -42,7 +42,6 @@ namespace S_Class_Kalista
                 return;
             try
             {
-
                 if (Properties.MainMenu.Item("cDrawRendRange").GetValue<Circle>().Active &&
                     Properties.Champion.E.Level > 0)
                     Render.Circle.DrawCircle(Properties.PlayerHero.Position, Properties.Champion.E.Range,
@@ -58,8 +57,6 @@ namespace S_Class_Kalista
         {
             try
             {
-
-
                 if (!Properties.MainMenu.Item("cDrawOnMonsters").GetValue<Circle>().Active ||
                     Properties.Drawing.DamageToMonster == null)
                     return;
@@ -115,30 +112,31 @@ namespace S_Class_Kalista
                             yOffset = 18;
                             yOffset2 = 4;
                             break;
+
                         case "SRU_Murkwolf":
                             barWidth = 75;
                             xOffset = 54;
                             yOffset = 19;
                             yOffset2 = 4;
                             break;
+
                         case "SRU_Razorbeak":
                             barWidth = 75;
                             xOffset = 54;
                             yOffset = 18;
                             yOffset2 = 4;
                             break;
+
                         default:
                             display = false;
                             break;
                     }
                     if (!display) continue;
                     var barPos = minion.HPBarPosition;
-                    var percentHealthAfterDamage = Math.Max(0, minion.Health - rendDamage)/minion.MaxHealth;
+                    var percentHealthAfterDamage = Math.Max(0, minion.Health - rendDamage) / minion.MaxHealth;
                     var yPos = barPos.Y + yOffset;
-                    var xPosDamage = barPos.X + xOffset + barWidth*percentHealthAfterDamage;
-                    var xPosCurrentHp = barPos.X + xOffset + barWidth*minion.Health/minion.MaxHealth;
-
-
+                    var xPosDamage = barPos.X + xOffset + barWidth * percentHealthAfterDamage;
+                    var xPosCurrentHp = barPos.X + xOffset + barWidth * minion.Health / minion.MaxHealth;
 
                     if (Properties.MainMenu.Item("cFillMonster").GetValue<Circle>().Active)
                     {
@@ -177,8 +175,6 @@ namespace S_Class_Kalista
         {
             try
             {
-
-
                 if (!Properties.MainMenu.Item("bDrawOnChamp").GetValue<bool>() ||
                     Properties.Drawing.DamageToUnit == null)
                     return;
@@ -196,10 +192,10 @@ namespace S_Class_Kalista
 
                     var barPos = unit.HPBarPosition;
                     var damage = DamageCalc.GetRendDamage(unit);
-                    var percentHealthAfterDamage = Math.Max(0, unit.Health - damage)/unit.MaxHealth;
+                    var percentHealthAfterDamage = Math.Max(0, unit.Health - damage) / unit.MaxHealth;
                     var yPos = barPos.Y + yOffset;
-                    var xPosDamage = barPos.X + xOffset + width*percentHealthAfterDamage;
-                    var xPosCurrentHp = barPos.X + xOffset + width*unit.Health/unit.MaxHealth;
+                    var xPosDamage = barPos.X + xOffset + width * percentHealthAfterDamage;
+                    var xPosCurrentHp = barPos.X + xOffset + width * unit.Health / unit.MaxHealth;
 
                     if (Properties.MainMenu.Item("cDrawTextOnChamp").GetValue<Circle>().Active && damage > unit.Health)
                         Drawing.DrawText(barPos.X + xOffset, barPos.Y + yOffset - 13,
@@ -210,7 +206,7 @@ namespace S_Class_Kalista
                     if (!Properties.MainMenu.Item("cDrawFillOnChamp").GetValue<Circle>().Active) return;
 
                     var differenceInHp = xPosCurrentHp - xPosDamage;
-                    var pos1 = barPos.X + 9 + (107*percentHealthAfterDamage);
+                    var pos1 = barPos.X + 9 + (107 * percentHealthAfterDamage);
 
                     for (var i = 0; i < differenceInHp; i++)
                     {
@@ -218,7 +214,6 @@ namespace S_Class_Kalista
                             Properties.MainMenu.Item("cDrawFillOnChamp").GetValue<Circle>().Color);
                     }
                 }
-
 
                 if (!Properties.MainMenu.Item("bDrawTextOnSelf").GetValue<bool>())
                     return;
