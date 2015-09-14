@@ -156,22 +156,50 @@ namespace S_Class_Kalista
                     var minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
                         Properties.Champion.Q.Range);
 
-                    var count = minions.Count(minion => minion.Health <= Properties.Champion.Q.GetDamage(minion) && minion.IsValid);
-
-                    if (Properties.MainMenu.Item("sLaneClearMinionsKilledQ").GetValue<Slider>().Value <= count)
+                    if (Properties.MainMenu.Item("sLaneClearMinionsKilledQ").GetValue<Slider>().Value <= minions.Count)
                     {
-                        foreach (var minion in minions)
+                        foreach (var minion in minions.Where(x => x.Health <= Properties.Champion.Q.GetDamage(x)))
                         {
-                            if (!minion.IsValid) continue;
-                            if (minion.Health > Properties.Champion.Q.GetDamage(minion)) continue;
-                            var killcount = GetCollisionMinions(ObjectManager.Player, ObjectManager.Player.ServerPosition.Extend(minion.ServerPosition, Properties.Champion.Q.Range), Properties.Champion.Q).Count(collisionMinion => collisionMinion.Health < Properties.Champion.Q.GetDamage(collisionMinion));
-                            if (killcount < Properties.MainMenu.Item("sLaneClearMinionsKilledQ").GetValue<Slider>().Value) continue;
+                            var killcount = 0;
+
+                            foreach (
+                                var colminion in
+                                    GetCollisionMinions(Properties.PlayerHero,
+                                        Properties.PlayerHero.ServerPosition.Extend(minion.ServerPosition, Properties.Champion.Q.Range), Properties.Champion.Q))
+                            {
+                                if (colminion.Health <= Properties.Champion.Q.GetDamage(colminion))
+                                    killcount++;
+                                else
+                                    break;
+                            }
+
+                            if (killcount <
+                                Properties.MainMenu.Item("sLaneClearMinionsKilledQ").GetValue<Slider>().Value)
+                                continue;
 
                             Properties.Champion.Q.Cast(minion.ServerPosition);
                             break;
                         }
                     }
                 }
+                //var minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
+                //    Properties.Champion.Q.Range);
+
+                //var count = minions.Count(minion => minion.Health <= Properties.Champion.Q.GetDamage(minion) && minion.IsValid);
+
+                //if (Properties.MainMenu.Item("sLaneClearMinionsKilledQ").GetValue<Slider>().Value <= count)
+                //{
+                //    foreach (var minion in minions)
+                //    {
+                //        if (!minion.IsValid) continue;
+                //        if (minion.Health > Properties.Champion.Q.GetDamage(minion)) continue;
+                //        var killcount = GetCollisionMinions(ObjectManager.Player, ObjectManager.Player.ServerPosition.Extend(minion.ServerPosition, Properties.Champion.Q.Range), Properties.Champion.Q).Count(collisionMinion => collisionMinion.Health < Properties.Champion.Q.GetDamage(collisionMinion));
+                //        if (killcount < Properties.MainMenu.Item("sLaneClearMinionsKilledQ").GetValue<Slider>().Value) continue;
+
+                //        Properties.Champion.Q.Cast(minion.ServerPosition);
+                //        break;
+                //    }
+                //}
             }
 
             if (Properties.MainMenu.Item("bUseELaneClear").GetValue<bool>())
