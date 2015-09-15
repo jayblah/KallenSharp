@@ -15,7 +15,7 @@
 //             along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // </copyright>
 // <summary>
-//   Assembly to be use with LeagueSharp for champion Kalista
+//   Assembly to be use with LeagueSharp for champion Lucian
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 using LeagueSharp;
@@ -23,11 +23,11 @@ using LeagueSharp.Common;
 using System;
 
 
-namespace S_Class_Jinx
+namespace S_Class_Lucian
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (args == null) throw new ArgumentNullException("args");
             // So you can test if it in VS wihout crahses
@@ -36,14 +36,18 @@ namespace S_Class_Jinx
             #endif
         }
 
+
+        // ReSharper disable once UnusedParameter.Local
+        // ReSharper disable once UnusedMember.Local
         private static void OnLoad(EventArgs args)
         {
-            //They wanted comments so i added this line
+            // Copied from S CLass Kalista LOL
+
             Console.WriteLine(@"Generating Auto Properties...");
             Properties.GenerateProperties();
 
             //Close If Assembly Not Needed
-            if (Properties.PlayerHero.ChampionName != "Jinx")
+            if (Properties.PlayerHero.ChampionName != "Lucian")
                 return;
 
             //Create Menu and Initialize spells
@@ -54,10 +58,42 @@ namespace S_Class_Jinx
             Properties.MainMenu.AddToMainMenu();
             Console.WriteLine(@"Linking Game Events...");
 
+
             //Link Game evernts to functions
             Game.OnUpdate += Game_OnUpdate;
-            //Properties.AutoLevel.InitilizeAutoLevel();
-            Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
+            Drawing.OnDraw += DrawingManager.Drawing_OnDraw;
+
+            //Loaded yay
+            Console.WriteLine(@"S Class Lucian Load Completed");
+
+            Game.PrintChat(
+                "<b> <font color=\"#F88017\">S</font> Class <font color=\"#F88017\">Lucian</font></b> - <font color=\"#008080\">Loaded and ready!</font>");
+            Net.CheckVersion();
+
+        }
+
+        private static void Game_OnUpdate(EventArgs args)
+        {
+            try
+            {
+                if (Properties.MainMenu.Item("bAutoLevel").GetValue<bool>())
+                    AutoLevel.LevelUpSpells();
+
+                if (Properties.MainMenu.Item("bAutoBuyOrb").GetValue<bool>() && Properties.PlayerHero.Level >= 6)
+                    TrinketManager.BuyOrb();
+
+                if (Properties.PlayerHero.IsDead)
+                    return;
+                if (Properties.PlayerHero.IsRecalling())
+                    return;
+
+                AutoEventManager.EventCheck();
+                OrbWalkerManager.DoTheWalk();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

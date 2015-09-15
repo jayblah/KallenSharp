@@ -4,7 +4,7 @@ using System.Net;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace S_Class_Kalista
+namespace S_Class_Lucian
 {
     internal class Net
     {
@@ -28,12 +28,12 @@ namespace S_Class_Kalista
                             match.Groups[4]));
 
                 if (gitVersion <= Assembly.GetExecutingAssembly().GetName().Version) return;
-                Game.PrintChat("<b> <font color=\"#F88017\">S</font> Class <font color=\"#F88017\">Kalista</font></b> - <font color=\"#008080\">Version:</font>{0} Available!", gitVersion);
+                Game.PrintChat("<b> <font color=\"#F88017\">S</font> Class <font color=\"#F88017\">Lucian</font></b> - <font color=\"#008080\">Version:</font>{0} Available!", gitVersion);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                Game.PrintChat("<b> <font color=\"#008080\">S Class Kalista Unable to check for updates</font></b>");
+                Game.PrintChat("<b> <font color=\"#008080\">S Class Lucian Unable to check for updates</font></b>");
             }
         }
 
