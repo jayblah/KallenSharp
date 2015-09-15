@@ -18,6 +18,8 @@
 //   Assembly to be use with LeagueSharp for champion Kalista
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
+
+using System;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
@@ -207,16 +209,19 @@ namespace S_Class_Kalista
                 var count = 0;
                 var minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range);
                 count += minions.Count(minion => minion.Health <= DamageCalc.GetRendDamage(minion) && minion.IsValid);
-                if (Properties.MainMenu.Item("sLaneClearMinionsKilled").GetValue<Slider>().Value > count) return;
-                if (!Properties.Time.CheckRendDelay()) return;
+                if (Properties.MainMenu.Item("sLaneClearMinionsKilled").GetValue<Slider>().Value <= count)
+                {
+                    if (Properties.Time.CheckRendDelay())
+                    {
+                        Properties.Champion.UseRend();
 #if DEBUG_MODE
                         Console.WriteLine("Using Lane Clear E:{0}", Properties.Time.TickCount);
 #endif
-                Properties.Champion.UseRend();
+                    }
+                }
             }
 
             if (!Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active) return;
-
             foreach (var monster in MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
                 Properties.Champion.E.Range,
                 MinionTypes.All,
@@ -225,9 +230,7 @@ namespace S_Class_Kalista
             {
                 if (!(DamageCalc.GetRendDamage(monster) > monster.Health)) continue;
                 if (!Properties.Time.CheckRendDelay()) return;
-#if DEBUG_MODE
                 Console.WriteLine("Using Jungle CLear E:{0}", Properties.Time.TickCount);
-#endif
                 Properties.Champion.UseRend();
                 return;
             }
