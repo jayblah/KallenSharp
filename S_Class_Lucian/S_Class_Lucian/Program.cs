@@ -65,7 +65,7 @@ namespace S_Class_Lucian
 
             //Loaded yay
             Console.WriteLine(@"S Class Lucian Load Completed");
-
+            Properties.Champion.UseTick();
             Game.PrintChat(
                 "<b> <font color=\"#F88017\">S</font> Class <font color=\"#F88017\">Lucian</font></b> - <font color=\"#008080\">Loaded and ready!</font>");
             Net.CheckVersion();

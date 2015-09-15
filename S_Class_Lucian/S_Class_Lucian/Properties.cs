@@ -55,7 +55,7 @@ namespace S_Class_Lucian
 
             public static bool CheckLastDelay()
             {
-                return !(TickCount - LastTick < 200);
+                return !(TickCount - LastTick < 100);
             }
         }
 
