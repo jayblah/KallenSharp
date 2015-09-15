@@ -136,6 +136,19 @@ namespace S_Class_Lucian
                 }
             }
 
+            if (Properties.Champion.E.IsReady() && Properties.Champion.Q.IsReady())
+            {
+                if (ObjectManager.Player.Distance(target) - 100 <= Properties.Champion.Q.Range)
+                {
+                    Properties.Champion.E.Cast(target);
+                    Properties.PlayerHero.IssueOrder(GameObjectOrder.AutoAttack, target);
+                    Properties.Champion.Q.Cast(target);
+                    Properties.PlayerHero.IssueOrder(GameObjectOrder.AutoAttack, target);
+                    Properties.Champion.UseTick();
+                    return;
+                }
+            }
+
             if (ObjectManager.Player.Distance(target) <= 550) return;
 
             if (Properties.Champion.R.IsReady())
@@ -181,6 +194,7 @@ namespace S_Class_Lucian
             }
             return Properties.PlayerHero.Position.To2D().Extend(backTo, 425);
         }
+
         private static void Mixed()
         {
            
