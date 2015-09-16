@@ -56,13 +56,15 @@ namespace S_Class_Lucian
             Console.WriteLine(@"Generating Spells...");
             Properties.Champion.LoadSpells();
             Properties.MainMenu.AddToMainMenu();
+
+
             Console.WriteLine(@"Linking Game Events...");
-
-
-            //Link Game evernts to functions
+            //Link Game evernts to methods
             Game.OnUpdate += Game_OnUpdate;
             Drawing.OnDraw += DrawingManager.Drawing_OnDraw;
-
+            Obj_AI_Base.OnProcessSpellCast += AutoEventManager.OnProcessSpellCast;
+            Spellbook.OnCastSpell += AutoEventManager.OnCastSpell;
+            AntiGapcloser.OnEnemyGapcloser += AutoEventManager.OnGapcloser;
             //Loaded yay
             Console.WriteLine(@"S Class Lucian Load Completed");
             Properties.Champion.UseTick();

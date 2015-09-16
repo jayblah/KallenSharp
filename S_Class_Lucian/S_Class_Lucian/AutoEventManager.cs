@@ -37,5 +37,35 @@ namespace S_Class_Lucian
                 Console.WriteLine(ex.Message);
             }
         }
+
+        public static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (!sender.IsMe) return;
+            switch (args.SData.Name)
+            {
+                case "LucianQ":
+                case "LucianW":
+                case "LucianE":
+                    Utility.DelayAction.Add((int)(Math.Ceiling(Game.Ping / 2f) + 150),Orbwalking.ResetAutoAttackTimer);
+                    break;
+            }
+        }
+
+        public static void OnGapcloser(ActiveGapcloser gapcloser)
+        {
+            
+        }
+        public static void OnCastSpell(Spellbook sender, SpellbookCastSpellEventArgs args)
+        {
+            if (args.Slot == SpellSlot.R)
+            {
+                if (Items.HasItem(3142) && Items.CanUseItem(3142))
+                {
+                    Items.UseItem(3142);
+                }
+            }
+
+
+        }
     }
 }
