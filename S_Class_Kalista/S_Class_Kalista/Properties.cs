@@ -53,15 +53,15 @@ namespace S_Class_Kalista
                     return (int)DateTime.Now.Subtract(AssemblyLoadTime).TotalMilliseconds;
                 }
             }
-
+            
             public static bool CheckRendDelay()
             {
-                return !(TickCount - LastRendTick < 750);
+                return !(TickCount - LastRendTick < 650  + Game.Ping/2);
             }
 
             public static bool CheckNonKillable()
             {
-                return !(TickCount - LastNonKillable < 2000);
+                return !(TickCount - LastNonKillable < 1500 + Game.Ping/2);
             }
         }
 
