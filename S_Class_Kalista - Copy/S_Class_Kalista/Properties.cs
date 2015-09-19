@@ -56,7 +56,7 @@ namespace S_Class_Kalista
             
             public static bool CheckRendDelay()
             {
-                return !(TickCount - LastRendTick < 1000  + Game.Ping/2);
+                return !(TickCount - LastRendTick < 650  + Game.Ping/2);
             }
 
             public static bool CheckNonKillable()
