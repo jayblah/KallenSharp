@@ -104,7 +104,7 @@ namespace S_Class_Kalista
         //Cool Q in mid Auto
         //if (Properties.PlayerHero.IsWindingUp || Properties.PlayerHero.IsDashing())
         //Properties.Champion.Q.Cast(predictionPosition.CastPosition);
-
+        
         private static void Mixed()
         {
             if (Properties.MainMenu.Item("bUseQMixed").GetValue<bool>() && Properties.Champion.Q.IsReady())
