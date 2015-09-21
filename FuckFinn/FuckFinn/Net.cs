@@ -10,12 +10,12 @@ namespace FuckFinn
 
             //20-25
             private static string SiteRange = "104.20.2*.154";
-
+        
         public static IPAddress GetAddress()
         {
             return Dns.GetHostAddresses("www.joduska.me")[0];
         }
-
+      
         public static bool CheckSite()
         {
             var retAddress = ToInteger(GetAddress());
