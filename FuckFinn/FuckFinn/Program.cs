@@ -20,6 +20,8 @@ namespace FuckFinn
             var ping = new System.Net.NetworkInformation.Ping();
            if(Net.CheckSite())
                 Console.WriteLine("L# IP {0}:", Net.GetAddress());
+           else
+           Console.WriteLine("Fuck you Finn");
         }
     }
 }
