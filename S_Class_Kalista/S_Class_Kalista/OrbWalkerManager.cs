@@ -82,8 +82,16 @@ namespace S_Class_Kalista
                 var target = TargetSelector.GetTarget(Properties.Champion.Q.Range, TargetSelector.DamageType.Physical);
                 var predictionPosition = Properties.Champion.Q.GetPrediction(target);
                 if (predictionPosition.Hitchance >= GetHitChance())
-                    if (!Properties.PlayerHero.IsWindingUp && !Properties.PlayerHero.IsDashing())
+                {
+                    if (Properties.MainMenu.Item("bUseQComboReset").GetValue<bool>())
+                    {
+                        if (Properties.PlayerHero.IsWindingUp || Properties.PlayerHero.IsDashing())
+                            Properties.Champion.Q.Cast(predictionPosition.CastPosition);
+                    }
+                    else if (!Properties.PlayerHero.IsWindingUp && !Properties.PlayerHero.IsDashing())
                         Properties.Champion.Q.Cast(predictionPosition.CastPosition);
+                }
+
             }
             if (!Properties.MainMenu.Item("bUseECombo").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
 
@@ -104,8 +112,16 @@ namespace S_Class_Kalista
                 var target = TargetSelector.GetTarget(Properties.Champion.Q.Range, TargetSelector.DamageType.Physical);
                 var predictionPosition = Properties.Champion.Q.GetPrediction(target);
                 if (predictionPosition.Hitchance >= GetHitChance())
-                    if (!Properties.PlayerHero.IsWindingUp && !Properties.PlayerHero.IsDashing())
-                        Properties.Champion.Q.Cast(predictionPosition.CastPosition);
+                    if (predictionPosition.Hitchance >= GetHitChance())
+                    {
+                        if (Properties.MainMenu.Item("bUseQMixedReset").GetValue<bool>())
+                        {
+                            if (Properties.PlayerHero.IsWindingUp || Properties.PlayerHero.IsDashing())
+                                Properties.Champion.Q.Cast(predictionPosition.CastPosition);
+                        }
+                        else if (!Properties.PlayerHero.IsWindingUp && !Properties.PlayerHero.IsDashing())
+                            Properties.Champion.Q.Cast(predictionPosition.CastPosition);
+                    }
             }
             if (!Properties.MainMenu.Item("bUseEMixed").GetValue<bool>()) return;
 

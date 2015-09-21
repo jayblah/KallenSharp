@@ -55,6 +55,7 @@ namespace S_Class_Kalista
         {
             var mixedMenu = new Menu("Mixed Options", "mixedOptions");
             mixedMenu.AddItem(new MenuItem("bUseQMixed", "Auto Q").SetValue(true));
+            mixedMenu.AddItem(new MenuItem("bUseQMixedReset", "Use Q To Reset AutoAttacks").SetValue(false));
             mixedMenu.AddItem(new MenuItem("bUseEMixed", "Auto E on Stacks").SetValue(false));
             mixedMenu.AddItem(new MenuItem("sMixedStacks", "Required E stacks").SetValue(new Slider(4, 2, 15)));
 
@@ -65,6 +66,7 @@ namespace S_Class_Kalista
         {
             var mixedMenu = new Menu("Combo Options", "comboMenu");
             mixedMenu.AddItem(new MenuItem("bUseQCombo", "Auto Q").SetValue(false));
+            mixedMenu.AddItem(new MenuItem("bUseQComboReset", "Use Q To Reset AutoAttacks").SetValue(false));
             mixedMenu.AddItem(new MenuItem("bUseECombo", "Auto E for kills").SetValue(false));
             return mixedMenu;
         }

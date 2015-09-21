@@ -66,9 +66,9 @@ namespace S_Class_Kalista
 
             Properties.Drawing.DamageToUnit = DamageCalc.GetRendDamage;
             Properties.Drawing.DamageToMonster = DamageCalc.GetRendDamage;
-            Drawing.OnDraw += DrawingManager.Drawing_OnDraw;
-            Drawing.OnDraw += DrawingManager.Drawing_OnDrawChamp;
-            Drawing.OnDraw += DrawingManager.Drawing_OnDrawMonster;
+            LeagueSharp.Drawing.OnDraw += DrawingManager.Drawing_OnDraw;
+            LeagueSharp.Drawing.OnDraw += DrawingManager.Drawing_OnDrawChamp;
+            LeagueSharp.Drawing.OnDraw += DrawingManager.Drawing_OnDrawMonster;
             Orbwalking.OnNonKillableMinion += AutoEventManager.CheckNonKillables;
 
             // Add Delays for later use
@@ -83,7 +83,7 @@ namespace S_Class_Kalista
             Net.CheckVersion();
         }
 
-        private static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+    private static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (sender == null || !sender.IsValid) return;
 

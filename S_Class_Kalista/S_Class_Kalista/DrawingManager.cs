@@ -145,18 +145,18 @@ namespace S_Class_Kalista
 
                         for (var i = 0; i < differenceInHp; i++)
                         {
-                            Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + yOffset2, 1,
+                            LeagueSharp.Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + yOffset2, 1,
                                 Properties.MainMenu.Item("cFillMonster").GetValue<Circle>().Color);
                         }
                     }
                     else
-                        Drawing.DrawLine(xPosDamage, yPos, xPosDamage, yPos + yOffset2, 1,
+                        LeagueSharp.Drawing.DrawLine(xPosDamage, yPos, xPosDamage, yPos + yOffset2, 1,
                             Properties.MainMenu.Item("cDrawOnMonsters").GetValue<Circle>().Color);
 
                     if (!(rendDamage > minion.Health)) continue;
                     if (!Properties.MainMenu.Item("cKillableText").GetValue<Circle>().Active) return;
 
-                    Drawing.DrawText(minion.HPBarPosition.X + xOffset, minion.HPBarPosition.Y,
+                    LeagueSharp.Drawing.DrawText(minion.HPBarPosition.X + xOffset, minion.HPBarPosition.Y,
                         Properties.MainMenu.Item("cKillableText").GetValue<Circle>().Color, "Killable");
                 }
             }
@@ -198,10 +198,10 @@ namespace S_Class_Kalista
                     var xPosCurrentHp = barPos.X + xOffset + width * unit.Health / unit.MaxHealth;
 
                     if (Properties.MainMenu.Item("cDrawTextOnChamp").GetValue<Circle>().Active && damage > unit.Health)
-                        Drawing.DrawText(barPos.X + xOffset, barPos.Y + yOffset - 13,
+                        LeagueSharp.Drawing.DrawText(barPos.X + xOffset, barPos.Y + yOffset - 13,
                             Properties.MainMenu.Item("cDrawTextOnChamp").GetValue<Circle>().Color, "Killable");
 
-                    Drawing.DrawLine(xPosDamage, yPos, xPosDamage, yPos + height, 1, Color.LightGray);
+                    LeagueSharp.Drawing.DrawLine(xPosDamage, yPos, xPosDamage, yPos + height, 1, Color.LightGray);
 
                     if (!Properties.MainMenu.Item("cDrawFillOnChamp").GetValue<Circle>().Active) return;
 
@@ -210,7 +210,7 @@ namespace S_Class_Kalista
 
                     for (var i = 0; i < differenceInHp; i++)
                     {
-                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1,
+                        LeagueSharp.Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1,
                             Properties.MainMenu.Item("cDrawFillOnChamp").GetValue<Circle>().Color);
                     }
                 }
@@ -218,14 +218,14 @@ namespace S_Class_Kalista
                 if (!Properties.MainMenu.Item("bDrawTextOnSelf").GetValue<bool>())
                     return;
 
-                var playerPos = Drawing.WorldToScreen(Properties.PlayerHero.Position);
+                var playerPos = LeagueSharp.Drawing.WorldToScreen(Properties.PlayerHero.Position);
                 var jungleBool = Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active
                     ? "True"
                     : "False";
                 var jungleClear = string.Format("Jungle Clear:{0}", jungleBool);
                 var vColor = GetColor(Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active);
-                Drawing.DrawText(playerPos.X - Drawing.GetTextExtent(jungleClear).Width + 50,
-                    playerPos.Y - Drawing.GetTextExtent(jungleClear).Height + 30, vColor, jungleClear);
+                LeagueSharp.Drawing.DrawText(playerPos.X - LeagueSharp.Drawing.GetTextExtent(jungleClear).Width + 50,
+                    playerPos.Y - LeagueSharp.Drawing.GetTextExtent(jungleClear).Height + 30, vColor, jungleClear);
             }
             catch
             {

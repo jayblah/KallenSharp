@@ -62,6 +62,7 @@
     <Compile Include="AutoEventManager.cs" />
     <Compile Include="AutoLevel.cs" />
     <Compile Include="DamageCalc.cs" />
+    <Compile Include="Drawing.cs" />
     <Compile Include="DrawingManager.cs" />
     <Compile Include="Net.cs" />
     <Compile Include="SMenu.cs" />
