@@ -17,6 +17,7 @@ namespace FuckFinn
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
         private static void OnLoad(EventArgs args)
         {
+
             var ping = new System.Net.NetworkInformation.Ping();
            if(Net.CheckSite())
                 Console.WriteLine("L# IP {0}:", Net.GetAddress());
