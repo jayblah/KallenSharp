@@ -75,25 +75,47 @@ namespace S_Class_Kalista
             return HitChance.VeryHigh;
         }
 
+        
+        // ReSharper disable once UnusedMethodReturnValue.Local
+
+        //var autoEventsMenu = new Menu("Mana Manager", "manaMenu");
+        //autoEventsMenu.AddItem(new MenuItem("bUseManaManager", "Use Mana Manager").SetValue(true));
+        //    autoEventsMenu.AddItem(new MenuItem("sMinManaQ", "Min% Mana For Q").SetValue(new Slider(15, 10, 40)));
+        //    autoEventsMenu.AddItem(new MenuItem("sMinManaE", "Min% Mana For E").SetValue(new Slider(0, 0, 30)));
+        //    return autoEventsMenu;
+
+            
+           
+
         private static void Combo()
         {
             if (Properties.MainMenu.Item("bUseQCombo").GetValue<bool>() && Properties.Champion.Q.IsReady())
             {
-                var target = TargetSelector.GetTarget(Properties.Champion.Q.Range, TargetSelector.DamageType.Physical);
-                var predictionPosition = Properties.Champion.Q.GetPrediction(target);
-                if (predictionPosition.Hitchance >= GetHitChance())
+                if (Properties.MainMenu.Item("bUseManaManager").GetValue<bool>())
                 {
-                    if (Properties.MainMenu.Item("bUseQComboReset").GetValue<bool>())
+                    if (Properties.PlayerHero.ManaPercent >
+                        Properties.MainMenu.Item("sMinManaQ").GetValue<Slider>().Value)
                     {
-                        if (Properties.PlayerHero.IsWindingUp || Properties.PlayerHero.IsDashing())
-                            Properties.Champion.Q.Cast(predictionPosition.CastPosition);
+                        var target = TargetSelector.GetTarget(Properties.Champion.Q.Range,
+                            TargetSelector.DamageType.Physical);
+                        var predictionPosition = Properties.Champion.Q.GetPrediction(target);
+                        if (predictionPosition.Hitchance >= GetHitChance())
+                        {
+                            if (Properties.MainMenu.Item("bUseQComboReset").GetValue<bool>())
+                            {
+                                if (Properties.PlayerHero.IsWindingUp || Properties.PlayerHero.IsDashing())
+                                    Properties.Champion.Q.Cast(predictionPosition.CastPosition);
+                            }
+                            else if (!Properties.PlayerHero.IsWindingUp && !Properties.PlayerHero.IsDashing())
+                                Properties.Champion.Q.Cast(predictionPosition.CastPosition);
+                        }
                     }
-                    else if (!Properties.PlayerHero.IsWindingUp && !Properties.PlayerHero.IsDashing())
-                        Properties.Champion.Q.Cast(predictionPosition.CastPosition);
                 }
-
             }
             if (!Properties.MainMenu.Item("bUseECombo").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
+
+            if (Properties.MainMenu.Item("bUseManaManager").GetValue<bool>())
+                if (Properties.PlayerHero.ManaPercent < Properties.MainMenu.Item("sMinManaE").GetValue<Slider>().Value) return;
 
             if (!Properties.Time.CheckRendDelay()) // Wait for rend delay
                 return;
@@ -109,21 +131,32 @@ namespace S_Class_Kalista
         {
             if (Properties.MainMenu.Item("bUseQMixed").GetValue<bool>() && Properties.Champion.Q.IsReady())
             {
-                var target = TargetSelector.GetTarget(Properties.Champion.Q.Range, TargetSelector.DamageType.Physical);
-                var predictionPosition = Properties.Champion.Q.GetPrediction(target);
-                if (predictionPosition.Hitchance >= GetHitChance())
-                    if (predictionPosition.Hitchance >= GetHitChance())
+                if (Properties.MainMenu.Item("bUseManaManager").GetValue<bool>())
+                {
+                    if (Properties.PlayerHero.ManaPercent >
+                        Properties.MainMenu.Item("sMinManaQ").GetValue<Slider>().Value)
                     {
-                        if (Properties.MainMenu.Item("bUseQMixedReset").GetValue<bool>())
-                        {
-                            if (Properties.PlayerHero.IsWindingUp || Properties.PlayerHero.IsDashing())
-                                Properties.Champion.Q.Cast(predictionPosition.CastPosition);
-                        }
-                        else if (!Properties.PlayerHero.IsWindingUp && !Properties.PlayerHero.IsDashing())
-                            Properties.Champion.Q.Cast(predictionPosition.CastPosition);
+                        var target = TargetSelector.GetTarget(Properties.Champion.Q.Range,
+                            TargetSelector.DamageType.Physical);
+                        var predictionPosition = Properties.Champion.Q.GetPrediction(target);
+                        if (predictionPosition.Hitchance >= GetHitChance())
+                            if (predictionPosition.Hitchance >= GetHitChance())
+                            {
+                                if (Properties.MainMenu.Item("bUseQMixedReset").GetValue<bool>())
+                                {
+                                    if (Properties.PlayerHero.IsWindingUp || Properties.PlayerHero.IsDashing())
+                                        Properties.Champion.Q.Cast(predictionPosition.CastPosition);
+                                }
+                                else if (!Properties.PlayerHero.IsWindingUp && !Properties.PlayerHero.IsDashing())
+                                    Properties.Champion.Q.Cast(predictionPosition.CastPosition);
+                            }
                     }
+                }
             }
             if (!Properties.MainMenu.Item("bUseEMixed").GetValue<bool>()) return;
+
+            if (Properties.MainMenu.Item("bUseManaManager").GetValue<bool>())
+                if (Properties.PlayerHero.ManaPercent < Properties.MainMenu.Item("sMinManaE").GetValue<Slider>().Value) return;
 
             // ReSharper disable once UnusedVariable
             foreach (var stacks in from target in HeroManager.Enemies where target.IsValid where target.IsValidTarget(Properties.Champion.E.Range) where !DamageCalc.CheckNoDamageBuffs(target) select target.GetBuffCount("kalistaexpungemarker") into stacks where stacks >= Properties.MainMenu.Item("sMixedStacks").GetValue<Slider>().Value select stacks)

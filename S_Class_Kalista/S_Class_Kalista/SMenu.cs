@@ -38,6 +38,7 @@ namespace S_Class_Kalista
             Properties.MainMenu.AddSubMenu(MixedMenu());
             Properties.MainMenu.AddSubMenu(ComboMenu());
             Properties.MainMenu.AddSubMenu(LaneClearMenu());
+            Properties.MainMenu.AddSubMenu(ManaMenu());
             Properties.MainMenu.AddSubMenu(MiscMenu());
             Properties.LukeOrbWalker = new Orbwalking.Orbwalker(Properties.MainMenu.SubMenu("Orbwalking"));
         }
@@ -139,6 +140,15 @@ namespace S_Class_Kalista
             autoEventsMenu.AddItem(new MenuItem("bSentinelBaron", "Sentinel Baron").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("slQprediction", "Q Prediction").SetValue(
                             new StringList(new[] { "Very High", "High", "Dashing" })));
+            return autoEventsMenu;
+        }
+
+        private static Menu ManaMenu()
+        {
+            var autoEventsMenu = new Menu("Mana Manager", "manaMenu");
+            autoEventsMenu.AddItem(new MenuItem("bUseManaManager", "Use Mana Manager").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("sMinManaQ", "Min% Mana For Q").SetValue(new Slider(15, 10, 40)));
+            autoEventsMenu.AddItem(new MenuItem("sMinManaE", "Min% Mana For E").SetValue(new Slider(0, 0, 30)));
             return autoEventsMenu;
         }
     }

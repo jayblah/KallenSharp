@@ -148,10 +148,10 @@ namespace S_Class_Kalista
 
         #region Private Functions
 
-        // ReSharper disable once UnusedMethodReturnValue.Local
         private static bool AutoEOnStacksAndMinions()
         {
             if (!Properties.Time.CheckRendDelay()) return false;
+
 
             foreach (var target in HeroManager.Enemies)
             {
@@ -194,6 +194,9 @@ namespace S_Class_Kalista
 
             if (!Properties.Time.CheckRendDelay()) return false;
 
+            if (Properties.MainMenu.Item("bUseManaManager").GetValue<bool>())
+                if (Properties.PlayerHero.ManaPercent < Properties.MainMenu.Item("sMinManaE").GetValue<Slider>().Value) return false;
+
             if (!MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
                 Properties.Champion.E.Range,
                 MinionTypes.All,
@@ -212,6 +215,9 @@ namespace S_Class_Kalista
         private static bool AutoEOnLeave()
         {
             if (!Properties.Time.CheckRendDelay()) return false;
+
+            if (Properties.MainMenu.Item("bUseManaManager").GetValue<bool>())
+                if (Properties.PlayerHero.ManaPercent < Properties.MainMenu.Item("sMinManaE").GetValue<Slider>().Value) return false;
 
             foreach (var target in HeroManager.Enemies)
             {
@@ -237,6 +243,8 @@ namespace S_Class_Kalista
         {
             // ReSharper disable once UnusedVariable
             if (!Properties.Time.CheckRendDelay()) return false;
+            if (Properties.MainMenu.Item("bUseManaManager").GetValue<bool>())
+                if (Properties.PlayerHero.ManaPercent < Properties.MainMenu.Item("sMinManaE").GetValue<Slider>().Value) return false;
 
             foreach (var monster in MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
                 Properties.Champion.E.Range,
@@ -261,6 +269,10 @@ namespace S_Class_Kalista
         private static bool CheckMinions()
         {
             if (!Properties.Time.CheckRendDelay()) return false;
+
+            if (Properties.MainMenu.Item("bUseManaManager").GetValue<bool>())
+                if (Properties.PlayerHero.ManaPercent < Properties.MainMenu.Item("sMinManaE").GetValue<Slider>().Value) return false;
+
             var count = 0;
 
             var minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition, Properties.Champion.E.Range);
