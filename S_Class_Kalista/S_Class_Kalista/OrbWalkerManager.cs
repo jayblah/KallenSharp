@@ -78,15 +78,6 @@ namespace S_Class_Kalista
         
         // ReSharper disable once UnusedMethodReturnValue.Local
 
-        //var autoEventsMenu = new Menu("Mana Manager", "manaMenu");
-        //autoEventsMenu.AddItem(new MenuItem("bUseManaManager", "Use Mana Manager").SetValue(true));
-        //    autoEventsMenu.AddItem(new MenuItem("sMinManaQ", "Min% Mana For Q").SetValue(new Slider(15, 10, 40)));
-        //    autoEventsMenu.AddItem(new MenuItem("sMinManaE", "Min% Mana For E").SetValue(new Slider(0, 0, 30)));
-        //    return autoEventsMenu;
-
-            
-           
-
         private static void Combo()
         {
             if (Properties.MainMenu.Item("bUseQCombo").GetValue<bool>() && Properties.Champion.Q.IsReady())
@@ -112,15 +103,54 @@ namespace S_Class_Kalista
                     }
                 }
             }
+
             if (!Properties.MainMenu.Item("bUseECombo").GetValue<bool>() || !Properties.Champion.E.IsReady()) return;
 
             if (Properties.MainMenu.Item("bUseManaManager").GetValue<bool>())
-                if (Properties.PlayerHero.ManaPercent < Properties.MainMenu.Item("sMinManaE").GetValue<Slider>().Value) return;
+                if (Properties.PlayerHero.ManaPercent < Properties.MainMenu.Item("sMinManaE").GetValue<Slider>().Value)
+                    return;
 
             if (!Properties.Time.CheckRendDelay()) // Wait for rend delay
                 return;
 
             AutoEventManager.CheckEnemies();
+
+            if (!Properties.MainMenu.Item("bUseBetaCombo").GetValue<bool>()) return;
+            var nTarget = LeagueSharp.Common.TargetSelector.GetTarget(Properties.Champion.E.Range * 1.2f, TargetSelector.DamageType.Physical);
+
+            if (Properties.Champion.E.Instance.State != SpellState.Ready &&
+                (Properties.Champion.E.Instance.State != SpellState.Surpressed ||
+                 (nTarget.GetBuffCount("kalistaexpungemarker") <= 0))) return;
+
+            foreach (var target in HeroManager.Enemies)
+            {
+                if (!target.IsValid) continue;
+                if (Properties.PlayerHero.Distance(target) <
+                    Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero)) continue;
+                var minions =
+                    ObjectManager.Get<Obj_AI_Minion>()
+                        .Where(m => m.IsValidTarget(Orbwalking.GetRealAutoAttackRange(m)));
+
+                if (minions.Any(m => Properties.Champion.E.CanCast(m) && m.Health <= DamageCalc.GetRendDamage(m)))
+                    Properties.Champion.UseRend();
+
+                else
+                {
+                    var minion =
+                        VectorHelper.GetDashObjects(minions)
+                            .Find(
+                                m =>
+                                    m.Health > Properties.PlayerHero.GetAutoAttackDamage(m) &&
+                                    m.Health <
+                                    Properties.PlayerHero.GetAutoAttackDamage(m) + DamageCalc.GetRendDamage(m));
+                    if (minion != null)
+                    {
+                        Properties.LukeOrbWalker.ForceTarget(minion);
+                    }
+                }
+
+
+            }
         }
 
         //Cool Q in mid Auto
@@ -233,24 +263,6 @@ namespace S_Class_Kalista
                         }
                     }
                 }
-                //var minions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
-                //    Properties.Champion.Q.Range);
-
-                //var count = minions.Count(minion => minion.Health <= Properties.Champion.Q.GetDamage(minion) && minion.IsValid);
-
-                //if (Properties.MainMenu.Item("sLaneClearMinionsKilledQ").GetValue<Slider>().Value <= count)
-                //{
-                //    foreach (var minion in minions)
-                //    {
-                //        if (!minion.IsValid) continue;
-                //        if (minion.Health > Properties.Champion.Q.GetDamage(minion)) continue;
-                //        var killcount = GetCollisionMinions(ObjectManager.Player, ObjectManager.Player.ServerPosition.Extend(minion.ServerPosition, Properties.Champion.Q.Range), Properties.Champion.Q).Count(collisionMinion => collisionMinion.Health < Properties.Champion.Q.GetDamage(collisionMinion));
-                //        if (killcount < Properties.MainMenu.Item("sLaneClearMinionsKilledQ").GetValue<Slider>().Value) continue;
-
-                //        Properties.Champion.Q.Cast(minion.ServerPosition);
-                //        break;
-                //    }
-                //}
             }
 
             if (Properties.MainMenu.Item("bUseELaneClear").GetValue<bool>())

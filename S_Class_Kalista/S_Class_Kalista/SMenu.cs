@@ -69,6 +69,7 @@ namespace S_Class_Kalista
             mixedMenu.AddItem(new MenuItem("bUseQCombo", "Auto Q").SetValue(false));
             mixedMenu.AddItem(new MenuItem("bUseQComboReset", "Reset AutoAttack With Q").SetValue(false));
             mixedMenu.AddItem(new MenuItem("bUseECombo", "Auto E for kills").SetValue(false));
+            mixedMenu.AddItem(new MenuItem("bUseBetaCombo", "Beta Combo").SetValue(true));
             return mixedMenu;
         }
 
@@ -127,7 +128,7 @@ namespace S_Class_Kalista
             autoEventsMenu.AddItem(new MenuItem("bUseEOnLeave", "Auto E On Range Leave").SetValue(false));
             autoEventsMenu.AddItem(new MenuItem("sStacksOnLeave", "Required Stacks For Range Leave").SetValue(new Slider(4, 1, 10)));
             autoEventsMenu.AddItem(new MenuItem("bAutoSaveSoul", "Auto Save SoulBound partner").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bBalista", "Balista?").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bBST", "Balista? Skalista? Tahmlista?").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("sSoulBoundPercent", "Soul Bound HP% Remaining").SetValue(new Slider(10, 1, 90)));
             return autoEventsMenu;
         }

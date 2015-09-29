@@ -72,7 +72,9 @@
     <Compile Include="Properties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SoulBound.cs" />
+    <Compile Include="SWalker.cs" />
     <Compile Include="TrinketManager.cs" />
+    <Compile Include="Vectorhelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
