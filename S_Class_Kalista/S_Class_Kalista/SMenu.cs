@@ -56,9 +56,9 @@ namespace S_Class_Kalista
         {
             var mixedMenu = new Menu("Mixed Options", "mixedOptions");
             mixedMenu.AddItem(new MenuItem("bUseQMixed", "Auto Q").SetValue(true));
-            mixedMenu.AddItem(new MenuItem("bUseQMixedReset", "Reset AutoAttack With Q").SetValue(false));
+            mixedMenu.AddItem(new MenuItem("bUseQMixedReset", "Reset Auto-Attack with Q").SetValue(false));
             mixedMenu.AddItem(new MenuItem("bUseEMixed", "Auto E on Stacks").SetValue(false));
-            mixedMenu.AddItem(new MenuItem("sMixedStacks", "Required E stacks").SetValue(new Slider(4, 2, 15)));
+            mixedMenu.AddItem(new MenuItem("sMixedStacks", ">> Required E Stacks").SetValue(new Slider(4, 2, 15)));
 
             return mixedMenu;
         }
@@ -69,18 +69,18 @@ namespace S_Class_Kalista
             mixedMenu.AddItem(new MenuItem("bUseQCombo", "Auto Q").SetValue(false));
             mixedMenu.AddItem(new MenuItem("bUseQComboReset", "Reset AutoAttack With Q").SetValue(false));
             mixedMenu.AddItem(new MenuItem("bUseECombo", "Auto E for kills").SetValue(false));
-            mixedMenu.AddItem(new MenuItem("bUseMinionComboWalk", "(Beta) OrbWalk Using Minions(Hard To Expain)").SetValue(false));
+            mixedMenu.AddItem(new MenuItem("bUseMinionComboWalk", "[BETA] Orbwalk by Using Minions (Hard To Explain)").SetValue(false));
             return mixedMenu;
         }
 
         private static Menu LaneClearMenu()
         {
             var laneClearMenu = new Menu("Lane Clear Options", "laneClearOptions");
-            laneClearMenu.AddItem(new MenuItem("bUseELaneClear", "Auto E On Minions Killed").SetValue(true));
-            laneClearMenu.AddItem(new MenuItem("sLaneClearMinionsKilled", "Required Minions Killed By E").SetValue(new Slider(3, 2, 10)));
+            laneClearMenu.AddItem(new MenuItem("bUseELaneClear", "Auto E on Minions Killed").SetValue(true));
+            laneClearMenu.AddItem(new MenuItem("sLaneClearMinionsKilled", ">> If X Minion(s) Killable").SetValue(new Slider(3, 2, 10)));
 
-            laneClearMenu.AddItem(new MenuItem("bUseQLaneClear", "Kill Minions With Q").SetValue(false));
-            laneClearMenu.AddItem(new MenuItem("sLaneClearMinionsKilledQ", "Required Minions Killed By Q").SetValue(new Slider(3, 2, 10)));
+            laneClearMenu.AddItem(new MenuItem("bUseQLaneClear", "Use Q to Kill Minions").SetValue(false));
+            laneClearMenu.AddItem(new MenuItem("sLaneClearMinionsKilledQ", ">> Required Minions to Use Q").SetValue(new Slider(3, 2, 10)));
 
             laneClearMenu.AddItem(new MenuItem("bUseJungleClear", "Jungle Clear").SetValue(new KeyBind('G', KeyBindType.Toggle)));
             return laneClearMenu;
@@ -93,16 +93,16 @@ namespace S_Class_Kalista
             drawMenu.AddItem(new MenuItem("bDraw", "Display Drawing").SetValue(true));
             drawMenu.AddItem(new MenuItem("cDrawRendRange", "Draw Rend Range").SetValue(new Circle(true, Color.LightSkyBlue)));
 
-            drawMenu.AddItem(new MenuItem("bDrawOnChamp", "Draw On Enemies").SetValue(true));
-            drawMenu.AddItem(new MenuItem("cDrawTextOnChamp", "Display Killable Text On Enemies").SetValue(new Circle(true, Color.Red)));
+            drawMenu.AddItem(new MenuItem("bDrawOnChamp", "Draw Damage Fill on Enemy").SetValue(true));
+            drawMenu.AddItem(new MenuItem("cDrawTextOnChamp", "Display Killable-Text on Enemy").SetValue(new Circle(true, Color.Red)));
 
-            drawMenu.AddItem(new MenuItem("cDrawFillOnChamp", "Draw Combo Damage On Champs").SetValue(new Circle(true, Color.DarkGray)));
+            drawMenu.AddItem(new MenuItem("cDrawFillOnChamp", "Draw Combo Damage on Enemy").SetValue(new Circle(true, Color.DarkGray)));
 
-            drawMenu.AddItem(new MenuItem("bDrawTextOnSelf", "Display Floating Text (self)").SetValue(true));
+            drawMenu.AddItem(new MenuItem("bDrawTextOnSelf", "Display Floating-Text (Self)").SetValue(true));
 
-            drawMenu.AddItem(new MenuItem("cDrawOnMonsters", "Draw Damage On Monsters").SetValue(new Circle(true, Color.LightSlateGray)));
-            drawMenu.AddItem(new MenuItem("cFillMonster", "Damage Fill On Monsters").SetValue(new Circle(true, Color.DarkGray)));
-            drawMenu.AddItem(new MenuItem("cKillableText", "Display Killable Text On Monsters").SetValue(new Circle(true, Color.Red)));
+            drawMenu.AddItem(new MenuItem("cDrawOnMonsters", "Draw Damage on Monsters").SetValue(new Circle(true, Color.LightSlateGray)));
+            drawMenu.AddItem(new MenuItem("cFillMonster", "Draw Damage Fill On Monsters").SetValue(new Circle(true, Color.DarkGray)));
+            drawMenu.AddItem(new MenuItem("cKillableText", "Display Killable-Text on Monsters").SetValue(new Circle(true, Color.Red)));
 
             return drawMenu;
         }
@@ -110,36 +110,36 @@ namespace S_Class_Kalista
         private static Menu AutoEvents()
         {
             var autoEventsMenu = new Menu("Auto Events", "autoEvents");
-            autoEventsMenu.AddItem(new MenuItem("bAutoLevel", "Auto Level Skills").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bAutoBuyOrb", "Auto Buy Orb at 6").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bUseEToKillEpics", "Auto E Epics").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bUseEToKillBuffs", "Auto E Buffs").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKill", "Auto E Kill Enemies").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bUseENonKillables", "Auto E NonKillable Minions").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bEBeforeDeath", "Auto E Before Death").SetValue(false));
-            autoEventsMenu.AddItem(new MenuItem("sEBeforeDeathChamps", "Champions With Stacks").SetValue(new Slider(1, 1, 5)));
-            autoEventsMenu.AddItem(new MenuItem("sEBeforeDeathMinStacks", "Min Stacks On Champs").SetValue(new Slider(3, 1, 10)));
-            autoEventsMenu.AddItem(new MenuItem("sEBeforeDeathMaxHP", "Max HP% To Activate E Before Death").SetValue(new Slider(10, 1, 30)));
-            autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKillMinions", "Auto E Kill Minions").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("sAutoEMinionsKilled", "Required Minions Killed From E").SetValue(new Slider(2, 2, 10)));
-            autoEventsMenu.AddItem(new MenuItem("bAutoEOnStacksAndMinions", "Auto E When Stacks On Champ And Minions Killed").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("sUseEOnMinionKilled", "Required Minions Killed From E + Champ Stacks").SetValue(new Slider(3, 1, 10)));
-            autoEventsMenu.AddItem(new MenuItem("sUseEOnChampStacks", "Required Stacks On Champion").SetValue(new Slider(1, 1, 10)));
-            autoEventsMenu.AddItem(new MenuItem("bUseEOnLeave", "Auto E On Range Leave").SetValue(false));
-            autoEventsMenu.AddItem(new MenuItem("sStacksOnLeave", "Required Stacks For Range Leave").SetValue(new Slider(4, 1, 10)));
-            autoEventsMenu.AddItem(new MenuItem("bAutoSaveSoul", "Auto Save SoulBound partner").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bBST", "Balista? Skalista? Tahmlista?").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("sSoulBoundPercent", "Soul Bound HP% Remaining").SetValue(new Slider(10, 1, 90)));
+            autoEventsMenu.AddItem(new MenuItem("bAutoLevel", "Auto-level Skills").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bAutoBuyOrb", "Auto-buy Orb at 6").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bUseEToKillEpics", "Auto E Epic Camps").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bUseEToKillBuffs", "Auto E Buff Camps").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKill", "Auto E to Kill Enemy").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bUseENonKillables", "Auto E Non-killable Minions").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bEBeforeDeath", "Auto E Before Dying").SetValue(false));
+            autoEventsMenu.AddItem(new MenuItem("sEBeforeDeathChamps", ">> # of Enemies with Stacks").SetValue(new Slider(1, 1, 5)));
+            autoEventsMenu.AddItem(new MenuItem("sEBeforeDeathMinStacks", ">> Min. Stacks On Enemies").SetValue(new Slider(3, 1, 10)));
+            autoEventsMenu.AddItem(new MenuItem("sEBeforeDeathMaxHP", ">> Max % HP to Auto E Before Dying").SetValue(new Slider(10, 1, 30)));
+            autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKillMinions", "Auto E to Kill Minions").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("sAutoEMinionsKilled", ">> Min. Minions to Use E").SetValue(new Slider(2, 2, 10)));
+            autoEventsMenu.AddItem(new MenuItem("bAutoEOnStacksAndMinions", "Use E on Killable Minions Even if Enemy Has Stacks").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("sUseEOnMinionKilled", ">> Min. Minions to Use E").SetValue(new Slider(3, 1, 10)));
+            autoEventsMenu.AddItem(new MenuItem("sUseEOnChampStacks", ">> Min. Stacks on Enemy").SetValue(new Slider(1, 1, 10)));
+            autoEventsMenu.AddItem(new MenuItem("bUseEOnLeave", "Auto E if Leaving Rend Range").SetValue(false));
+            autoEventsMenu.AddItem(new MenuItem("sStacksOnLeave", ">> Min. Stacks on Enemy to Use E").SetValue(new Slider(4, 1, 10)));
+            autoEventsMenu.AddItem(new MenuItem("bAutoSaveSoul", "Auto-save Soulbound Ally").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("sSoulBoundPercent", ">> Min. Soulbound Ally % HP to Save").SetValue(new Slider(10, 1, 90)));
+            autoEventsMenu.AddItem(new MenuItem("bBST", "Auto-combo R (Blitz, Tahm, Skarner)").SetValue(true));
             return autoEventsMenu;
         }
 
         private static Menu MiscMenu()
         {
-            var autoEventsMenu = new Menu("Misc Crap", "miscMenu");
-            autoEventsMenu.AddItem(new MenuItem("bSentinel", "Sentinel While In Range").SetValue(new KeyBind('T', KeyBindType.Press)));
-            autoEventsMenu.AddItem(new MenuItem("bSentinelDragon", "Sentinel Dragon").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bSentinelBaron", "Sentinel Baron").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("slQprediction", "Q Prediction").SetValue(
+            var autoEventsMenu = new Menu("Miscellaneous", "miscMenu");
+            autoEventsMenu.AddItem(new MenuItem("bSentinel", "Use Sentinel While in Range").SetValue(new KeyBind('T', KeyBindType.Press)));
+            autoEventsMenu.AddItem(new MenuItem("bSentinelDragon", "Send to Dragon Camp").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bSentinelBaron", "Send to Baron Camp").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("slQprediction", "Set Q Prediction").SetValue(
                             new StringList(new[] { "Very High", "High", "Dashing" })));
             return autoEventsMenu;
         }
@@ -148,8 +148,8 @@ namespace S_Class_Kalista
         {
             var autoEventsMenu = new Menu("Mana Manager", "manaMenu");
             autoEventsMenu.AddItem(new MenuItem("bUseManaManager", "Use Mana Manager").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("sMinManaQ", "Min% Mana For Q").SetValue(new Slider(15, 10, 40)));
-            autoEventsMenu.AddItem(new MenuItem("sMinManaE", "Min% Mana For E").SetValue(new Slider(0, 0, 30)));
+            autoEventsMenu.AddItem(new MenuItem("sMinManaQ", "Min. % Mana for Q").SetValue(new Slider(15, 10, 40)));
+            autoEventsMenu.AddItem(new MenuItem("sMinManaE", "Min. % Mana for E").SetValue(new Slider(0, 0, 30)));
             return autoEventsMenu;
         }
     }
