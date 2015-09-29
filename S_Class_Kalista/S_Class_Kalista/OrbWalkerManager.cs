@@ -124,6 +124,7 @@ namespace S_Class_Kalista
 
             foreach (var target in HeroManager.Enemies)
             {
+                Console.WriteLine("Combo Beta Start");
                 if (!target.IsValid) continue;
                 if (Properties.PlayerHero.Distance(target) <
                     Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero)) continue;
