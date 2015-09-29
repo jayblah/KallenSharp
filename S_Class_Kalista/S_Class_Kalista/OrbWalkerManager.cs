@@ -124,24 +124,24 @@ namespace S_Class_Kalista
 
             foreach (var target in HeroManager.Enemies)
             {
-                Console.WriteLine("Combo Beta Start");
+              //  Console.WriteLine("Combo Beta Start");
                 if (!target.IsValid) continue;
-                Console.WriteLine("Combo Beta Target Valid");
+                //Console.WriteLine("Combo Beta Target Valid");
                 if (Properties.PlayerHero.Distance(target) <
                     Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero)) continue;
-                Console.WriteLine("Combo Beta Range Valid");
+               // Console.WriteLine("Combo Beta Range Valid");
                 var minions =
                     ObjectManager.Get<Obj_AI_Minion>()
                         .Where(m => m.IsValidTarget(Orbwalking.GetRealAutoAttackRange(m)));
 
                 if (minions.Any(m => Properties.Champion.E.CanCast(m) && m.Health <= DamageCalc.GetRendDamage(m)))
                 {
-                    Console.WriteLine("Combo IF");
+                    Console.WriteLine("Use Rend ");
                     Properties.Champion.UseRend();
                 }
                 else
                 {
-                    Console.WriteLine("Combo ELse");
+
                     var minion =
                         VectorHelper.GetDashObjects(minions)
                             .Find(
@@ -151,6 +151,7 @@ namespace S_Class_Kalista
                                     Properties.PlayerHero.GetAutoAttackDamage(m) + DamageCalc.GetRendDamage(m));
                     if (minion != null)
                     {
+                        Console.WriteLine("Force Target");
                         Properties.LukeOrbWalker.ForceTarget(minion);
                     }
                 }
