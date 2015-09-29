@@ -69,7 +69,7 @@ namespace S_Class_Kalista
             mixedMenu.AddItem(new MenuItem("bUseQCombo", "Auto Q").SetValue(false));
             mixedMenu.AddItem(new MenuItem("bUseQComboReset", "Reset AutoAttack With Q").SetValue(false));
             mixedMenu.AddItem(new MenuItem("bUseECombo", "Auto E for kills").SetValue(false));
-            mixedMenu.AddItem(new MenuItem("bUseBetaCombo", "Beta Combo").SetValue(true));
+            mixedMenu.AddItem(new MenuItem("bUseBetaCombo", "Beta Combo").SetValue(false));
             return mixedMenu;
         }
 
