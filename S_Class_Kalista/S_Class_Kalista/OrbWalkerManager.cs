@@ -223,7 +223,6 @@ namespace S_Class_Kalista
                     break;
                 }
 
-
                 var rendTarget =
                     HeroManager.Enemies.Where(
                         x =>
@@ -232,28 +231,24 @@ namespace S_Class_Kalista
                         .FirstOrDefault();
 
                 if (target.GetBuffCount("kalistaexpungemarker") <= 0) return;
-   
-                if (Properties.PlayerHero.Distance(target, true) > Math.Pow(Orbwalking.GetRealAutoAttackRange(target), 2))
-                {
-                    // Get minions around
-                    var minions = ObjectManager.Get<Obj_AI_Minion>().Where(m => m.IsValidTarget(Orbwalking.GetRealAutoAttackRange(m)));
 
-                    // Check if a minion can die with the current E stacks
-                    if (minions.Any(m => Properties.Champion.E.CanCast(m) && m.Health <= Properties.Champion.E.GetDamage(m)))
-                    {
-                        Properties.Champion.UseRend();
-                    }
-                    else
-                    {
-                        // Check if a minion can die with one AA and E. Also, the AA minion has be be behind the player direction for a further leap
-                        var minion = VectorHelper.GetDashObjects(minions).Find(m => m.Health > Properties.PlayerHero.GetAutoAttackDamage(m) && m.Health < Properties.PlayerHero.GetAutoAttackDamage(m) + DamageCalc.GetRendDamage(m));
-                        if (minion != null)
-                        {
-                            Properties.LukeOrbWalker.ForceTarget(minion);
-                        }
-                    }
+                if (!(Properties.PlayerHero.Distance(target, true) > Math.Pow(Orbwalking.GetRealAutoAttackRange(target), 2))) return;
+               
+                // Get minions around
+                var minions = ObjectManager.Get<Obj_AI_Minion>().Where(m => m.IsValidTarget(Orbwalking.GetRealAutoAttackRange(m)));
+
+                // Check if a minion can die with the current E stacks
+                if (minions.Any(m => Properties.Champion.E.CanCast(m) && m.Health <= Properties.Champion.E.GetDamage(m)))
+                    Properties.Champion.UseRend();
+                
+                else
+                {
+                    // Check if a minion can die with one AA and E. Also, the AA minion has be be behind the player direction for a further leap
+                    var minion = VectorHelper.GetDashObjects(minions).Find(m => m.Health > Properties.PlayerHero.GetAutoAttackDamage(m) && m.Health < Properties.PlayerHero.GetAutoAttackDamage(m) + DamageCalc.GetRendDamage(m));
+                    if (minion != null)
+                        Properties.LukeOrbWalker.ForceTarget(minion);
+                    
                 }
-      
             }
             else
             {
@@ -292,16 +287,14 @@ namespace S_Class_Kalista
                 }
             }
 
-            if (!Properties.Champion.E.IsReady()) return;
 
             if (Properties.MainMenu.Item("bUseManaManager").GetValue<bool>())
                 if (Properties.PlayerHero.ManaPercent < Properties.MainMenu.Item("sMinManaE").GetValue<Slider>().Value)
                     return;
 
-            if (!Properties.Time.CheckRendDelay()) // Wait for rend delay
-                return;
-
-            if(Properties.MainMenu.Item("bUseECombo").GetValue<bool>())
+            if (Properties.Time.CheckRendDelay()) // Wait for rend delay
+            if (Properties.Champion.E.IsReady())
+            if (Properties.MainMenu.Item("bUseECombo").GetValue<bool>())
             AutoEventManager.CheckEnemies();
 
             if (!Properties.MainMenu.Item("bUseMinionComboWalk").GetValue<bool>()) return;
