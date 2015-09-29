@@ -217,7 +217,8 @@ namespace S_Class_Kalista
                 var Minions = MinionManager.GetMinions(Properties.PlayerHero.Position, Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero), MinionTypes.All, MinionTeam.NotAlly);
 
                 var target2 = TargetSelector.GetTarget(700, TargetSelector.DamageType.Physical);
-                foreach (var minion in Minions.Where(minion => target2 == null).Where(minion => Vector3.Distance(ObjectManager.Player.ServerPosition, minion.Position) < Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero) + 50))
+                foreach (var minion in Minions.Where(minion => target2 == null).Where(minion => 
+                Vector3.Distance(ObjectManager.Player.ServerPosition, minion.Position) < Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero) + 50))
                 {
                     Properties.PlayerHero.IssueOrder(GameObjectOrder.AttackUnit, minion);
                     break;
@@ -276,10 +277,9 @@ namespace S_Class_Kalista
                         if (predictionPosition.Hitchance >= GetHitChance())
                         {
                             if (Properties.MainMenu.Item("bUseQComboReset").GetValue<bool>())
-                            {
                                 if (Properties.PlayerHero.IsWindingUp || Properties.PlayerHero.IsDashing())
                                     Properties.Champion.Q.Cast(predictionPosition.CastPosition);
-                            }
+                            
                             else if (!Properties.PlayerHero.IsWindingUp && !Properties.PlayerHero.IsDashing())
                                 Properties.Champion.Q.Cast(predictionPosition.CastPosition);
                         }
@@ -297,8 +297,8 @@ namespace S_Class_Kalista
             if (Properties.MainMenu.Item("bUseECombo").GetValue<bool>())
             AutoEventManager.CheckEnemies();
 
-            if (!Properties.MainMenu.Item("bUseMinionComboWalk").GetValue<bool>()) return;
-            OrbWalkMinionsV3();
+            if (Properties.MainMenu.Item("bUseMinionComboWalk").GetValue<bool>())
+                OrbWalkMinions();
 
 
 

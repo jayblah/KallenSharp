@@ -121,7 +121,7 @@ namespace S_Class_Kalista
             autoEventsMenu.AddItem(new MenuItem("sEBeforeDeathMinStacks", "Min Stacks On Champs").SetValue(new Slider(3, 1, 10)));
             autoEventsMenu.AddItem(new MenuItem("sEBeforeDeathMaxHP", "Max HP% To Activate E Before Death").SetValue(new Slider(10, 1, 30)));
             autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKillMinions", "Auto E Kill Minions").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("sAutoEMinionsKilled", "Required Minions Killed From E").SetValue(new Slider(2, 2, 10)));
+            autoEventsMenu.AddItem(new MenuItem("sAutoEMinionsKilled", "Required Minions Killed From E").SetValue(new Slider(2, 1, 10)));
             autoEventsMenu.AddItem(new MenuItem("bAutoEOnStacksAndMinions", "Auto E When Stacks On Champ And Minions Killed").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("sUseEOnMinionKilled", "Required Minions Killed From E + Champ Stacks").SetValue(new Slider(3, 1, 10)));
             autoEventsMenu.AddItem(new MenuItem("sUseEOnChampStacks", "Required Stacks On Champion").SetValue(new Slider(1, 1, 10)));
