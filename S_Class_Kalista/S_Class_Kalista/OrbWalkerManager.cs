@@ -75,8 +75,73 @@ namespace S_Class_Kalista
             return HitChance.VeryHigh;
         }
 
-        
+
         // ReSharper disable once UnusedMethodReturnValue.Local
+        private static bool OrbWalkMinions()
+        {
+
+            var nTarget = LeagueSharp.Common.TargetSelector.GetTarget(Properties.Champion.E.Range * 1.2f, TargetSelector.DamageType.Physical);
+            if (nTarget == null) return false;
+
+            var Minions = MinionManager.GetMinions(Properties.PlayerHero.Position, LeagueSharp.Common.Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero), MinionTypes.All, MinionTeam.NotAlly);
+
+            var target2 = TargetSelector.GetTarget(700f, TargetSelector.DamageType.Physical);
+
+            foreach (var minion in Minions)
+            {
+                if (target2 == null&& (Vector3.Distance(Properties.PlayerHero.ServerPosition, minion.Position) < Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero) + 50))
+                {
+                    Properties.PlayerHero.IssueOrder(GameObjectOrder.AttackUnit, minion);
+                    break;
+                }
+            }
+
+            var rendTarget =
+           HeroManager.Enemies.Where(
+               x =>
+               x.IsValidTarget(Properties.Champion.E.Range) && Properties.Champion.E.GetDamage(x) > 1 && !DamageCalc.CheckNoDamageBuffs(x))
+               .OrderByDescending(x => Properties.Champion.E.GetDamage(x))
+               .FirstOrDefault();
+
+            if ((Properties.Champion.E.Instance.State == SpellState.Ready ||
+                 Properties.Champion.E.Instance.State == SpellState.Surpressed)
+                && nTarget.GetBuffCount("kalistaexpungemarker") > 0)
+            {
+                if (Properties.PlayerHero.Distance(nTarget, true) >
+                    Math.Pow(Orbwalking.GetRealAutoAttackRange(nTarget), 2))
+                {
+                    // Get minions around
+                    var minions =
+                        ObjectManager.Get<Obj_AI_Minion>()
+                            .Where(m => m.IsValidTarget(Orbwalking.GetRealAutoAttackRange(m)));
+
+                    // Check if a minion can die with the current E stacks
+                    if (minions.Any(m => Properties.Champion.E.CanCast(m) && m.Health <= DamageCalc.GetRendDamage(m)))
+                    {
+                        return true;
+                        Properties.Champion.UseRend();
+                    }
+
+                    else
+                    {
+                        // Check if a minion can die with one AA and E. Also, the AA minion has be be behind the player direction for a further leap
+                        var minion =
+                            VectorHelper.GetDashObjects(minions)
+                                .Find(
+                                    m =>
+                                        m.Health > Properties.PlayerHero.GetAutoAttackDamage(m) &&
+                                        m.Health <
+                                        Properties.PlayerHero.GetAutoAttackDamage(m) + DamageCalc.GetRendDamage(m));
+                        if (minion != null)
+                        {
+                            Properties.LukeOrbWalker.ForceTarget(minion);
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
 
         private static void Combo()
         {
@@ -117,86 +182,17 @@ namespace S_Class_Kalista
 
             if (!Properties.MainMenu.Item("bUseBetaCombo").GetValue<bool>()) return;
 
-            var target2 = LeagueSharp.Common.TargetSelector.GetTarget((Properties.Champion.E.Range*1.2f),
-                TargetSelector.DamageType.Physical);
-            if (target2 == null) return;
-
-            if (Properties.PlayerHero.Distance(target2, true) > Math.Pow(Orbwalking.GetRealAutoAttackRange(target2), 2))
-            {
-                // Get minions around
-                var minions =
-                    ObjectManager.Get<Obj_AI_Minion>().Where(m => m.IsValidTarget(Orbwalking.GetRealAutoAttackRange(m)));
-
-                // Check if a minion can die with the current E stacks
-                if (minions.Any(m => Properties.Champion.E.CanCast(m) && m.Health <= Properties.Champion.E.GetDamage(m)))
-                {
-                    Console.WriteLine("Beta Combo E Cast");
-                    Properties.Champion.E.Cast();
-                    Properties.Champion.E.LastCastAttemptT = Environment.TickCount;
-                }
-                else
-                {
-                    // Check if a minion can die with one AA and E. Also, the AA minion has be be behind the player direction for a further leap
-                    var minion =
-                        VectorHelper.GetDashObjects(minions)
-                            .Find(
-                                m =>
-                                    m.Health > Properties.PlayerHero.GetAutoAttackDamage(m) &&
-                                    m.Health <
-                                    Properties.PlayerHero.GetAutoAttackDamage(m) + DamageCalc.GetRendDamage(m));
-                    if (minion != null)
-                    {
-                        Console.WriteLine("Beta Combo Force Minon");
-                        Properties.LukeOrbWalker.ForceTarget(minion);
-                    }
-                }
-
-                //var nTarget = LeagueSharp.Common.TargetSelector.GetTarget(Properties.Champion.E.Range * 1.2f, TargetSelector.DamageType.Physical);
-
-                //if (Properties.Champion.E.Instance.State != SpellState.Ready &&
-                //    (Properties.Champion.E.Instance.State != SpellState.Surpressed ||
-                //     (nTarget.GetBuffCount("kalistaexpungemarker") <= 0))) return;
-
-                //foreach (var target in HeroManager.Enemies)
-                //{
-                //  //  Console.WriteLine("Combo Beta Start");
-                //    if (!target.IsValid) continue;
-                //    //Console.WriteLine("Combo Beta Target Valid");
-                //    if (Properties.PlayerHero.Distance(target) <
-                //        Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero)) continue;
-                //   // Console.WriteLine("Combo Beta Range Valid");
-                //    var minions =
-                //        ObjectManager.Get<Obj_AI_Minion>()
-                //            .Where(m => m.IsValidTarget(Orbwalking.GetRealAutoAttackRange(m)));
-
-                //    if (minions.Any(m => Properties.Champion.E.CanCast(m) && m.Health <= DamageCalc.GetRendDamage(m)))
-                //    {
-                //        Console.WriteLine("Use Rend ");
-                //        Properties.Champion.UseRend();
-                //    }
-                //    else
-                //    {
-
-                //        var minion =
-                //            VectorHelper.GetDashObjects(minions)
-                //                .Find(
-                //                    m =>
-                //                        m.Health > Properties.PlayerHero.GetAutoAttackDamage(m) &&
-                //                        m.Health <
-                //                        Properties.PlayerHero.GetAutoAttackDamage(m) + DamageCalc.GetRendDamage(m));
-                //        if (minion != null)
-                //        {
-                //            Console.WriteLine("Force Target");
-                //            Properties.LukeOrbWalker.ForceTarget(minion);
-                //        }
-                //    }
+            OrbWalkMinions();
 
 
-                //}
-            }
+
         }
+    
 
-        //Cool Q in mid Auto
+
+
+
+//Cool Q in mid Auto
         //if (Properties.PlayerHero.IsWindingUp || Properties.PlayerHero.IsDashing())
         //Properties.Champion.Q.Cast(predictionPosition.CastPosition);
         
