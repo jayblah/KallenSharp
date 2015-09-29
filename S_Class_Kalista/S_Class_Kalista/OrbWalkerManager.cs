@@ -117,13 +117,15 @@ namespace S_Class_Kalista
 
             if (!Properties.MainMenu.Item("bUseBetaCombo").GetValue<bool>()) return;
 
-            var target2 = LeagueSharp.Common.TargetSelector.GetTarget((Properties.Champion.E.Range * 1.2f), TargetSelector.DamageType.Physical);
+            var target2 = LeagueSharp.Common.TargetSelector.GetTarget((Properties.Champion.E.Range*1.2f),
+                TargetSelector.DamageType.Physical);
             if (target2 == null) return;
 
-                if (Properties.PlayerHero.Distance(target2, true) > Math.Pow(Orbwalking.GetRealAutoAttackRange(target2), 2))
+            if (Properties.PlayerHero.Distance(target2, true) > Math.Pow(Orbwalking.GetRealAutoAttackRange(target2), 2))
             {
                 // Get minions around
-                var minions = ObjectManager.Get<Obj_AI_Minion>().Where(m => m.IsValidTarget(Orbwalking.GetRealAutoAttackRange(m)));
+                var minions =
+                    ObjectManager.Get<Obj_AI_Minion>().Where(m => m.IsValidTarget(Orbwalking.GetRealAutoAttackRange(m)));
 
                 // Check if a minion can die with the current E stacks
                 if (minions.Any(m => Properties.Champion.E.CanCast(m) && m.Health <= Properties.Champion.E.GetDamage(m)))
@@ -135,7 +137,13 @@ namespace S_Class_Kalista
                 else
                 {
                     // Check if a minion can die with one AA and E. Also, the AA minion has be be behind the player direction for a further leap
-                    var minion = VectorHelper.GetDashObjects(minions).Find(m => m.Health > Properties.PlayerHero.GetAutoAttackDamage(m) && m.Health < Properties.PlayerHero.GetAutoAttackDamage(m) + DamageCalc.GetRendDamage(m));
+                    var minion =
+                        VectorHelper.GetDashObjects(minions)
+                            .Find(
+                                m =>
+                                    m.Health > Properties.PlayerHero.GetAutoAttackDamage(m) &&
+                                    m.Health <
+                                    Properties.PlayerHero.GetAutoAttackDamage(m) + DamageCalc.GetRendDamage(m));
                     if (minion != null)
                     {
                         Console.WriteLine("Beta Combo Force Minon");
@@ -186,6 +194,7 @@ namespace S_Class_Kalista
 
                 //}
             }
+        }
 
         //Cool Q in mid Auto
         //if (Properties.PlayerHero.IsWindingUp || Properties.PlayerHero.IsDashing())
