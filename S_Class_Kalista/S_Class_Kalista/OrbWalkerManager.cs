@@ -79,51 +79,46 @@ namespace S_Class_Kalista
         // ReSharper disable once UnusedMethodReturnValue.Local
         private static bool OrbWalkMinions()
         {
-
-            var nTarget = LeagueSharp.Common.TargetSelector.GetTarget(Properties.Champion.E.Range, TargetSelector.DamageType.Physical);
+            var nTarget = TargetSelector.GetTarget(Properties.Champion.E.Range, TargetSelector.DamageType.Physical);
             if (nTarget == null) return false;
 
             var target2 = TargetSelector.GetTarget(700f, TargetSelector.DamageType.Physical);
 
+            // ReSharper disable once LoopCanBePartlyConvertedToQuery
             foreach (var m in MinionManager.GetMinions(
-                Properties.PlayerHero.Position, LeagueSharp.Common.Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero), 
+                Properties.PlayerHero.Position, Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero),
                 MinionTypes.All, MinionTeam.NotAlly))
             {
                 if (target2 != null ||
                     (!(Vector3.Distance(Properties.PlayerHero.ServerPosition, m.Position) <
-                       Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero) + 50))) continue;
+                       Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero) + 50)))
+                    continue;
                 Properties.PlayerHero.IssueOrder(GameObjectOrder.AttackUnit, m);
                 break;
             }
 
             if ((Properties.Champion.E.Instance.State != SpellState.Ready &&
                  Properties.Champion.E.Instance.State != SpellState.Surpressed) ||
-                nTarget.GetBuffCount("kalistaexpungemarker") <= 0) return false;
+                nTarget.GetBuffCount("kalistaexpungemarker") <= 0)
+                return false;
 
             if (!(Properties.PlayerHero.Distance(nTarget, true) >
-                  Math.Pow(Orbwalking.GetRealAutoAttackRange(nTarget), 2))) return false;
+                  Math.Pow(Orbwalking.GetRealAutoAttackRange(nTarget), 2)))
+                return false;
 
 
-            var minion =
-                VectorHelper.GetDashObjects(MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
-                    Properties.Champion.E.Range))
-                    .Find(
-                        m =>
-                            m.Health > Properties.PlayerHero.GetAutoAttackDamage(m) && m.Health < Properties.PlayerHero.GetAutoAttackDamage(m) + DamageCalc.GetRendDamage(m));
-            if (minion == null) return false;
-            Properties.LukeOrbWalker.ForceTarget(minion);
+            if (!Properties.Time.CheckRendDelay()) return true;
 
-            if (Properties.Time.CheckRendDelay())
+            var killableMinions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
+                Properties.Champion.E.Range);
+
+            foreach (var m in killableMinions)
             {
-                var rendMinions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
-                    Properties.Champion.E.Range);
-                var count = 0;
-                var killableMinions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
-                    Properties.Champion.E.Range);
-                count += killableMinions.Count(m => m.Health <= DamageCalc.GetRendDamage(m) + Properties.PlayerHero.GetAutoAttackDamage(m) && m.IsValid);
-                if (count <= 0) return false;
-                Properties.LukeOrbWalker.ForceTarget(minion);
-                Properties.Champion.UseRend();
+                if(!m.IsValid)continue;
+                if(m.Health > Properties.PlayerHero.GetAutoAttackDamage(m) + DamageCalc.GetRendDamage(m))continue;
+                    Properties.LukeOrbWalker.ForceTarget(m);
+                if(m.Health < DamageCalc.GetRendDamage(m))
+                    Properties.Champion.UseRend();
             }
 
             return true;
