@@ -126,8 +126,10 @@ namespace S_Class_Kalista
             {
                 Console.WriteLine("Combo Beta Start");
                 if (!target.IsValid) continue;
+                Console.WriteLine("Combo Beta Target Valid");
                 if (Properties.PlayerHero.Distance(target) <
                     Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero)) continue;
+                Console.WriteLine("Combo Beta Range Valid");
                 var minions =
                     ObjectManager.Get<Obj_AI_Minion>()
                         .Where(m => m.IsValidTarget(Orbwalking.GetRealAutoAttackRange(m)));
