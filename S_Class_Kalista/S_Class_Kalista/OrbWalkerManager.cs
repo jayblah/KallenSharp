@@ -166,7 +166,7 @@ namespace S_Class_Kalista
 
             AutoEventManager.CheckEnemies();
 
-            if (!Properties.MainMenu.Item("bUseBetaCombo").GetValue<bool>()) return;
+            if (!Properties.MainMenu.Item("bUseMinionComboWalk").GetValue<bool>()) return;
 
             OrbWalkMinions();
 
