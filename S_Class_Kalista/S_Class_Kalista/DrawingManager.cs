@@ -220,9 +220,9 @@ namespace S_Class_Kalista
 
                 var playerPos = LeagueSharp.Drawing.WorldToScreen(Properties.PlayerHero.Position);
                 var jungleBool = Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active
-                    ? "True"
-                    : "False";
-                var jungleClear = string.Format("Jungle Clear:{0}", jungleBool);
+                    ? "Enabled"
+                    : "Disabled";
+                var jungleClear = string.Format("Jungle Clear: {0}", jungleBool);
                 var vColor = GetColor(Properties.MainMenu.Item("bUseJungleClear").GetValue<KeyBind>().Active);
                 LeagueSharp.Drawing.DrawText(playerPos.X - LeagueSharp.Drawing.GetTextExtent(jungleClear).Width + 50,
                     playerPos.Y - LeagueSharp.Drawing.GetTextExtent(jungleClear).Height + 30, vColor, jungleClear);
