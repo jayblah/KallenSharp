@@ -132,10 +132,13 @@ namespace S_Class_Kalista
                         .Where(m => m.IsValidTarget(Orbwalking.GetRealAutoAttackRange(m)));
 
                 if (minions.Any(m => Properties.Champion.E.CanCast(m) && m.Health <= DamageCalc.GetRendDamage(m)))
+                {
+                    Console.WriteLine("Combo IF");
                     Properties.Champion.UseRend();
-
+                }
                 else
                 {
+                    Console.WriteLine("Combo ELse");
                     var minion =
                         VectorHelper.GetDashObjects(minions)
                             .Find(
