@@ -80,67 +80,43 @@ namespace S_Class_Kalista
         private static bool OrbWalkMinions()
         {
 
-            var nTarget = LeagueSharp.Common.TargetSelector.GetTarget(Properties.Champion.E.Range * 1.2f, TargetSelector.DamageType.Physical);
+            var nTarget = TargetSelector.GetTarget(Properties.Champion.E.Range, TargetSelector.DamageType.Physical);
             if (nTarget == null) return false;
-
-            var Minions = MinionManager.GetMinions(Properties.PlayerHero.Position, LeagueSharp.Common.Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero), MinionTypes.All, MinionTeam.NotAlly);
 
             var target2 = TargetSelector.GetTarget(700f, TargetSelector.DamageType.Physical);
 
-            foreach (var minion in Minions)
+            // ReSharper disable once LoopCanBePartlyConvertedToQuery
+            foreach (var m in MinionManager.GetMinions(
+                Properties.PlayerHero.Position, Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero), 
+                MinionTypes.All, MinionTeam.NotAlly))
             {
-                if (target2 == null&& (Vector3.Distance(Properties.PlayerHero.ServerPosition, minion.Position) < Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero) + 50))
-                {
-                    Properties.PlayerHero.IssueOrder(GameObjectOrder.AttackUnit, minion);
-                    break;
-                }
+                if (target2 != null ||
+                    (!(Vector3.Distance(Properties.PlayerHero.ServerPosition, m.Position) <
+                       Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero) + 50))) continue;
+                Properties.PlayerHero.IssueOrder(GameObjectOrder.AttackUnit, m);
+                break;
             }
 
-            var rendTarget =
-           HeroManager.Enemies.Where(
-               x =>
-               x.IsValidTarget(Properties.Champion.E.Range) && Properties.Champion.E.GetDamage(x) > 1 && !DamageCalc.CheckNoDamageBuffs(x))
-               .OrderByDescending(x => Properties.Champion.E.GetDamage(x))
-               .FirstOrDefault();
+            if ((Properties.Champion.E.Instance.State != SpellState.Ready &&
+                 Properties.Champion.E.Instance.State != SpellState.Surpressed) ||
+                nTarget.GetBuffCount("kalistaexpungemarker") <= 0) return false;
 
-            if ((Properties.Champion.E.Instance.State == SpellState.Ready ||
-                 Properties.Champion.E.Instance.State == SpellState.Surpressed)
-                && nTarget.GetBuffCount("kalistaexpungemarker") > 0)
+            if (!(Properties.PlayerHero.Distance(nTarget, true) >
+                  Math.Pow(Orbwalking.GetRealAutoAttackRange(nTarget), 2))) return false;
+
+
+            if (!Properties.Time.CheckRendDelay()) return true;
+
+            var killableMinions = MinionManager.GetMinions(Properties.PlayerHero.ServerPosition,
+                Properties.Champion.E.Range);
+
+            foreach (var m in killableMinions.Where(m => !(m.Health > DamageCalc.GetRendDamage(m) + Properties.PlayerHero.GetAutoAttackDamage(m))).Where(m => m.IsValid))
             {
-                if (Properties.PlayerHero.Distance(nTarget, true) >
-                    Math.Pow(Orbwalking.GetRealAutoAttackRange(nTarget), 2))
-                {
-                    // Get minions around
-                    var minions =
-                        ObjectManager.Get<Obj_AI_Minion>()
-                            .Where(m => m.IsValidTarget(Orbwalking.GetRealAutoAttackRange(m)));
-
-                    // Check if a minion can die with the current E stacks
-                    if (minions.Any(m => Properties.Champion.E.CanCast(m) && m.Health <= DamageCalc.GetRendDamage(m)))
-                    {
-                        return true;
-                        Properties.Champion.UseRend();
-                    }
-
-                    else
-                    {
-                        // Check if a minion can die with one AA and E. Also, the AA minion has be be behind the player direction for a further leap
-                        var minion =
-                            VectorHelper.GetDashObjects(minions)
-                                .Find(
-                                    m =>
-                                        m.Health > Properties.PlayerHero.GetAutoAttackDamage(m) &&
-                                        m.Health <
-                                        Properties.PlayerHero.GetAutoAttackDamage(m) + DamageCalc.GetRendDamage(m));
-                        if (minion != null)
-                        {
-                            Properties.LukeOrbWalker.ForceTarget(minion);
-                            return true;
-                        }
-                    }
-                }
+                Properties.LukeOrbWalker.ForceTarget(m);
+                Properties.Champion.UseRend();
             }
-            return false;
+
+            return true;
         }
 
         private static void Combo()
@@ -180,12 +156,8 @@ namespace S_Class_Kalista
 
             AutoEventManager.CheckEnemies();
 
-            if (!Properties.MainMenu.Item("bUseBetaCombo").GetValue<bool>()) return;
-
+            if (!Properties.MainMenu.Item("bUseMinionComboWalk").GetValue<bool>()) return;
             OrbWalkMinions();
-
-
-
         }
     
 
