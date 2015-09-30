@@ -130,6 +130,7 @@ namespace S_Class_Kalista
             autoEventsMenu.AddItem(new MenuItem("bAutoSaveSoul", "Auto-save Soulbound Ally").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("sSoulBoundPercent", ">> Min. Soulbound Ally % HP to Save").SetValue(new Slider(10, 1, 90)));
             autoEventsMenu.AddItem(new MenuItem("bBST", "Auto-combo R (Blitz, Tahm, Skarner)").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("sBST", "Min Distance To Activate R Combo").SetValue(new Slider(1000, 350, 2450)));
             return autoEventsMenu;
         }
 

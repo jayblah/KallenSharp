@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LeagueSharp;
-using LeagueSharp.Common;
+﻿using LeagueSharp;
 
 namespace S_Class_Kalista
 {
-    class SWalker
+    internal class SWalker
     {
         static SWalker()
         {
-            
         }
 
         internal class BeforeAttackEventArgs
@@ -33,19 +26,22 @@ namespace S_Class_Kalista
             }
         }
 
-        struct Events
+        private struct Events
         {
             public delegate void AfterAttack(AttackableUnit unit, AttackableUnit target);
+
             public delegate void BeforeAttack(BeforeAttackEventArgs args);
+
             public delegate void OnAttack(AttackableUnit unit, AttackableUnit target);
+
             public delegate void OnNonKillableMinion(AttackableUnit minion);
+
             public delegate void OnTargetChange(AttackableUnit oldTarget, AttackableUnit newTarget);
         }
 
-
         public struct OrbWalker
         {
-            enum Mode
+            private enum Mode
             {
                 LastHit,
                 Mixed,
@@ -55,7 +51,6 @@ namespace S_Class_Kalista
             }
 
             public float Delay;
-
         }
     }
 }

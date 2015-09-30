@@ -152,7 +152,6 @@ namespace S_Class_Kalista
         {
             if (!Properties.Time.CheckRendDelay()) return false;
 
-
             foreach (var target in HeroManager.Enemies)
             {
                 if (!target.IsValid) continue;

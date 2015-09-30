@@ -83,7 +83,7 @@ namespace S_Class_Kalista
             Net.CheckVersion();
         }
 
-    private static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        private static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (sender == null || !sender.IsValid) return;
 

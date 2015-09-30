@@ -1,15 +1,11 @@
-﻿using LeagueSharp;
-using LeagueSharp.Common;
+﻿using SharpDX;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using SharpDX;
 using Color = System.Drawing.Color;
 
 namespace S_Class_Kalista
 {
-    class Drawing 
+    internal class Drawing
     {
         public struct Circle
         {
@@ -28,14 +24,16 @@ namespace S_Class_Kalista
         private static readonly Dictionary<String, Line> Lines = new Dictionary<String, Line>();
         private static readonly Dictionary<String, Circle> Circles = new Dictionary<String, Circle>();
 
-        public static bool Delete(string name,char type)
+        public static bool Delete(string name, char type)
         {
             switch (type)
             {
                 case 'c':
                     return Circles.Remove(name);
+
                 case 'l':
                     return Lines.Remove(name);
+
                 default:
                     return false;
             }
@@ -43,8 +41,9 @@ namespace S_Class_Kalista
 
         public static void Add(string name, Circle c)
         {
-            Circles.Add(name,c);
+            Circles.Add(name, c);
         }
+
         public static void Add(string name, Line l)
         {
             Lines.Add(name, l);
@@ -52,16 +51,17 @@ namespace S_Class_Kalista
 
         private static void Draw(Circle c)
         {
-            LeagueSharp.Drawing.DrawCircle(c.Position,c.NativeCircle.Radius,c.NativeCircle.Color);
+            LeagueSharp.Drawing.DrawCircle(c.Position, c.NativeCircle.Radius, c.NativeCircle.Color);
         }
 
         private static Color GetManagedColor(ColorBGRA c)
         {
-            return  Color.FromArgb(c.A, c.R, c.G, c.B);
+            return Color.FromArgb(c.A, c.R, c.G, c.B);
         }
+
         private static void Draw(Line c)
         {
-            LeagueSharp.Drawing.DrawLine(c.NativeLine.Start,c.NativeLine.End,c.Thinkness, GetManagedColor(c.NativeLine.Color));
+            LeagueSharp.Drawing.DrawLine(c.NativeLine.Start, c.NativeLine.End, c.Thinkness, GetManagedColor(c.NativeLine.Color));
         }
 
         public static void Draw_onDraw()
@@ -69,7 +69,7 @@ namespace S_Class_Kalista
             foreach (var c in Circles)
             {
                 if (Properties.Time.TickCount > c.Value.LifeTime)
-                    if (Delete(c.Key, 'c'))continue;
+                    if (Delete(c.Key, 'c')) continue;
 
                 Draw(c.Value);
             }
@@ -82,6 +82,5 @@ namespace S_Class_Kalista
                 Draw(l.Value);
             }
         }
-
     }
 }
