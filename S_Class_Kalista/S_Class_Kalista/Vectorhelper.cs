@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LeagueSharp;
+﻿using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace S_Class_Kalista
 {
-    class VectorHelper
+    internal class VectorHelper
     {
         private static readonly Obj_AI_Hero player = ObjectManager.Player;
 
         // Credits to furikuretsu from Stackoverflow (http://stackoverflow.com/a/10772759)
+
         #region ConeCalculations
 
         public static bool IsLyingInCone(Vector2 position, Vector2 apexPoint, Vector2 circleCenter, double aperture)
@@ -27,13 +26,13 @@ namespace S_Class_Kalista
             // Vector pointing from apex to circle-center point.
             Vector2 axisVect = apexPoint - circleCenter;
 
-            // X is lying in cone only if it's lying in 
-            // infinite version of its cone -- that is, 
+            // X is lying in cone only if it's lying in
+            // infinite version of its cone -- that is,
             // not limited by "round basement".
-            // We'll use dotProd() to 
+            // We'll use dotProd() to
             // determine angle between apexToXVect and axis.
             bool isInInfiniteCone = DotProd(apexToXVect, axisVect) / Magn(apexToXVect) / Magn(axisVect) >
-            // We can safely compare cos() of angles 
+            // We can safely compare cos() of angles
             // between vectors instead of bare angles.
             Math.Cos(halfAperture);
 
@@ -41,7 +40,7 @@ namespace S_Class_Kalista
                 return false;
 
             // X is contained in cone only if projection of apexToXVect to axis
-            // is shorter than axis. 
+            // is shorter than axis.
             // We'll use dotProd() to figure projection length.
             bool isUnderRoundCap = DotProd(apexToXVect, axisVect) / Magn(axisVect) < Magn(axisVect);
 
@@ -58,7 +57,7 @@ namespace S_Class_Kalista
             return (float)(Math.Sqrt(a.X * a.X + a.Y * a.Y));
         }
 
-        #endregion
+        #endregion ConeCalculations
 
         public static Vector2? GetFirstWallPoint(Vector3 from, Vector3 to, float step = 25)
         {
@@ -96,4 +95,3 @@ namespace S_Class_Kalista
         }
     }
 }
-

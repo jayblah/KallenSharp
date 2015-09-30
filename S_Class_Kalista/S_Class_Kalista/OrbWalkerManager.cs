@@ -19,10 +19,10 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System;
 using LeagueSharp;
 using LeagueSharp.Common;
 using SharpDX;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Collision = LeagueSharp.Common.Collision;
@@ -75,10 +75,8 @@ namespace S_Class_Kalista
             return HitChance.VeryHigh;
         }
 
-
         private static void OrbWalkMinions()
         {
-
             var target = TargetSelector.GetTarget(Properties.Champion.E.Range * 1.2f, TargetSelector.DamageType.Physical);
 
             if (target != null)
@@ -86,7 +84,7 @@ namespace S_Class_Kalista
                 // ReSharper disable once InconsistentNaming
                 var Minions = MinionManager.GetMinions(Properties.PlayerHero.Position, Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero), MinionTypes.All, MinionTeam.NotAlly);
 
-                if (Minions == null)return;
+                if (Minions == null) return;
 
                 var target2 = TargetSelector.GetTarget(700, TargetSelector.DamageType.Physical);
 
@@ -107,14 +105,12 @@ namespace S_Class_Kalista
                 var objAiMinions = minions as Obj_AI_Minion[] ?? minions.ToArray();
                 if (objAiMinions.Any(m => Properties.Champion.E.CanCast(m) && m.Health <= Properties.Champion.E.GetDamage(m)))
                     Properties.Champion.UseRend();
-                
                 else
                 {
                     // ReSharper disable once PossibleMultipleEnumeration
                     var minion = VectorHelper.GetDashObjects(objAiMinions).Find(m => m.Health > Properties.PlayerHero.GetAutoAttackDamage(m) && m.Health < Properties.PlayerHero.GetAutoAttackDamage(m) + DamageCalc.GetRendDamage(m));
                     if (minion != null)
                         Properties.LukeOrbWalker.ForceTarget(minion);
-                    
                 }
             }
             else
@@ -146,39 +142,30 @@ namespace S_Class_Kalista
                             if (Properties.MainMenu.Item("bUseQComboReset").GetValue<bool>())
                                 if (Properties.PlayerHero.IsWindingUp || Properties.PlayerHero.IsDashing())
                                     Properties.Champion.Q.Cast(predictionPosition.CastPosition);
-                            
-                            else if (!Properties.PlayerHero.IsWindingUp && !Properties.PlayerHero.IsDashing())
-                                Properties.Champion.Q.Cast(predictionPosition.CastPosition);
+                                else if (!Properties.PlayerHero.IsWindingUp && !Properties.PlayerHero.IsDashing())
+                                    Properties.Champion.Q.Cast(predictionPosition.CastPosition);
                         }
                     }
                 }
             }
-
 
             if (Properties.MainMenu.Item("bUseManaManager").GetValue<bool>())
                 if (Properties.PlayerHero.ManaPercent < Properties.MainMenu.Item("sMinManaE").GetValue<Slider>().Value)
                     return;
 
             if (Properties.Time.CheckRendDelay()) // Wait for rend delay
-            if (Properties.Champion.E.IsReady())
-            if (Properties.MainMenu.Item("bUseECombo").GetValue<bool>())
-            AutoEventManager.CheckEnemies();
+                if (Properties.Champion.E.IsReady())
+                    if (Properties.MainMenu.Item("bUseECombo").GetValue<bool>())
+                        AutoEventManager.CheckEnemies();
 
             if (Properties.MainMenu.Item("bUseMinionComboWalk").GetValue<bool>())
                 OrbWalkMinions();
-
-
-
         }
-    
 
-
-
-
-//Cool Q in mid Auto
+        //Cool Q in mid Auto
         //if (Properties.PlayerHero.IsWindingUp || Properties.PlayerHero.IsDashing())
         //Properties.Champion.Q.Cast(predictionPosition.CastPosition);
-        
+
         private static void Mixed()
         {
             if (Properties.MainMenu.Item("bUseQMixed").GetValue<bool>() && Properties.Champion.Q.IsReady())

@@ -44,34 +44,32 @@ namespace S_Class_Kalista
                 case "Blitzcrank":
                     buffName = "rocketgrab2";
                     break;
+
                 case "Skarner":
                     buffName = "skarnerimpale";
                     break;
+
                 case "TahmKench":
                     buffName = "tahmkenchwdevoured";
                     break;
             }
 
-
             if (Properties.MainMenu.Item("bBST").GetValue<bool>() && buffName.Length > 0)
             {
-
                 foreach (var target in ObjectManager.Get<Obj_AI_Hero>())
                 {
-
                     if (!target.IsValid) continue;
                     if (!target.IsEnemy) continue;
                     if (target.Distance(ObjectManager.Player) < 2450f) continue;// out of range
                     if (target.Buffs == null) continue;
                     for (var i = 0; i < target.Buffs.Count(); i++)
                     {
-                        if(target.Distance(ObjectManager.Player) > Properties.MainMenu.Item("sBST").GetValue<Slider>().Value)
+                        if (target.Distance(ObjectManager.Player) > Properties.MainMenu.Item("sBST").GetValue<Slider>().Value)
                             if (target.Buffs[i].Name.ToLower() != buffName || !target.Buffs[i].IsActive) continue;
-                                 Properties.Champion.R.Cast();
+                        Properties.Champion.R.Cast();
                     }
                 }
             }
-
             else if (Properties.SoulBoundHero.HealthPercent <
                      Properties.MainMenu.Item("sSoulBoundPercent").GetValue<Slider>().Value &&
                      Properties.SoulBoundHero.CountEnemiesInRange(500) > 0)
