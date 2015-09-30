@@ -109,50 +109,31 @@ namespace S_Class_Kalista
 
         private static Menu AutoEvents()
         {
-            var autoEventsMenu = new Menu("Auto Events", "autoEvents");
-
-            autoEventsMenu.AddItem(new MenuItem("bAutoLevel", "Auto Level Skills").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bAutoBuyOrb", "Auto Buy Orb at 6").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bUseEToKillEpics", "Auto E Epics").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bUseEToKillBuffs", "Auto E Buffs").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKill", "Auto E Kill Enemies").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bUseENonKillables", "Auto E NonKillable Minions").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bEBeforeDeath", "Auto E Before Death").SetValue(false));
-            autoEventsMenu.AddItem(new MenuItem("sEBeforeDeathChamps", "Champions With Stacks").SetValue(new Slider(1, 1, 5)));
-            autoEventsMenu.AddItem(new MenuItem("sEBeforeDeathMinStacks", "Min Stacks On Champs").SetValue(new Slider(3, 1, 10)));
-            autoEventsMenu.AddItem(new MenuItem("sEBeforeDeathMaxHP", "Max HP% To Activate E Before Death").SetValue(new Slider(10, 1, 30)));
-            autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKillMinions", "Auto E Kill Minions").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("sAutoEMinionsKilled", "Required Minions Killed From E").SetValue(new Slider(2, 1, 10)));
-            autoEventsMenu.AddItem(new MenuItem("bAutoEOnStacksAndMinions", "Auto E When Stacks On Champ And Minions Killed").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("sUseEOnMinionKilled", "Required Minions Killed From E + Champ Stacks").SetValue(new Slider(3, 1, 10)));
-            autoEventsMenu.AddItem(new MenuItem("sUseEOnChampStacks", "Required Stacks On Champion").SetValue(new Slider(1, 1, 10)));
-            autoEventsMenu.AddItem(new MenuItem("bUseEOnLeave", "Auto E On Range Leave").SetValue(false));
-            autoEventsMenu.AddItem(new MenuItem("sStacksOnLeave", "Required Stacks For Range Leave").SetValue(new Slider(4, 1, 10)));
-            autoEventsMenu.AddItem(new MenuItem("bAutoSaveSoul", "Auto Save SoulBound partner").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bBST", "Balista? Skalista? Tahmlista?").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("sSoulBoundPercent", "Soul Bound HP% Remaining").SetValue(new Slider(10, 1, 90)));
-
+            var autoEventsMenu = new Menu("Automatic Events", "autoEvents");
             autoEventsMenu.AddItem(new MenuItem("bAutoLevel", "Auto-level Skills").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bAutoBuyOrb", "Auto-buy Orb at 6").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseEToKillEpics", "Auto E Epic Camps").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseEToKillBuffs", "Auto E Buff Camps").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKill", "Auto E to Kill Enemy").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("bUseENonKillables", "Auto E Non-killable Minions").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKillMinions", "Use E to Farm Minions").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("sAutoEMinionsKilled", ">> Min. Minions to Use E").SetValue(new Slider(2, 2, 10)));
+            autoEventsMenu.AddItem(new MenuItem("bAutoEOnStacksAndMinions", "Use E on Minions Even if Enemy Has Stacks").SetValue(true));
+            autoEventsMenu.AddItem(new MenuItem("sUseEOnMinionKilled", ">> Min. Minions to Use E").SetValue(new Slider(3, 1, 10)));
+            autoEventsMenu.AddItem(new MenuItem("sUseEOnChampStacks", ">> Min. Stacks on Enemy").SetValue(new Slider(1, 1, 10)));
+            autoEventsMenu.AddItem(new MenuItem("bUseENonKillables", "Use E on Minions That Can't be AA'd").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bEBeforeDeath", "Auto E Before Dying").SetValue(false));
             autoEventsMenu.AddItem(new MenuItem("sEBeforeDeathChamps", ">> # of Enemies with Stacks").SetValue(new Slider(1, 1, 5)));
             autoEventsMenu.AddItem(new MenuItem("sEBeforeDeathMinStacks", ">> Min. Stacks On Enemies").SetValue(new Slider(3, 1, 10)));
-            autoEventsMenu.AddItem(new MenuItem("sEBeforeDeathMaxHP", ">> Max % HP to Auto E Before Dying").SetValue(new Slider(10, 1, 30)));
-            autoEventsMenu.AddItem(new MenuItem("bUseEToAutoKillMinions", "Auto E to Kill Minions").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("sAutoEMinionsKilled", ">> Min. Minions to Use E").SetValue(new Slider(2, 2, 10)));
-            autoEventsMenu.AddItem(new MenuItem("bAutoEOnStacksAndMinions", "Use E on Killable Minions Even if Enemy Has Stacks").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("sUseEOnMinionKilled", ">> Min. Minions to Use E").SetValue(new Slider(3, 1, 10)));
-            autoEventsMenu.AddItem(new MenuItem("sUseEOnChampStacks", ">> Min. Stacks on Enemy").SetValue(new Slider(1, 1, 10)));
+            autoEventsMenu.AddItem(new MenuItem("sEBeforeDeathMaxHP", ">> % HP to Use E Before Dying").SetValue(new Slider(10, 1, 30)));
             autoEventsMenu.AddItem(new MenuItem("bUseEOnLeave", "Auto E if Leaving Rend Range").SetValue(false));
             autoEventsMenu.AddItem(new MenuItem("sStacksOnLeave", ">> Min. Stacks on Enemy to Use E").SetValue(new Slider(4, 1, 10)));
             autoEventsMenu.AddItem(new MenuItem("bAutoSaveSoul", "Auto-save Soulbound Ally").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("sSoulBoundPercent", ">> Min. Soulbound Ally % HP to Save").SetValue(new Slider(10, 1, 90)));
             autoEventsMenu.AddItem(new MenuItem("bBST", "Auto-combo R (Blitz, Tahm, Skarner)").SetValue(true));
+<<<<<<< HEAD
             autoEventsMenu.AddItem(new MenuItem("sBST", "Min Distance To Activate R Combo").SetValue(new Slider(1000, 350, 2450)));
+=======
+>>>>>>> origin/master
             return autoEventsMenu;
         }
 
