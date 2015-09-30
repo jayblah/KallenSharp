@@ -61,13 +61,13 @@ namespace S_Class_Kalista
 
                     if (!target.IsValid) continue;
                     if (!target.IsEnemy) continue;
-                    if (target.Distance(ObjectManager.Player) < 2450f) continue;
+                    if (target.Distance(ObjectManager.Player) < 2450f) continue;// out of range
                     if (target.Buffs == null) continue;
-                    if (Properties.SoulBoundHero.Distance(target) < 750) continue;
                     for (var i = 0; i < target.Buffs.Count(); i++)
                     {
-                        if (target.Buffs[i].Name.ToLower() != buffName || !target.Buffs[i].IsActive) continue;
-                        Properties.Champion.R.Cast();
+                        if(target.Distance(ObjectManager.Player) > Properties.MainMenu.Item("sBST").GetValue<Slider>().Value)
+                            if (target.Buffs[i].Name.ToLower() != buffName || !target.Buffs[i].IsActive) continue;
+                                 Properties.Champion.R.Cast();
                     }
                 }
             }
