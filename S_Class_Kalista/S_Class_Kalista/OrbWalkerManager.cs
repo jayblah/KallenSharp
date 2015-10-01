@@ -129,7 +129,9 @@ namespace S_Class_Kalista
         {
             if (Properties.MainMenu.Item("bUseQCombo").GetValue<bool>() && Properties.Champion.Q.IsReady())
             {
-                if (!Properties.MainMenu.Item("bUseManaManager").GetValue<bool>() || Properties.MainMenu.Item("bUseManaManager").GetValue<bool>() && Properties.PlayerHero.ManaPercent > Properties.MainMenu.Item("sMinManaQ").GetValue<Slider>().Value)
+                if (!Properties.MainMenu.Item("bUseManaManager").GetValue<bool>() || 
+                    Properties.MainMenu.Item("bUseManaManager").GetValue<bool>() && 
+                    Properties.PlayerHero.ManaPercent > Properties.MainMenu.Item("sMinManaQ").GetValue<Slider>().Value)
                 {
                         var target = TargetSelector.GetTarget(Properties.Champion.Q.Range, TargetSelector.DamageType.Physical);
                         var predictionPosition = Properties.Champion.Q.GetPrediction(target);
@@ -193,7 +195,9 @@ namespace S_Class_Kalista
 
             if (!Properties.MainMenu.Item("bUseEMixed").GetValue<bool>()) return;
 
-            if (!Properties.MainMenu.Item("bUseManaManager").GetValue<bool>() || Properties.MainMenu.Item("bUseManaManager").GetValue<bool>() && Properties.PlayerHero.ManaPercent < Properties.MainMenu.Item("sMinManaE").GetValue<Slider>().Value) return;
+            if (!Properties.MainMenu.Item("bUseManaManager").GetValue<bool>() || 
+                Properties.MainMenu.Item("bUseManaManager").GetValue<bool>() && 
+                Properties.PlayerHero.ManaPercent > Properties.MainMenu.Item("sMinManaE").GetValue<Slider>().Value)
             {
                 foreach (var stacks in from target in HeroManager.Enemies
                     where target.IsValid
