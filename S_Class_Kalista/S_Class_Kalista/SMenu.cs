@@ -56,8 +56,8 @@ namespace S_Class_Kalista
 
         private static Menu NewOrbWalkingMenu()
         {
-            var orbWalkingMenu = new Menu("New OrbWalker", "yodaWalker");
-            var targetSelectorMenu = new Menu("Target Selector", "newTargetSelect");
+            var orbWalkingMenu = new Menu("Sky Walker", "yodaWalker");
+            var targetSelectorMenu = new Menu("Target Selector", "targetSelect");
             TargetSelector.AddToMenu(targetSelectorMenu);
             orbWalkingMenu.AddSubMenu(targetSelectorMenu);
             return orbWalkingMenu;
@@ -148,7 +148,7 @@ namespace S_Class_Kalista
         private static Menu MiscMenu()
         {
             var autoEventsMenu = new Menu("Miscellaneous", "miscMenu");
-            autoEventsMenu.AddItem(new MenuItem("slOrbwalker", "Orbwalker To Use").SetValue(new StringList(new[] { "Old Orbwalker", "New Orbwalker" })));
+            //autoEventsMenu.AddItem(new MenuItem("slOrbwalker", "Orbwalker To Use").SetValue(new StringList(new[] { "Old Orbwalker", "New Orbwalker" })));
             autoEventsMenu.AddItem(new MenuItem("bSentinel", "Use Sentinel While in Range").SetValue(new KeyBind('T', KeyBindType.Press)));
             autoEventsMenu.AddItem(new MenuItem("bSentinelDragon", "Send to Dragon Camp").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bSentinelBaron", "Send to Baron Camp").SetValue(true));

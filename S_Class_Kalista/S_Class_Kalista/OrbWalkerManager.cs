@@ -35,31 +35,31 @@ namespace S_Class_Kalista
 
         public static void DoTheWalk()
         {
-            switch (Properties.MainMenu.Item("slOrbwalker").GetValue<StringList>().SelectedIndex)
-            {
+            //switch (Properties.MainMenu.Item("slOrbwalker").GetValue<StringList>().SelectedIndex)
+            //{
 
-                case 0:
-                    switch (Properties.LukeOrbWalker.ActiveMode)
-                    {
-                        case Orbwalking.OrbwalkingMode.Combo:
-                            Combo();
-                            break;
+            //    case 0:
+            //        switch (Properties.LukeOrbWalker.ActiveMode)
+            //        {
+            //            case Orbwalking.OrbwalkingMode.Combo:
+            //                Combo();
+            //                break;
 
-                        case Orbwalking.OrbwalkingMode.Mixed:
-                            Mixed();
-                            break;
+            //            case Orbwalking.OrbwalkingMode.Mixed:
+            //                Mixed();
+            //                break;
 
-                        case Orbwalking.OrbwalkingMode.LaneClear:
-                            LaneClear();
-                            break;
+            //            case Orbwalking.OrbwalkingMode.LaneClear:
+            //                LaneClear();
+            //                break;
 
-                        case Orbwalking.OrbwalkingMode.LastHit:
-                            LastHit();
-                            break;
-                    }
-                    break;
+            //            case Orbwalking.OrbwalkingMode.LastHit:
+            //                LastHit();
+            //                break;
+            //        }
+            //        break;
 
-                case 1:
+            //    case 1:
                     switch (Properties.YodaOrbWalker.ActiveMode)
                     {
                         case SWalker.OrbwalkingMode.Combo:
@@ -77,8 +77,8 @@ namespace S_Class_Kalista
                         case SWalker.OrbwalkingMode.LastHit:
                             LastHit();
                             break;
-                    }
-                    break;
+            //        }
+            //        break;
             }
         }
 
