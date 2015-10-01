@@ -42,7 +42,7 @@ namespace S_Class_Kalista
             Properties.MainMenu.AddSubMenu(ManaMenu());
             Properties.MainMenu.AddSubMenu(MiscMenu());
            // Properties.LukeOrbWalker = new Orbwalking.Orbwalker(Properties.MainMenu.SubMenu("lukeWalker"));
-            Properties.YodaOrbWalker = new SWalker.Orbwalker(Properties.MainMenu.SubMenu("yodaWalker"));
+            Properties.SkyWalker = new SWalker.Orbwalker(Properties.MainMenu.SubMenu("skyWalker"));
         }
 
         //private static Menu OrbWalkingMenu()
@@ -56,7 +56,7 @@ namespace S_Class_Kalista
 
         private static Menu NewOrbWalkingMenu()
         {
-            var orbWalkingMenu = new Menu("Sky Walker", "yodaWalker");
+            var orbWalkingMenu = new Menu("Sky Walker", "skyWalker");
             var targetSelectorMenu = new Menu("Target Selector", "targetSelect");
             TargetSelector.AddToMenu(targetSelectorMenu);
             orbWalkingMenu.AddSubMenu(targetSelectorMenu);

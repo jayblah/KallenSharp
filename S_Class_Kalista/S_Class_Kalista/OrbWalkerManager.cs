@@ -60,7 +60,7 @@ namespace S_Class_Kalista
             //        break;
 
             //    case 1:
-                    switch (Properties.YodaOrbWalker.ActiveMode)
+                    switch (Properties.SkyWalker.ActiveMode)
                     {
                         case SWalker.OrbwalkingMode.Combo:
                             Combo();
@@ -137,7 +137,7 @@ namespace S_Class_Kalista
                     // ReSharper disable once PossibleMultipleEnumeration
                     var minion = VectorHelper.GetDashObjects(objAiMinions).Find(m => m.Health > Properties.PlayerHero.GetAutoAttackDamage(m) && m.Health < Properties.PlayerHero.GetAutoAttackDamage(m) + DamageCalc.GetRendDamage(m));
                     if (minion != null)
-                        Properties.LukeOrbWalker.ForceTarget(minion);
+                        Properties.SkyWalker.ForceTarget(minion);
                 }
             }
             else

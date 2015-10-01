@@ -33,8 +33,8 @@ namespace S_Class_Kalista
 
         #region Auto Properties
 
-        public static Orbwalking.Orbwalker LukeOrbWalker { get; set; }
-        public static SWalker.Orbwalker YodaOrbWalker{ get; set; }
+       // public static Orbwalking.Orbwalker LukeOrbWalker { get; set; }
+        public static SWalker.Orbwalker SkyWalker{ get; set; }
         public static Menu MainMenu { get; set; }
         public static Obj_AI_Hero PlayerHero { get; set; }
         public static Obj_AI_Hero SoulBoundHero { get; set; }
