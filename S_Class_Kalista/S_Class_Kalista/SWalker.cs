@@ -28,8 +28,8 @@ namespace S_Class_Kalista
             Mixed,
             LaneClear,
             Combo,
-            Burst,
-            FastHarass,
+      //      Burst,
+     //       FastHarass,
             None
         }
         // Buffs that disable attack and movement
@@ -351,7 +351,7 @@ namespace S_Class_Kalista
                         if (!NoCancelChamps.Contains(Player.ChampionName))
                         {
                             LastAACommandTick = Utils.GameTimeTickCount - 4;
-                            //LastAATick = Utils.GameTimeTickCount + Game.Ping + 100 - (int)(ObjectManager.Player.AttackCastDelay * 1000f);
+                            LastAATick = Utils.GameTimeTickCount + Game.Ping + 100 - (int)(ObjectManager.Player.AttackCastDelay * 1000f);
                             _missileLaunched = false;
                             StopMove = true;
                         }
@@ -397,7 +397,7 @@ namespace S_Class_Kalista
             var missile = sender as MissileClient;
             if (missile != null && missile.SpellCaster.IsMe && IsAutoAttack(missile.SData.Name))
             {
-                // _missileLaunched = true;
+                _missileLaunched = true;
             }
         }
 
@@ -418,13 +418,7 @@ namespace S_Class_Kalista
                 {
                     return;
                 }
-                if (!unit.IsMe)
-                    return;
-                if (!Player.IsWindingUp)
-                {
-                    Game.Say("/d");
-                    return;
-                }
+
                 if (unit.IsMe &&
                     (Spell.Target is Obj_AI_Base || Spell.Target is Obj_BarracksDampener || Spell.Target is Obj_HQ))
                 {
@@ -441,8 +435,8 @@ namespace S_Class_Kalista
                         }
 
                         //Trigger it for ranged until the missiles catch normal attacks again!
-                        //Utility.DelayAction.Add(
-                        //    (int)(unit.AttackCastDelay * 1000 + 40), () => FireAfterAttack(unit, _lastTarget));
+                        Utility.DelayAction.Add(
+                            (int)(unit.AttackCastDelay * 1000 + 40), () => FireAfterAttack(unit, _lastTarget));
                     }
                 }
 
@@ -469,7 +463,7 @@ namespace S_Class_Kalista
                     (!(args.Target is Obj_AI_Base) && !(args.Target is Obj_BarracksDampener) && !(args.Target is Obj_HQ)))
                     return;
                 var windup = SWalker.Orbwalker.Config.Item("ExtraDoCastWindup").GetValue<Slider>().Value;
-                //_missileLaunched = true;
+                _missileLaunched = true;
                 Utility.DelayAction.Add(40 + windup > Game.Ping ? 40 + windup - Game.Ping : 0, () => FireAfterAttack(sender, _lastTarget));
                 Utility.DelayAction.Add(40 + windup > Game.Ping ? 40 + windup - Game.Ping : 0, () => StopMove = false);
                 if (args.Target is Obj_AI_Base)
@@ -579,19 +573,19 @@ namespace S_Class_Kalista
                 Config.AddItem(
                     new MenuItem("LastHit", "Last hit").SetShared().SetValue(new KeyBind('X', KeyBindType.Press)));
 
-                Config.AddItem(new MenuItem("Farm", "Mixed").SetShared().SetValue(new KeyBind('C', KeyBindType.Press)));
+                Config.AddItem(new MenuItem("Mixed", "Mixed").SetShared().SetValue(new KeyBind('C', KeyBindType.Press)));
 
                 Config.AddItem(
                     new MenuItem("LaneClear", "LaneClear").SetShared().SetValue(new KeyBind('V', KeyBindType.Press)));
 
                 Config.AddItem(
-                    new MenuItem("Orbwalk", "Combo").SetShared().SetValue(new KeyBind(32, KeyBindType.Press)));
+                    new MenuItem("Combo", "Combo").SetShared().SetValue(new KeyBind(32, KeyBindType.Press)));
 
-                Config.AddItem(
-                  new MenuItem("Burst", "Burst").SetShared().SetValue(new KeyBind('T', KeyBindType.Press)));
+                //Config.AddItem(
+                //  new MenuItem("Burst", "Burst").SetShared().SetValue(new KeyBind('T', KeyBindType.Press)));
 
-                Config.AddItem(
-                   new MenuItem("FastHarass", "FastHarass").SetShared().SetValue(new KeyBind('Y', KeyBindType.Press)));
+                //Config.AddItem(
+                //   new MenuItem("FastHarass", "FastHarass").SetShared().SetValue(new KeyBind('Y', KeyBindType.Press)));
 
 
                 _delay = Config.Item("MovementDelay").GetValue<Slider>().Value;
@@ -627,7 +621,7 @@ namespace S_Class_Kalista
                         return _mode;
                     }
 
-                    if (Config.Item("Orbwalk").GetValue<KeyBind>().Active)
+                    if (Config.Item("Combo").GetValue<KeyBind>().Active)
                     {
                         return OrbwalkingMode.Combo;
                     }
@@ -637,7 +631,7 @@ namespace S_Class_Kalista
                         return OrbwalkingMode.LaneClear;
                     }
 
-                    if (Config.Item("Farm").GetValue<KeyBind>().Active)
+                    if (Config.Item("Mixed").GetValue<KeyBind>().Active)
                     {
                         return OrbwalkingMode.Mixed;
                     }
@@ -646,14 +640,14 @@ namespace S_Class_Kalista
                     {
                         return OrbwalkingMode.LastHit;
                     }
-                    if (Config.Item("Burst").GetValue<KeyBind>().Active)
-                    {
-                        return OrbwalkingMode.Burst;
-                    }
-                    if (Config.Item("FastHarass").GetValue<KeyBind>().Active)
-                    {
-                        return OrbwalkingMode.FastHarass;
-                    }
+                    //if (Config.Item("Burst").GetValue<KeyBind>().Active)
+                    //{
+                    //    return OrbwalkingMode.Burst;
+                    //}
+                    //if (Config.Item("FastHarass").GetValue<KeyBind>().Active)
+                    //{
+                    //    return OrbwalkingMode.FastHarass;
+                    //}
 
                     return OrbwalkingMode.None;
                 }
