@@ -42,7 +42,7 @@ namespace S_Class_Kalista
             Properties.MainMenu.AddSubMenu(ManaMenu());
             Properties.MainMenu.AddSubMenu(MiscMenu());
            // Properties.LukeOrbWalker = new Orbwalking.Orbwalker(Properties.MainMenu.SubMenu("lukeWalker"));
-            Properties.SkyWalker = new SWalker.Orbwalker(Properties.MainMenu.SubMenu("skyWalker"));
+            Properties.SkyWalker = new SkyWalker.Orbwalker(Properties.MainMenu.SubMenu("skyWalker"));
         }
 
         //private static Menu OrbWalkingMenu()

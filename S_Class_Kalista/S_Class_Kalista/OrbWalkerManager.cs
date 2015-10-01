@@ -62,19 +62,19 @@ namespace S_Class_Kalista
             //    case 1:
                     switch (Properties.SkyWalker.ActiveMode)
                     {
-                        case SWalker.OrbwalkingMode.Combo:
+                        case SkyWalker.OrbwalkingMode.Combo:
                             Combo();
                             break;
 
-                        case SWalker.OrbwalkingMode.Mixed:
+                        case SkyWalker.OrbwalkingMode.Mixed:
                             Mixed();
                             break;
 
-                        case SWalker.OrbwalkingMode.LaneClear:
+                        case SkyWalker.OrbwalkingMode.LaneClear:
                             LaneClear();
                             break;
 
-                        case SWalker.OrbwalkingMode.LastHit:
+                        case SkyWalker.OrbwalkingMode.LastHit:
                             LastHit();
                             break;
             //        }

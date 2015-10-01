@@ -10,7 +10,7 @@ using Color = System.Drawing.Color;
 namespace S_Class_Kalista
 {
     //Credits to whoever made the new orbwalker
-    public static class SWalker
+    public static class SkyWalker
     {
         public delegate void AfterAttackEvenH(AttackableUnit unit, AttackableUnit target);
 
@@ -89,7 +89,7 @@ namespace S_Class_Kalista
         private static bool _missileLaunched;
         private static readonly Random _random = new Random(DateTime.Now.Millisecond);
 
-        static SWalker()
+        static SkyWalker()
         {
             Player = ObjectManager.Player;
             Obj_AI_Base.OnProcessSpellCast += OnProcessSpell;
@@ -462,7 +462,7 @@ namespace S_Class_Kalista
                 if (!sender.IsMe ||
                     (!(args.Target is Obj_AI_Base) && !(args.Target is Obj_BarracksDampener) && !(args.Target is Obj_HQ)))
                     return;
-                var windup = SWalker.Orbwalker.Config.Item("ExtraDoCastWindup").GetValue<Slider>().Value;
+                var windup = SkyWalker.Orbwalker.Config.Item("ExtraDoCastWindup").GetValue<Slider>().Value;
                 _missileLaunched = true;
                 Utility.DelayAction.Add(40 + windup > Game.Ping ? 40 + windup - Game.Ping : 0, () => FireAfterAttack(sender, _lastTarget));
                 Utility.DelayAction.Add(40 + windup > Game.Ping ? 40 + windup - Game.Ping : 0, () => StopMove = false);
