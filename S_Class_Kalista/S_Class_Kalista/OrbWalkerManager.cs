@@ -35,22 +35,49 @@ namespace S_Class_Kalista
 
         public static void DoTheWalk()
         {
-            switch (Properties.LukeOrbWalker.ActiveMode)
+            switch (Properties.MainMenu.Item("slOrbwalker").GetValue<StringList>().SelectedIndex)
             {
-                case Orbwalking.OrbwalkingMode.Combo:
-                    Combo();
+
+                case 0:
+                    switch (Properties.LukeOrbWalker.ActiveMode)
+                    {
+                        case Orbwalking.OrbwalkingMode.Combo:
+                            Combo();
+                            break;
+
+                        case Orbwalking.OrbwalkingMode.Mixed:
+                            Mixed();
+                            break;
+
+                        case Orbwalking.OrbwalkingMode.LaneClear:
+                            LaneClear();
+                            break;
+
+                        case Orbwalking.OrbwalkingMode.LastHit:
+                            LastHit();
+                            break;
+                    }
                     break;
 
-                case Orbwalking.OrbwalkingMode.Mixed:
-                    Mixed();
-                    break;
+                case 1:
+                    switch (Properties.YodaOrbWalker.ActiveMode)
+                    {
+                        case SWalker.OrbwalkingMode.Combo:
+                            Combo();
+                            break;
 
-                case Orbwalking.OrbwalkingMode.LaneClear:
-                    LaneClear();
-                    break;
+                        case SWalker.OrbwalkingMode.Mixed:
+                            Mixed();
+                            break;
 
-                case Orbwalking.OrbwalkingMode.LastHit:
-                    LastHit();
+                        case SWalker.OrbwalkingMode.LaneClear:
+                            LaneClear();
+                            break;
+
+                        case SWalker.OrbwalkingMode.LastHit:
+                            LastHit();
+                            break;
+                    }
                     break;
             }
         }
@@ -199,6 +226,7 @@ namespace S_Class_Kalista
                 Properties.MainMenu.Item("bUseManaManager").GetValue<bool>() && 
                 Properties.PlayerHero.ManaPercent > Properties.MainMenu.Item("sMinManaE").GetValue<Slider>().Value)
             {
+                // ReSharper disable once UnusedVariable
                 foreach (var stacks in from target in HeroManager.Enemies
                     where target.IsValid
                     where target.IsValidTarget(Properties.Champion.E.Range)

@@ -30,23 +30,34 @@ namespace S_Class_Kalista
         public static void GenerateMenu()
         {
             Properties.MainMenu = new Menu(MenuName, MenuName, true);
-            Properties.MainMenu.AddSubMenu(new Menu("Created by Kallen aka 0x0539", "ddsfhjsjhdfjhdsfjhdfsjhdf"));
+            Properties.MainMenu.AddSubMenu(new Menu("Created by Kallen", "ddsfhjsjhdfjhdsfjhdfsjhdf"));
             //Properties.MainMenu.AddSubMenu(HumanizerMenu());
             Properties.MainMenu.AddSubMenu(DrawingMenu());
             Properties.MainMenu.AddSubMenu(AutoEvents());
             Properties.MainMenu.AddSubMenu(OrbWalkingMenu());
+            Properties.MainMenu.AddSubMenu(NewOrbWalkingMenu());
             Properties.MainMenu.AddSubMenu(MixedMenu());
             Properties.MainMenu.AddSubMenu(ComboMenu());
             Properties.MainMenu.AddSubMenu(LaneClearMenu());
             Properties.MainMenu.AddSubMenu(ManaMenu());
             Properties.MainMenu.AddSubMenu(MiscMenu());
-            Properties.LukeOrbWalker = new Orbwalking.Orbwalker(Properties.MainMenu.SubMenu("Orbwalking"));
+            Properties.LukeOrbWalker = new Orbwalking.Orbwalker(Properties.MainMenu.SubMenu("lukeWalker"));
+            Properties.YodaOrbWalker = new SWalker.Orbwalker(Properties.MainMenu.SubMenu("yodaWalker"));
         }
 
         private static Menu OrbWalkingMenu()
         {
-            var orbWalkingMenu = new Menu("Orbwalking", "lukeWalker");
-            var targetSelectorMenu = new Menu("Target Selector", "tSelect");
+            var orbWalkingMenu = new Menu("Old OrbWalker", "lukeWalker");
+            var targetSelectorMenu = new Menu("Target Selector", "oldTargetSelect");
+            TargetSelector.AddToMenu(targetSelectorMenu);
+            orbWalkingMenu.AddSubMenu(targetSelectorMenu);
+            return orbWalkingMenu;
+        }
+
+        private static Menu NewOrbWalkingMenu()
+        {
+            var orbWalkingMenu = new Menu("New OrbWalker", "yodaWalker");
+            var targetSelectorMenu = new Menu("Target Selector", "newTargetSelect");
             TargetSelector.AddToMenu(targetSelectorMenu);
             orbWalkingMenu.AddSubMenu(targetSelectorMenu);
             return orbWalkingMenu;
@@ -137,11 +148,11 @@ namespace S_Class_Kalista
         private static Menu MiscMenu()
         {
             var autoEventsMenu = new Menu("Miscellaneous", "miscMenu");
+            autoEventsMenu.AddItem(new MenuItem("slOrbwalker", "Orbwalker To Use").SetValue(new StringList(new[] { "Old Orbwalker", "New Orbwalker" })));
             autoEventsMenu.AddItem(new MenuItem("bSentinel", "Use Sentinel While in Range").SetValue(new KeyBind('T', KeyBindType.Press)));
             autoEventsMenu.AddItem(new MenuItem("bSentinelDragon", "Send to Dragon Camp").SetValue(true));
             autoEventsMenu.AddItem(new MenuItem("bSentinelBaron", "Send to Baron Camp").SetValue(true));
-            autoEventsMenu.AddItem(new MenuItem("slQprediction", "Set Q Prediction").SetValue(
-                            new StringList(new[] { "Very High", "High", "Dashing" })));
+            autoEventsMenu.AddItem(new MenuItem("slQprediction", "Set Q Prediction").SetValue(new StringList(new[] { "Very High", "High", "Dashing" })));
             return autoEventsMenu;
         }
 
