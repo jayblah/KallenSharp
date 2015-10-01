@@ -34,25 +34,25 @@ namespace S_Class_Kalista
             //Properties.MainMenu.AddSubMenu(HumanizerMenu());
             Properties.MainMenu.AddSubMenu(DrawingMenu());
             Properties.MainMenu.AddSubMenu(AutoEvents());
-            Properties.MainMenu.AddSubMenu(OrbWalkingMenu());
+            //Properties.MainMenu.AddSubMenu(OrbWalkingMenu());
             Properties.MainMenu.AddSubMenu(NewOrbWalkingMenu());
             Properties.MainMenu.AddSubMenu(MixedMenu());
             Properties.MainMenu.AddSubMenu(ComboMenu());
             Properties.MainMenu.AddSubMenu(LaneClearMenu());
             Properties.MainMenu.AddSubMenu(ManaMenu());
             Properties.MainMenu.AddSubMenu(MiscMenu());
-            Properties.LukeOrbWalker = new Orbwalking.Orbwalker(Properties.MainMenu.SubMenu("lukeWalker"));
+           // Properties.LukeOrbWalker = new Orbwalking.Orbwalker(Properties.MainMenu.SubMenu("lukeWalker"));
             Properties.YodaOrbWalker = new SWalker.Orbwalker(Properties.MainMenu.SubMenu("yodaWalker"));
         }
 
-        private static Menu OrbWalkingMenu()
-        {
-            var orbWalkingMenu = new Menu("Old OrbWalker", "lukeWalker");
-            var targetSelectorMenu = new Menu("Target Selector", "oldTargetSelect");
-            TargetSelector.AddToMenu(targetSelectorMenu);
-            orbWalkingMenu.AddSubMenu(targetSelectorMenu);
-            return orbWalkingMenu;
-        }
+        //private static Menu OrbWalkingMenu()
+        //{
+        //    var orbWalkingMenu = new Menu("Old OrbWalker", "lukeWalker");
+        //    var targetSelectorMenu = new Menu("Target Selector", "oldTargetSelect");
+        //    TargetSelector.AddToMenu(targetSelectorMenu);
+        //    orbWalkingMenu.AddSubMenu(targetSelectorMenu);
+        //    return orbWalkingMenu;
+        //}
 
         private static Menu NewOrbWalkingMenu()
         {
