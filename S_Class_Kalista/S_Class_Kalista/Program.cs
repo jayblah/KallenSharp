@@ -69,7 +69,7 @@ namespace S_Class_Kalista
             LeagueSharp.Drawing.OnDraw += DrawingManager.Drawing_OnDraw;
             LeagueSharp.Drawing.OnDraw += DrawingManager.Drawing_OnDrawChamp;
             LeagueSharp.Drawing.OnDraw += DrawingManager.Drawing_OnDrawMonster;
-            Orbwalking.OnNonKillableMinion += AutoEventManager.CheckNonKillables;
+            SkyWalker.OnNonKillableMinion += AutoEventManager.CheckNonKillables;
 
             // Add Delays for later use
             //Humanizer needs to be reworked
