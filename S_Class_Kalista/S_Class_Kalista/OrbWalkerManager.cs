@@ -154,6 +154,11 @@ namespace S_Class_Kalista
             }
         }
 
+        public static void AfterAttack(AttackableUnit unit, AttackableUnit target)
+        {
+            ItemManager.UseItems((Obj_AI_Hero)target, Properties.SkyWalker.ActiveMode == SkyWalker.OrbwalkingMode.Combo);
+        }
+
         private static void Combo()
         {
             if (Properties.MainMenu.Item("bUseQCombo").GetValue<bool>() && Properties.Champion.Q.IsReady())

@@ -18,6 +18,8 @@
 //   Assembly to be use with LeagueSharp for champion Kalista
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
+
+using LeagueSharp;
 using LeagueSharp.Common;
 using Color = System.Drawing.Color;
 
@@ -40,6 +42,7 @@ namespace S_Class_Kalista
             Properties.MainMenu.AddSubMenu(ComboMenu());
             Properties.MainMenu.AddSubMenu(LaneClearMenu());
             Properties.MainMenu.AddSubMenu(ManaMenu());
+            Properties.MainMenu.AddSubMenu(ItemMenu());
             Properties.MainMenu.AddSubMenu(MiscMenu());
            // Properties.LukeOrbWalker = new Orbwalking.Orbwalker(Properties.MainMenu.SubMenu("lukeWalker"));
             Properties.SkyWalker = new SkyWalker.Orbwalker(Properties.MainMenu.SubMenu("skyWalker"));
@@ -53,7 +56,13 @@ namespace S_Class_Kalista
         //    orbWalkingMenu.AddSubMenu(targetSelectorMenu);
         //    return orbWalkingMenu;
         //}
-
+        private static Menu ItemMenu()
+        {
+            var itemMenu = new Menu("Item Options", "itemOptions");
+            itemMenu.AddItem(new MenuItem("bUseBork", "Smart Bork/Cutless Usage").SetValue(true));
+            itemMenu.AddItem(new MenuItem("bUseYoumuu", "Smart Youmuu's Usage").SetValue(true));
+            return itemMenu;
+        }
         private static Menu NewOrbWalkingMenu()
         {
             var orbWalkingMenu = new Menu("Sky Walker", "skyWalker");
