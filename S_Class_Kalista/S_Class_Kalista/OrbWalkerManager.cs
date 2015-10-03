@@ -119,7 +119,8 @@ namespace S_Class_Kalista
                 {
                     if (target2 != null) continue;
                     if (Vector3.Distance(ObjectManager.Player.ServerPosition, minion.Position) > Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero) + 50) continue;
-                    Properties.PlayerHero.IssueOrder(GameObjectOrder.AttackUnit, minion);
+                    if(minion.CharData.BaseSkinName == "gangplankbarrel") continue;
+                        Properties.PlayerHero.IssueOrder(GameObjectOrder.AttackUnit, minion);
                     break;
                 }
 
@@ -136,7 +137,7 @@ namespace S_Class_Kalista
                 {
                     // ReSharper disable once PossibleMultipleEnumeration
                     var minion = VectorHelper.GetDashObjects(objAiMinions).Find(m => m.Health > Properties.PlayerHero.GetAutoAttackDamage(m) && m.Health < Properties.PlayerHero.GetAutoAttackDamage(m) + DamageCalc.GetRendDamage(m));
-                    if (minion != null)
+                    if (minion != null && minion.CharData.BaseSkinName != "gangplankbarrel")
                         Properties.SkyWalker.ForceTarget(minion);
                 }
             }
@@ -146,6 +147,7 @@ namespace S_Class_Kalista
                 foreach (var minion in minions)
                 {
                     if (Vector3.Distance(ObjectManager.Player.ServerPosition, minion.Position) > Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero) + 50) continue;
+                    if(minion.CharData.BaseSkinName == "gangplankbarrel")continue;
                     Properties.PlayerHero.IssueOrder(GameObjectOrder.AttackUnit, minion);
                     break;
                 }

@@ -782,7 +782,7 @@ namespace S_Class_Kalista
                 if (ActiveMode != OrbwalkingMode.LastHit)
                 {
                     var target = TargetSelector.GetTarget(-1, TargetSelector.DamageType.Physical);
-                    if (target.IsValidTarget())
+                    if (target.IsValidTarget() && target.CharData.BaseSkinName != "gangplankbarrel")
                     {
                         return target;
                     }
