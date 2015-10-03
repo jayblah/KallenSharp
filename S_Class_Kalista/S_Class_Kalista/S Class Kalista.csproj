@@ -60,24 +60,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoEventManager.cs" />
-    <Compile Include="AutoLevel.cs" />
-    <Compile Include="DamageCalc.cs" />
-    <Compile Include="Drawing.cs" />
-    <Compile Include="DrawingManager.cs" />
-    <Compile Include="ItemManager.cs" />
-    <Compile Include="Net.cs" />
-    <Compile Include="SMenu.cs" />
-    <Compile Include="Humanizer.cs" />
-    <Compile Include="OrbWalkerManager.cs" />
+    <Compile Include="Auto\AutoEventManager.cs" />
+    <Compile Include="Auto\AutoLevel.cs" />
+    <Compile Include="Libs\DamageCalc.cs" />
+    <Compile Include="Drawing\Drawing.cs" />
+    <Compile Include="Drawing\DrawingManager.cs" />
+    <Compile Include="Managers\ItemManager.cs" />
+    <Compile Include="Libs\Net.cs" />
+    <Compile Include="Drawing\SMenu.cs" />
+    <Compile Include="Libs\Humanizer.cs" />
+    <Compile Include="Managers\OrbWalkerManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SoulBound.cs" />
-    <Compile Include="SkyWalker.cs" />
-    <Compile Include="SWalker.cs" />
-    <Compile Include="TrinketManager.cs" />
-    <Compile Include="Vectorhelper.cs" />
+    <Compile Include="Managers\SoulBound.cs" />
+    <Compile Include="Libs\SkyWalker.cs" />
+    <Compile Include="Libs\SWalker.cs" />
+    <Compile Include="Managers\TrinketManager.cs" />
+    <Compile Include="Libs\Vectorhelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
