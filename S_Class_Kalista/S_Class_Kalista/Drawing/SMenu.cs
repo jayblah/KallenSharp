@@ -82,7 +82,7 @@ namespace S_Class_Kalista
         private static Menu OrbwalkManagerMenu()
         {
             var oMenu = new Menu("Orbwalker Options", "orbwalkOptions");
-            oMenu.AddItem(new MenuItem("sOrbwalker", "Orbwalker (Chnage required F5").SetValue(new StringList(new[] { "SkyWalker", "Haven Walker", "Common(SOON)" })));
+            oMenu.AddItem(new MenuItem("sOrbwalker", "Orbwalker (Chnage required F5)").SetValue(new StringList(new[] { "SkyWalker", "Haven Walker", "Common(SOON)" })));
             return oMenu;
         }
 
