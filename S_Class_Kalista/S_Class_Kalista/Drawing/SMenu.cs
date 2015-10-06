@@ -74,7 +74,7 @@ namespace S_Class_Kalista
         private static Menu ItemMenu()
         {
             var itemMenu = new Menu("Item Options", "itemOptions");
-            itemMenu.AddItem(new MenuItem("bUseBork", "Smart Bork/Cutless Usage").SetValue(true));
+            itemMenu.AddItem(new MenuItem("bUseBork", "Smart BotRK/Cutlass Usage").SetValue(true));
             itemMenu.AddItem(new MenuItem("bUseYoumuu", "Smart Youmuu's Usage").SetValue(true));
             return itemMenu;
         }
@@ -82,7 +82,7 @@ namespace S_Class_Kalista
         private static Menu OrbwalkManagerMenu()
         {
             var oMenu = new Menu("Orbwalker Options", "orbwalkOptions");
-            oMenu.AddItem(new MenuItem("sOrbwalker", "Orbwalker (Chnage required F5)").SetValue(new StringList(new[] { "SkyWalker", "Haven Walker", "Common(SOON)" })));
+            oMenu.AddItem(new MenuItem("sOrbwalker", "Orbwalker (Changes Require Reload [F5])").SetValue(new StringList(new[] { "SkyWalker", "Haven Walker", "Common(SOON)" })));
             return oMenu;
         }
 
@@ -104,7 +104,7 @@ namespace S_Class_Kalista
         }
         private static Menu CommonWalkerMenu()
         {
-            var orbWalkingMenu = new Menu("Common OrbWalker", "commonWalker");
+            var orbWalkingMenu = new Menu("Common Orbwalker", "commonWalker");
             var targetSelectorMenu = new Menu("Target Selector", "targetSelect");
             TargetSelector.AddToMenu(targetSelectorMenu);
             orbWalkingMenu.AddSubMenu(targetSelectorMenu);
@@ -128,7 +128,7 @@ namespace S_Class_Kalista
             mixedMenu.AddItem(new MenuItem("bUseQCombo", "Auto Q").SetValue(false));
             mixedMenu.AddItem(new MenuItem("bUseQComboReset", "Reset Auto-Attack With Q").SetValue(false));
             mixedMenu.AddItem(new MenuItem("bUseECombo", "Auto E to Kill Enemy").SetValue(false));
-            mixedMenu.AddItem(new MenuItem("bUseMinionComboWalk", "[BETA] Orbwalk by Using Minions (Hard To Explain)").SetValue(false));
+            mixedMenu.AddItem(new MenuItem("bUseMinionComboWalk", "[BETA] Orbwalk by Using Minions").SetValue(false));
             return mixedMenu;
         }
 
