@@ -102,7 +102,7 @@ namespace S_Class_Kalista
             laneClearMenu.AddItem(new MenuItem("bUseQLaneClear", "Use Q to Kill Minions").SetValue(false));
             laneClearMenu.AddItem(new MenuItem("sLaneClearMinionsKilledQ", ">> Min. Minions to Use Q").SetValue(new Slider(3, 2, 10)));
 
-            laneClearMenu.AddItem(new MenuItem("bUseJungleClear", "Jungle Clear").SetValue(new KeyBind('G', KeyBindType.Toggle)));
+            laneClearMenu.AddItem(new MenuItem("bUseJungleClear", "Toggle Jungle Clear").SetValue(new KeyBind('G', KeyBindType.Toggle)));
             return laneClearMenu;
         }
 

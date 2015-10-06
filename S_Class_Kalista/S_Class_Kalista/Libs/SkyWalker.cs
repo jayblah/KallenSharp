@@ -1,4 +1,25 @@
-﻿using System;
+﻿#region LICENSE
+
+/*
+ Copyright 2014 - 2015 LeagueSharp
+ Orbwalking.cs is part of LeagueSharp.Common.
+ 
+ LeagueSharp.Common is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ LeagueSharp.Common is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with LeagueSharp.Common. If not, see <http://www.gnu.org/licenses/>.
+*/
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using LeagueSharp;
@@ -28,21 +49,9 @@ namespace S_Class_Kalista
             Mixed,
             LaneClear,
             Combo,
-      //      Burst,
-     //       FastHarass,
             None
         }
-        // Buffs that disable attack and movement
-        public static readonly BuffType[] DisableBuff =
-        {
-            BuffType.Charm,
-            BuffType.Fear,
-            BuffType.Stun,
-            BuffType.Knockup,
-            BuffType.Knockup,
-            BuffType.Taunt,
-            BuffType.Suppression
-        };
+
         //Spells that reset the attack timer.
         private static readonly string[] AttackResets =
         {
@@ -51,15 +60,22 @@ namespace S_Class_Kalista
             "monkeykingdoubleattack", "mordekaisermaceofspades", "nasusq", "nautiluspiercinggaze", "netherblade",
             "parley", "poppydevastatingblow", "powerfist", "renektonpreexecute", "rengarq", "shyvanadoubleattack",
             "sivirw", "takedown", "talonnoxiandiplomacy", "trundletrollsmash", "vaynetumble", "vie", "volibearq",
-            "xenzhaocombotarget", "yorickspectral", "reksaiq"
+            "xenzhaocombotarget", "yorickspectral", "reksaiq", "itemtitanichydracleave"
         };
 
         //Spells that are not attacks even if they have the "attack" word in their name.
         private static readonly string[] NoAttacks =
         {
-            "jarvanivcataclysmattack", "monkeykingdoubleattack",
+            "volleyattack", "volleyattackwithsound", "jarvanivcataclysmattack", "monkeykingdoubleattack",
             "shyvanadoubleattack", "shyvanadoubleattackdragon", "zyragraspingplantattack", "zyragraspingplantattack2",
-            "zyragraspingplantattackfire", "zyragraspingplantattack2fire", "viktorpowertransfer", "sivirwattackbounce"
+            "zyragraspingplantattackfire", "zyragraspingplantattack2fire", "viktorpowertransfer", "sivirwattackbounce",
+            "asheqattacknoonhit",
+            "elisespiderlingbasicattack", "heimertyellowbasicattack", "heimertyellowbasicattack2",
+            "heimertbluebasicattack",
+            "annietibbersbasicattack", "annietibbersbasicattack2", "yorickdecayedghoulbasicattack",
+            "yorickravenousghoulbasicattack",
+            "yorickspectralghoulbasicattack", "malzaharvoidlingbasicattack", "malzaharvoidlingbasicattack2",
+            "malzaharvoidlingbasicattack3"
         };
 
         //Spells that are attacks even if they dont have the "attack" word in their name.
@@ -72,14 +88,11 @@ namespace S_Class_Kalista
         };
 
         // Champs whose auto attacks can't be cancelled
-        private static readonly string[] NoCancelChamps = { "Kalista" };
+        private static readonly string[] NoCancelChamps = {"Kalista"};
         public static int LastAATick;
-        public static int LastAACommandTick;
         public static bool Attack = true;
         public static bool DisableNextAttack;
         public static bool Move = true;
-        public static bool StopMove = false;
-        public static int winduptime;
         public static int LastMoveCommandT;
         public static Vector3 LastMoveCommandPosition = Vector3.Zero;
         private static AttackableUnit _lastTarget;
@@ -87,15 +100,16 @@ namespace S_Class_Kalista
         private static int _delay;
         private static float _minDistance = 400;
         private static bool _missileLaunched;
+        private static string _championName;
         private static readonly Random _random = new Random(DateTime.Now.Millisecond);
 
         static SkyWalker()
         {
             Player = ObjectManager.Player;
+            _championName = Player.ChampionName;
             Obj_AI_Base.OnProcessSpellCast += OnProcessSpell;
-            MissileClient.OnCreate += MissileClient_OnCreate;
-            Spellbook.OnStopCast += SpellbookOnStopCast;
             Obj_AI_Base.OnDoCast += Obj_AI_Base_OnDoCast;
+            Spellbook.OnStopCast += SpellbookOnStopCast;
         }
 
         /// <summary>
@@ -127,7 +141,7 @@ namespace S_Class_Kalista
         {
             if (BeforeAttack != null)
             {
-                BeforeAttack(new BeforeAttackEventArgs { Target = target });
+                BeforeAttack(new BeforeAttackEventArgs {Target = target});
             }
             else
             {
@@ -193,7 +207,7 @@ namespace S_Class_Kalista
         }
 
         /// <summary>
-        ///     Returns the auto-attack range.
+        ///     Returns the auto-attack range of local player with respect to the target.
         /// </summary>
         public static float GetRealAutoAttackRange(AttackableUnit target)
         {
@@ -206,9 +220,18 @@ namespace S_Class_Kalista
         }
 
         /// <summary>
+        ///     Returns the auto-attack range of the target.
+        /// </summary>
+        public static float GetAttackRange(Obj_AI_Hero target)
+        {
+            var result = target.AttackRange + target.BoundingRadius;
+            return result;
+        }
+
+        /// <summary>
         ///     Returns true if the target is in auto-attack range.
         /// </summary>
-        public static bool InAutoAttackRange(AttackableUnit target)
+        public static bool InAutoAttackRange(AttackableUnit target, float extra = 0f)
         {
             if (!target.IsValidTarget())
             {
@@ -217,8 +240,8 @@ namespace S_Class_Kalista
             var myRange = GetRealAutoAttackRange(target);
             return
                 Vector2.DistanceSquared(
-                    (target is Obj_AI_Base) ? ((Obj_AI_Base)target).ServerPosition.To2D() : target.Position.To2D(),
-                    Player.ServerPosition.To2D()) <= myRange * myRange;
+                    (target is Obj_AI_Base) ? ((Obj_AI_Base) target).ServerPosition.To2D() : target.Position.To2D(),
+                    Player.ServerPosition.To2D()) <= myRange*myRange + extra*extra;
         }
 
         /// <summary>
@@ -226,7 +249,10 @@ namespace S_Class_Kalista
         /// </summary>
         public static float GetMyProjectileSpeed()
         {
-            return IsMelee(Player) || Player.ChampionName == "Azir" ? float.MaxValue : Player.BasicAttack.MissileSpeed;
+            return IsMelee(Player) || _championName == "Azir" ||
+                   _championName == "Viktor" && Player.HasBuff("ViktorPowerTransferReturn")
+                ? float.MaxValue
+                : Player.BasicAttack.MissileSpeed;
         }
 
         /// <summary>
@@ -234,9 +260,7 @@ namespace S_Class_Kalista
         /// </summary>
         public static bool CanAttack()
         {
-            return Utils.GameTimeTickCount + Game.Ping / 2 + 25 >= LastAATick + Player.AttackDelay * 1000 && Attack
-                && !DisableBuff.Where(x => Player.HasBuffOfType(x)).Any() && !Player.IsDashing();
-            //&& (Utils.GameTimeTickCount >= LastAACommandTick + 100 + Game.Ping);
+            return Utils.GameTimeTickCount + Game.Ping/2 + 25 >= LastAATick + Player.AttackDelay*1000 && Attack;
         }
 
         /// <summary>
@@ -253,13 +277,16 @@ namespace S_Class_Kalista
             {
                 return true;
             }
-            if (StopMove == false)
+
+            var localExtraWindup = 0;
+            if (_championName == "Rengar" && (Player.HasBuff("rengarqbase") || Player.HasBuff("rengarqemp")))
             {
-                return true;
+                localExtraWindup = 200;
             }
-            return NoCancelChamps.Contains(Player.ChampionName) ||
-                ((Utils.GameTimeTickCount + Game.Ping / 2 >= LastAATick + Player.AttackCastDelay * 1000 + extraWindup)
-                && (Utils.GameTimeTickCount >= LastAACommandTick + 100 + Game.Ping));
+
+            return NoCancelChamps.Contains(_championName) ||
+                   (Utils.GameTimeTickCount + Game.Ping/2 >=
+                    LastAATick + Player.AttackCastDelay*1000 + extraWindup + localExtraWindup);
         }
 
         public static void SetMovementDelay(int delay)
@@ -288,7 +315,7 @@ namespace S_Class_Kalista
             bool useFixedDistance = true,
             bool randomizeMinDistance = true)
         {
-            if (Utils.GameTimeTickCount - LastMoveCommandT < _delay && !overrideTimer)
+            if (Utils.GameTimeTickCount - LastMoveCommandT < (70 + Math.Min(60, Game.Ping)) && !overrideTimer)
             {
                 return;
             }
@@ -297,31 +324,41 @@ namespace S_Class_Kalista
 
             var playerPosition = Player.ServerPosition;
 
-            if (playerPosition.Distance(position, true) < holdAreaRadius * holdAreaRadius)
+            if (playerPosition.Distance(position, true) < holdAreaRadius*holdAreaRadius)
             {
                 if (Player.Path.Length > 0)
                 {
                     Player.IssueOrder(GameObjectOrder.Stop, playerPosition);
                     LastMoveCommandPosition = playerPosition;
+                    LastMoveCommandT -= 70;
                 }
                 return;
             }
 
             var point = position;
-            if (useFixedDistance)
+
+            if (Player.Distance(point, true) < 150*150)
             {
-                point = playerPosition.Extend(
-                    position, (randomizeMinDistance ? (_random.NextFloat(0.6f, 1) + 0.2f) * _minDistance : _minDistance));
+                point = playerPosition.Extend(position,
+                    (randomizeMinDistance ? (_random.NextFloat(0.6f, 1) + 0.2f)*_minDistance : _minDistance));
             }
-            else
+
+            var currentPath = Player.GetWaypoints();
+            if (currentPath.Count > 1 && currentPath.PathLength() > 100)
             {
-                if (randomizeMinDistance)
+                var movePath = Player.GetPath(point);
+
+                if (movePath.Length > 1)
                 {
-                    point = playerPosition.Extend(position, (_random.NextFloat(0.6f, 1) + 0.2f) * _minDistance);
-                }
-                else if (playerPosition.Distance(position) > _minDistance)
-                {
-                    point = playerPosition.Extend(position, _minDistance);
+                    var v1 = currentPath[1] - currentPath[0];
+                    var v2 = movePath[1] - movePath[0];
+                    var angle = v1.AngleBetween(v2.To2D());
+                    var distance = movePath.Last().To2D().Distance(currentPath.Last(), true);
+
+                    if ((angle < 10 && distance < 500*500) || distance < 50*50)
+                    {
+                        return;
+                    }
                 }
             }
 
@@ -348,15 +385,17 @@ namespace S_Class_Kalista
 
                     if (!DisableNextAttack)
                     {
-                        if (!NoCancelChamps.Contains(Player.ChampionName))
+                        if (!NoCancelChamps.Contains(_championName))
                         {
-                            LastAATick = Utils.GameTimeTickCount + Game.Ping + 100 - (int)(ObjectManager.Player.AttackCastDelay * 1000f);
+                            LastAATick = Utils.GameTimeTickCount + Game.Ping + 100 -
+                                         (int) (ObjectManager.Player.AttackCastDelay*1000f);
                             _missileLaunched = false;
 
                             var d = GetRealAutoAttackRange(target) - 65;
-                            if (Player.Distance(target, true) > d * d && !Player.IsMelee)
+                            if (Player.Distance(target, true) > d*d && !Player.IsMelee)
                             {
-                                LastAATick = Utils.GameTimeTickCount + Game.Ping + 400 - (int)(ObjectManager.Player.AttackCastDelay * 1000f);
+                                LastAATick = Utils.GameTimeTickCount + Game.Ping + 400 -
+                                             (int) (ObjectManager.Player.AttackCastDelay*1000f);
                             }
                         }
 
@@ -388,7 +427,6 @@ namespace S_Class_Kalista
         public static void ResetAutoAttackTimer()
         {
             LastAATick = 0;
-            LastAACommandTick = 0;
         }
 
         private static void SpellbookOnStopCast(Spellbook spellbook, SpellbookStopCastEventArgs args)
@@ -399,28 +437,35 @@ namespace S_Class_Kalista
             }
         }
 
-        private static void MissileClient_OnCreate(GameObject sender, EventArgs args)
+        private static void Obj_AI_Base_OnDoCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if (!Orbwalker.Enabled)
-                return;
-            var missile = sender as MissileClient;
-            if (missile != null && missile.SpellCaster.IsMe && IsAutoAttack(missile.SData.Name))
+            if (sender.IsMe && IsAutoAttack(args.SData.Name))
             {
-                _missileLaunched = true;
+                if (Game.Ping <= 30) //First world problems kappa
+                {
+                    Utility.DelayAction.Add(30, () => Obj_AI_Base_OnDoCast_Delayed(sender, args));
+                    return;
+                }
+
+                Obj_AI_Base_OnDoCast_Delayed(sender, args);
             }
+        }
+
+        private static void Obj_AI_Base_OnDoCast_Delayed(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            FireAfterAttack(sender, args.Target as AttackableUnit);
+            _missileLaunched = true;
         }
 
         private static void OnProcessSpell(Obj_AI_Base unit, GameObjectProcessSpellCastEventArgs Spell)
         {
-            if (!Orbwalker.Enabled)
-                return;
             try
             {
                 var spellName = Spell.SData.Name;
 
                 if (IsAutoAttackReset(spellName) && unit.IsMe)
                 {
-                    ResetAutoAttackTimer();
+                    Utility.DelayAction.Add(250, ResetAutoAttackTimer);
                 }
 
                 if (!IsAutoAttack(spellName))
@@ -431,21 +476,17 @@ namespace S_Class_Kalista
                 if (unit.IsMe &&
                     (Spell.Target is Obj_AI_Base || Spell.Target is Obj_BarracksDampener || Spell.Target is Obj_HQ))
                 {
-                    LastAATick = Utils.GameTimeTickCount - Game.Ping / 2;
+                    LastAATick = Utils.GameTimeTickCount - Game.Ping/2;
                     _missileLaunched = false;
-                    StopMove = true;
+
                     if (Spell.Target is Obj_AI_Base)
                     {
-                        var target = (Obj_AI_Base)Spell.Target;
+                        var target = (Obj_AI_Base) Spell.Target;
                         if (target.IsValid)
                         {
                             FireOnTargetSwitch(target);
                             _lastTarget = target;
                         }
-
-                        //Trigger it for ranged until the missiles catch normal attacks again!
-                        Utility.DelayAction.Add(
-                            (int)(unit.AttackCastDelay * 1000 + 40), () => FireAfterAttack(unit, _lastTarget));
                     }
                 }
 
@@ -456,36 +497,7 @@ namespace S_Class_Kalista
                 Console.WriteLine(e);
             }
         }
-        private static void Obj_AI_Base_OnDoCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
-        {
-            if (!Orbwalker.Enabled)
-                return;
-            try
-            {
-                var spellName = args.SData.Name;
 
-                if (!IsAutoAttack(spellName))
-                {
-                    return;
-                }
-                if (!sender.IsMe ||
-                    (!(args.Target is Obj_AI_Base) && !(args.Target is Obj_BarracksDampener) && !(args.Target is Obj_HQ)))
-                    return;
-                var windup = SkyWalker.Orbwalker.Config.Item("ExtraDoCastWindup").GetValue<Slider>().Value;
-                _missileLaunched = true;
-                Utility.DelayAction.Add(40 + windup > Game.Ping ? 40 + windup - Game.Ping : 0, () => FireAfterAttack(sender, _lastTarget));
-                Utility.DelayAction.Add(40 + windup > Game.Ping ? 40 + windup - Game.Ping : 0, () => StopMove = false);
-                if (args.Target is Obj_AI_Base)
-                {
-                    //Trigger it for ranged until the missiles catch normal attacks again!
-
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
         public class BeforeAttackEventArgs
         {
             private bool _process = true;
@@ -509,27 +521,9 @@ namespace S_Class_Kalista
         /// </summary>
         public class Orbwalker
         {
-            private static bool _enabled;
-
-            public static bool Enabled
-            {
-                get
-                {
-                    return _enabled;
-                }
-
-                set
-                {
-                    _enabled = value;
-                    if (Config != null)
-                    {
-                        Config.Item("enableOption").SetValue(value);
-                    }
-                }
-            }
             private const float LaneClearWaitTimeMod = 2f;
-            public static Menu Config;
-            private readonly Obj_AI_Hero _player;
+            private static Menu _config;
+            private readonly Obj_AI_Hero Player;
             private Obj_AI_Base _forcedTarget;
             private OrbwalkingMode _mode = OrbwalkingMode.None;
             private Vector3 _orbwalkingPoint;
@@ -538,87 +532,79 @@ namespace S_Class_Kalista
 
             public Orbwalker(Menu attachToMenu)
             {
-                Config = attachToMenu;
-                Config.AddItem(new MenuItem("enableOption", "Enable Orbwalker").SetValue(true))
-                    .ValueChanged += (sender, args) => _enabled = args.GetNewValue<bool>();
-                _enabled = Config.Item("enableOption").GetValue<bool>();
+                _config = attachToMenu;
                 /* Drawings submenu */
                 var drawings = new Menu("Drawings", "drawings");
                 drawings.AddItem(
                     new MenuItem("AACircle", "AACircle").SetShared()
-                        .SetValue(new Circle(true, Color.FromArgb(255, 255, 0, 255))));
+                        .SetValue(new Circle(true, Color.FromArgb(155, 255, 255, 0))));
                 drawings.AddItem(
                     new MenuItem("AACircle2", "Enemy AA circle").SetShared()
-                        .SetValue(new Circle(false, Color.FromArgb(255, 255, 0, 255))));
+                        .SetValue(new Circle(false, Color.FromArgb(155, 255, 255, 0))));
                 drawings.AddItem(
                     new MenuItem("HoldZone", "HoldZone").SetShared()
-                        .SetValue(new Circle(false, Color.FromArgb(255, 255, 0, 255))));
-                Config.AddSubMenu(drawings);
+                        .SetValue(new Circle(false, Color.FromArgb(155, 255, 255, 0))));
+                drawings.AddItem(
+                    new MenuItem("AALineWidth", "Line Width")).SetShared()
+                    .SetValue(new Slider(2, 1, 6));
+                _config.AddSubMenu(drawings);
 
                 /* Misc options */
                 var misc = new Menu("Misc", "Misc");
                 misc.AddItem(
                     new MenuItem("HoldPosRadius", "Hold Position Radius").SetShared().SetValue(new Slider(0, 0, 250)));
                 misc.AddItem(new MenuItem("PriorizeFarm", "Priorize farm over harass").SetShared().SetValue(true));
+                misc.AddItem(new MenuItem("AttackWards", "Auto attack wards").SetShared().SetValue(false));
+                misc.AddItem(new MenuItem("AttackPetsnTraps", "Auto attack pets & traps").SetShared().SetValue(true));
+                misc.AddItem(new MenuItem("Smallminionsprio", "Jungle clear small first").SetShared().SetValue(false));
 
-                Config.AddSubMenu(misc);
+                _config.AddSubMenu(misc);
 
                 /* Missile check */
-                Config.AddItem(new MenuItem("MissileCheck", "Use Missile Check").SetShared().SetValue(true));
+                _config.AddItem(new MenuItem("MissileCheck", "Use Missile Check").SetShared().SetValue(true));
 
                 /* Delay sliders */
-                Config.AddItem(
+                _config.AddItem(
                     new MenuItem("ExtraWindup", "Extra windup time").SetShared().SetValue(new Slider(80, 0, 200)));
-                Config.AddItem(
-                    new MenuItem("ExtraDoCastWindup", "Extra windup time for ondocast").SetShared().SetValue(new Slider(0, 0, 10)));
-
-                Config.AddItem(new MenuItem("FarmDelay", "Farm delay").SetShared().SetValue(new Slider(0, 0, 200)));
-                Config.AddItem(
+                _config.AddItem(new MenuItem("FarmDelay", "Farm delay").SetShared().SetValue(new Slider(0, 0, 200)));
+                _config.AddItem(
                     new MenuItem("MovementDelay", "Movement delay").SetShared().SetValue(new Slider(30, 0, 250)))
                     .ValueChanged += (sender, args) => SetMovementDelay(args.GetNewValue<Slider>().Value);
 
-
                 /*Load the menu*/
-                Config.AddItem(
+                _config.AddItem(
                     new MenuItem("LastHit", "Last hit").SetShared().SetValue(new KeyBind('X', KeyBindType.Press)));
 
-                Config.AddItem(new MenuItem("Mixed", "Mixed").SetShared().SetValue(new KeyBind('C', KeyBindType.Press)));
+                _config.AddItem(new MenuItem("Farm", "Mixed").SetShared().SetValue(new KeyBind('C', KeyBindType.Press)));
 
-                Config.AddItem(
+                _config.AddItem(
                     new MenuItem("LaneClear", "LaneClear").SetShared().SetValue(new KeyBind('V', KeyBindType.Press)));
 
-                Config.AddItem(
-                    new MenuItem("Combo", "Combo").SetShared().SetValue(new KeyBind(32, KeyBindType.Press)));
+                _config.AddItem(
+                    new MenuItem("Orbwalk", "Combo").SetShared().SetValue(new KeyBind(32, KeyBindType.Press)));
 
-                //Config.AddItem(
-                //  new MenuItem("Burst", "Burst").SetShared().SetValue(new KeyBind('T', KeyBindType.Press)));
-
-                //Config.AddItem(
-                //   new MenuItem("FastHarass", "FastHarass").SetShared().SetValue(new KeyBind('Y', KeyBindType.Press)));
+                _delay = _config.Item("MovementDelay").GetValue<Slider>().Value;
 
 
-                _delay = Config.Item("MovementDelay").GetValue<Slider>().Value;
-
-
-                _player = ObjectManager.Player;
+                Player = ObjectManager.Player;
                 Game.OnUpdate += GameOnOnGameUpdate;
                 LeagueSharp.Drawing.OnDraw += DrawingOnOnDraw;
                 Instances.Add(this);
             }
 
-            public virtual bool InAutoAttackRange(AttackableUnit target)
+            public virtual bool InAutoAttackRange(AttackableUnit target, float extra = 0f)
             {
-                return Orbwalking.InAutoAttackRange(target);
+                return SkyWalker.InAutoAttackRange(target, extra);
             }
 
             private int FarmDelay
             {
-                get { return Config.Item("FarmDelay").GetValue<Slider>().Value; }
+                get { return _config.Item("FarmDelay").GetValue<Slider>().Value; }
             }
 
             public static bool MissileCheck
             {
-                get { return Config.Item("MissileCheck").GetValue<bool>(); }
+                get { return _config.Item("MissileCheck").GetValue<bool>(); }
             }
 
             public OrbwalkingMode ActiveMode
@@ -630,33 +616,25 @@ namespace S_Class_Kalista
                         return _mode;
                     }
 
-                    if (Config.Item("Combo").GetValue<KeyBind>().Active)
+                    if (_config.Item("Orbwalk").GetValue<KeyBind>().Active)
                     {
                         return OrbwalkingMode.Combo;
                     }
 
-                    if (Config.Item("LaneClear").GetValue<KeyBind>().Active)
+                    if (_config.Item("LaneClear").GetValue<KeyBind>().Active)
                     {
                         return OrbwalkingMode.LaneClear;
                     }
 
-                    if (Config.Item("Mixed").GetValue<KeyBind>().Active)
+                    if (_config.Item("Farm").GetValue<KeyBind>().Active)
                     {
                         return OrbwalkingMode.Mixed;
                     }
 
-                    if (Config.Item("LastHit").GetValue<KeyBind>().Active)
+                    if (_config.Item("LastHit").GetValue<KeyBind>().Active)
                     {
                         return OrbwalkingMode.LastHit;
                     }
-                    //if (Config.Item("Burst").GetValue<KeyBind>().Active)
-                    //{
-                    //    return OrbwalkingMode.Burst;
-                    //}
-                    //if (Config.Item("FastHarass").GetValue<KeyBind>().Active)
-                    //{
-                    //    return OrbwalkingMode.FastHarass;
-                    //}
 
                     return OrbwalkingMode.None;
                 }
@@ -702,10 +680,10 @@ namespace S_Class_Kalista
                         .Any(
                             minion =>
                                 minion.IsValidTarget() && minion.Team != GameObjectTeam.Neutral &&
-                                InAutoAttackRange(minion) &&
+                                InAutoAttackRange(minion) && MinionManager.IsMinion(minion, false) &&
                                 HealthPrediction.LaneClearHealthPrediction(
-                                    minion, (int)((_player.AttackDelay * 1000) * LaneClearWaitTimeMod), FarmDelay) <=
-                                _player.GetAutoAttackDamage(minion));
+                                    minion, (int) ((Player.AttackDelay*1000)*LaneClearWaitTimeMod), FarmDelay) <=
+                                Player.GetAutoAttackDamage(minion));
             }
 
             public virtual AttackableUnit GetTarget()
@@ -713,7 +691,7 @@ namespace S_Class_Kalista
                 AttackableUnit result = null;
 
                 if ((ActiveMode == OrbwalkingMode.Mixed || ActiveMode == OrbwalkingMode.LaneClear) &&
-                    !Config.Item("PriorizeFarm").GetValue<bool>())
+                    !_config.Item("PriorizeFarm").GetValue<bool>())
                 {
                     var target = TargetSelector.GetTarget(-1, TargetSelector.DamageType.Physical);
                     if (target != null)
@@ -730,25 +708,30 @@ namespace S_Class_Kalista
                         ObjectManager.Get<Obj_AI_Minion>()
                             .Where(
                                 minion =>
-                                    minion.IsValidTarget() && InAutoAttackRange(minion) &&
-                                    minion.Health <
-                                    2 *
-                                    (ObjectManager.Player.BaseAttackDamage + ObjectManager.Player.FlatPhysicalDamageMod));
+                                    minion.IsValidTarget() && InAutoAttackRange(minion))
+                            .OrderByDescending(minion => minion.CharData.BaseSkinName.Contains("Siege"))
+                            .ThenBy(minion => minion.CharData.BaseSkinName.Contains("Super"))
+                            .ThenBy(minion => minion.Health)
+                            .ThenByDescending(minion => minion.MaxHealth);
 
                     foreach (var minion in MinionList)
                     {
-                        var t = (int)(_player.AttackCastDelay * 1000) - 100 + Game.Ping / 2 +
-                                1000 * (int)_player.Distance(minion) / (int)GetMyProjectileSpeed();
+                        var t = (int) (Player.AttackCastDelay*1000) - 100 + Game.Ping/2 +
+                                1000*(int) Math.Max(0, Player.Distance(minion) - Player.BoundingRadius)/
+                                (int) GetMyProjectileSpeed();
                         var predHealth = HealthPrediction.GetHealthPrediction(minion, t, FarmDelay);
 
-                        if (minion.Team != GameObjectTeam.Neutral && MinionManager.IsMinion(minion, true))
+                        if (minion.Team != GameObjectTeam.Neutral &&
+                            (_config.Item("AttackPetsnTraps").GetValue<bool>() &&
+                             minion.BaseSkinName != "jarvanivstandard" ||
+                             MinionManager.IsMinion(minion, _config.Item("AttackWards").GetValue<bool>())))
                         {
                             if (predHealth <= 0)
                             {
                                 FireOnNonKillableMinion(minion);
                             }
 
-                            if (predHealth > 0 && predHealth <= _player.GetAutoAttackDamage(minion, true))
+                            if (predHealth > 0 && predHealth <= Player.GetAutoAttackDamage(minion, true))
                             {
                                 return minion;
                             }
@@ -757,7 +740,7 @@ namespace S_Class_Kalista
                 }
 
                 //Forced target
-                if (_forcedTarget.IsValidTarget() && InAutoAttackRange(_forcedTarget))
+                if (_forcedTarget.IsValidTarget() && InAutoAttackRange(_forcedTarget, 150f))
                 {
                     return _forcedTarget;
                 }
@@ -791,7 +774,7 @@ namespace S_Class_Kalista
                 if (ActiveMode != OrbwalkingMode.LastHit)
                 {
                     var target = TargetSelector.GetTarget(-1, TargetSelector.DamageType.Physical);
-                    if (target.IsValidTarget() && target.CharData.BaseSkinName != "gangplankbarrel")
+                    if (target.IsValidTarget() && InAutoAttackRange(target, 150))
                     {
                         return target;
                     }
@@ -800,12 +783,17 @@ namespace S_Class_Kalista
                 /*Jungle minions*/
                 if (ActiveMode == OrbwalkingMode.LaneClear || ActiveMode == OrbwalkingMode.Mixed)
                 {
-                    result =
+                    var jminions =
                         ObjectManager.Get<Obj_AI_Minion>()
                             .Where(
                                 mob =>
-                                    mob.IsValidTarget() && mob.Team == GameObjectTeam.Neutral && InAutoAttackRange(mob) && mob.CharData.BaseSkinName != "gangplankbarrel")
-                            .MaxOrDefault(mob => mob.MaxHealth);
+                                    mob.IsValidTarget() && mob.Team == GameObjectTeam.Neutral && InAutoAttackRange(mob) &&
+                                    mob.CharData.BaseSkinName != "gangplankbarrel");
+
+                    result = _config.Item("Smallminionsprio").GetValue<bool>()
+                        ? jminions.MinOrDefault(mob => mob.MaxHealth)
+                        : jminions.MaxOrDefault(mob => mob.MaxHealth);
+
                     if (result != null)
                     {
                         return result;
@@ -820,8 +808,8 @@ namespace S_Class_Kalista
                         if (_prevMinion.IsValidTarget() && InAutoAttackRange(_prevMinion))
                         {
                             var predHealth = HealthPrediction.LaneClearHealthPrediction(
-                                _prevMinion, (int)((_player.AttackDelay * 1000) * LaneClearWaitTimeMod), FarmDelay);
-                            if (predHealth >= 2 * _player.GetAutoAttackDamage(_prevMinion) ||
+                                _prevMinion, (int) ((Player.AttackDelay*1000)*LaneClearWaitTimeMod), FarmDelay);
+                            if (predHealth >= 2*Player.GetAutoAttackDamage(_prevMinion) ||
                                 Math.Abs(predHealth - _prevMinion.Health) < float.Epsilon)
                             {
                                 return _prevMinion;
@@ -829,19 +817,27 @@ namespace S_Class_Kalista
                         }
 
                         result = (from minion in
-                                      ObjectManager.Get<Obj_AI_Minion>()
-                                          .Where(minion => minion.IsValidTarget() && InAutoAttackRange(minion) && minion.CharData.BaseSkinName != "gangplankbarrel")
-                                  let predHealth =
-                                      HealthPrediction.LaneClearHealthPrediction(
-                                          minion, (int)((_player.AttackDelay * 1000) * LaneClearWaitTimeMod), FarmDelay)
-                                  where
-                                      predHealth >= 2 * _player.GetAutoAttackDamage(minion) ||
-                                      Math.Abs(predHealth - minion.Health) < float.Epsilon
-                                  select minion).MaxOrDefault(m => m.Health);
+                            ObjectManager.Get<Obj_AI_Minion>()
+                                .Where(minion => minion.IsValidTarget() && InAutoAttackRange(minion) &&
+                                                 (_config.Item("AttackWards").GetValue<bool>() ||
+                                                  !MinionManager.IsWard(minion.CharData.BaseSkinName.ToLower())) &&
+                                                 (_config.Item("AttackPetsnTraps").GetValue<bool>() &&
+                                                  minion.CharData.BaseSkinName != "jarvanivstandard" ||
+                                                  MinionManager.IsMinion(minion,
+                                                      _config.Item("AttackWards").GetValue<bool>())) &&
+                                                 minion.CharData.BaseSkinName != "gangplankbarrel")
+                            let predHealth =
+                                HealthPrediction.LaneClearHealthPrediction(
+                                    minion, (int) ((Player.AttackDelay*1000)*LaneClearWaitTimeMod), FarmDelay)
+                            where
+                                predHealth >= 2*Player.GetAutoAttackDamage(minion) ||
+                                Math.Abs(predHealth - minion.Health) < float.Epsilon
+                            select minion).MaxOrDefault(
+                                m => !MinionManager.IsMinion(m, true) ? float.MaxValue : m.Health);
 
                         if (result != null)
                         {
-                            _prevMinion = (Obj_AI_Minion)result;
+                            _prevMinion = (Obj_AI_Minion) result;
                         }
                     }
                 }
@@ -851,8 +847,6 @@ namespace S_Class_Kalista
 
             private void GameOnOnGameUpdate(EventArgs args)
             {
-                if (!Orbwalker.Enabled)
-                    return;
                 try
                 {
                     if (ActiveMode == OrbwalkingMode.None)
@@ -861,7 +855,7 @@ namespace S_Class_Kalista
                     }
 
                     //Prevent canceling important spells
-                    if (_player.IsCastingInterruptableSpell(true))
+                    if (Player.IsCastingInterruptableSpell(true))
                     {
                         return;
                     }
@@ -869,8 +863,8 @@ namespace S_Class_Kalista
                     var target = GetTarget();
                     Orbwalk(
                         target, (_orbwalkingPoint.To2D().IsValid()) ? _orbwalkingPoint : Game.CursorPos,
-                        Config.Item("ExtraWindup").GetValue<Slider>().Value,
-                        Config.Item("HoldPosRadius").GetValue<Slider>().Value, false, false);
+                        _config.Item("ExtraWindup").GetValue<Slider>().Value,
+                        _config.Item("HoldPosRadius").GetValue<Slider>().Value);
                 }
                 catch (Exception e)
                 {
@@ -880,31 +874,32 @@ namespace S_Class_Kalista
 
             private void DrawingOnOnDraw(EventArgs args)
             {
-                if (!Orbwalker.Enabled)
-                    return;
-                if (Config.Item("AACircle").GetValue<Circle>().Active)
+                if (_config.Item("AACircle").GetValue<Circle>().Active)
                 {
                     Render.Circle.DrawCircle(
-                        _player.Position, GetRealAutoAttackRange(null) + 65,
-                        Config.Item("AACircle").GetValue<Circle>().Color);
+                        Player.Position, GetRealAutoAttackRange(null) + 65,
+                        _config.Item("AACircle").GetValue<Circle>().Color,
+                        _config.Item("AALineWidth").GetValue<Slider>().Value);
                 }
 
-                if (Config.Item("AACircle2").GetValue<Circle>().Active)
+                if (_config.Item("AACircle2").GetValue<Circle>().Active)
                 {
                     foreach (var target in
                         HeroManager.Enemies.FindAll(target => target.IsValidTarget(1175)))
                     {
                         Render.Circle.DrawCircle(
-                            target.Position, GetRealAutoAttackRange(target) + 65,
-                            Config.Item("AACircle2").GetValue<Circle>().Color);
+                            target.Position, GetAttackRange(target),
+                            _config.Item("AACircle2").GetValue<Circle>().Color,
+                            _config.Item("AALineWidth").GetValue<Slider>().Value);
                     }
                 }
 
-                if (Config.Item("HoldZone").GetValue<Circle>().Active)
+                if (_config.Item("HoldZone").GetValue<Circle>().Active)
                 {
                     Render.Circle.DrawCircle(
-                        _player.Position, Config.Item("HoldPosRadius").GetValue<Slider>().Value,
-                        Config.Item("HoldZone").GetValue<Circle>().Color, 5, true);
+                        Player.Position, _config.Item("HoldPosRadius").GetValue<Slider>().Value,
+                        _config.Item("HoldZone").GetValue<Circle>().Color,
+                        _config.Item("AALineWidth").GetValue<Slider>().Value, true);
                 }
 
             }
