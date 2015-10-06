@@ -1,6 +1,6 @@
 ﻿using LeagueSharp;
 using LeagueSharp.Common;
-
+using S_Class_Kalista.Libs;
 using ItemData = LeagueSharp.Common.Data.ItemData;
 using Item = LeagueSharp.Common.Items.Item;
 
@@ -61,8 +61,21 @@ namespace S_Class_Kalista
                 {
                     if (combo)
                     {
-                        if (target.IsValidTarget(SkyWalker.GetRealAutoAttackRange(Properties.PlayerHero) + -50))
-                            _youmuusGhostblade._Item.Cast();
+                        if (Properties.SkyWalker != null)
+                        {
+                            if (target.IsValidTarget(SkyWalker.GetRealAutoAttackRange(Properties.PlayerHero) + -50))
+                                _youmuusGhostblade._Item.Cast();
+                        }
+                        else if (Properties.HavenWalker != null)
+                        {
+                            if (target.IsValidTarget(HWalker.GetRealAutoAttackRange(Properties.PlayerHero) + -50))
+                                _youmuusGhostblade._Item.Cast();
+                        }
+                        else
+                        {
+                            if (target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero) + -50))
+                                _youmuusGhostblade._Item.Cast();
+                        }
                     }
                 }
 

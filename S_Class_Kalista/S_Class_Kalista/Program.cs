@@ -21,6 +21,7 @@
 using LeagueSharp;
 using LeagueSharp.Common;
 using System;
+using S_Class_Kalista.Libs;
 
 //using AutoLevel = S_Class_Kalista.AutoLevel;
 
@@ -69,10 +70,27 @@ namespace S_Class_Kalista
             LeagueSharp.Drawing.OnDraw += DrawingManager.Drawing_OnDraw;
             LeagueSharp.Drawing.OnDraw += DrawingManager.Drawing_OnDrawChamp;
             LeagueSharp.Drawing.OnDraw += DrawingManager.Drawing_OnDrawMonster;
-            SkyWalker.OnNonKillableMinion += AutoEventManager.CheckNonKillables;
-            SkyWalker.AfterAttack += OrbWalkerManager.AfterAttack;
 
-            // Add Delays for later use
+            switch (Properties.MainMenu.Item("sOrbwalker").GetValue<StringList>().SelectedIndex)
+            {
+                case 0:
+                    SkyWalker.OnNonKillableMinion += AutoEventManager.CheckNonKillables;
+                    SkyWalker.AfterAttack += OrbWalkerManager.AfterAttack;
+                    break;
+
+                case 1:
+                    HWalker.OnNonKillableMinion += AutoEventManager.CheckNonKillables;
+                    HWalker.AfterAttack += OrbWalkerManager.AfterAttack;
+                    break;
+
+                case 2:
+                    Orbwalking.OnNonKillableMinion += AutoEventManager.CheckNonKillables;
+                    Orbwalking.AfterAttack += OrbWalkerManager.AfterAttack;
+                    break;
+
+            }
+
+        // Add Delays for later use
             //Humanizer needs to be reworked
             //Humanizer.AddAction("rendDelay",200);
             // Humanizer.AddAction("generalDelay",125);

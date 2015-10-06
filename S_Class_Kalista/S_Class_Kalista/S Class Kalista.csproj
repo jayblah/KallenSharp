@@ -65,6 +65,7 @@
     <Compile Include="Libs\DamageCalc.cs" />
     <Compile Include="Drawing\Drawing.cs" />
     <Compile Include="Drawing\DrawingManager.cs" />
+    <Compile Include="Libs\HWalker.cs" />
     <Compile Include="Managers\ItemManager.cs" />
     <Compile Include="Libs\Net.cs" />
     <Compile Include="Drawing\SMenu.cs" />
