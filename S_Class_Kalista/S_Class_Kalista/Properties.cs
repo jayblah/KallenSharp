@@ -21,6 +21,8 @@
 using LeagueSharp;
 using LeagueSharp.Common;
 using System;
+using System.Security.AccessControl;
+using S_Class_Kalista.Libs;
 
 namespace S_Class_Kalista
 {
@@ -35,6 +37,9 @@ namespace S_Class_Kalista
 
        // public static Orbwalking.Orbwalker LukeOrbWalker { get; set; }
         public static SkyWalker.Orbwalker SkyWalker{ get; set; }
+        public static HWalker.Orbwalker HavenWalker{ get; set; }
+        public static Orbwalking.Orbwalker CommonWalker { get; set; }
+
         public static Menu MainMenu { get; set; }
         public static Obj_AI_Hero PlayerHero { get; set; }
         public static Obj_AI_Hero SoulBoundHero { get; set; }

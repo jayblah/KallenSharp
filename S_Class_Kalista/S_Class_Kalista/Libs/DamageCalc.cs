@@ -86,9 +86,16 @@ namespace S_Class_Kalista
         private static float CalculateRendDamage(Obj_AI_Base target)
         {
             var defuffer = 1f;
+            var healthDebuffer = 0f;
 
-            if (target.HasBuff("FerociousHowl"))
+            if (target.HasBuff("FerociousHowl") || target.HasBuff("GarenW"))
                 defuffer *= .7f;
+
+            if (target.HasBuff("Medidate"))
+                defuffer *= .5f - target.Spellbook.GetSpell(SpellSlot.E).Level*.05f;
+            
+            if(target.HasBuff("gragaswself"))
+                defuffer *= .9f - target.Spellbook.GetSpell(SpellSlot.W).Level * .02f;
 
             if (target.Name.Contains("Baron") && Properties.PlayerHero.HasBuff("barontarget"))
                 defuffer *= 0.5f;
@@ -99,7 +106,16 @@ namespace S_Class_Kalista
             if (Properties.PlayerHero.HasBuff("summonerexhaust"))
                 defuffer *= .4f;
 
-            return Properties.Champion.E.GetDamage(target) * defuffer;
+
+            if (target.IsChampion())
+            {
+                var hero = (Obj_AI_Hero) target;
+
+                if (hero.ChampionName == "Blitzcrank" && !target.HasBuff("BlitzcrankManaBarrierCD") &&!target.HasBuff("ManaBarrier"))
+                    healthDebuffer += target.Mana/2;
+
+            }
+            return Properties.Champion.E.GetDamage(target) * defuffer - healthDebuffer;
         }
 
         #endregion Private Functions

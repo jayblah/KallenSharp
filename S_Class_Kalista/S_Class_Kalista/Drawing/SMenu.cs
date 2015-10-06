@@ -18,45 +18,93 @@
 //   Assembly to be use with LeagueSharp for champion Kalista
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-using LeagueSharp.Common;
-using Color = System.Drawing.Color;
 
+using System.Dynamic;
+using LeagueSharp;
+using LeagueSharp.Common;
+using S_Class_Kalista.Libs;
+using Color = System.Drawing.Color;
 namespace S_Class_Kalista
 {
     internal class SMenu
     {
         private const string MenuName = "S Class Kalista";
+        public static char Walker { get; set; }
 
         public static void GenerateMenu()
         {
             Properties.MainMenu = new Menu(MenuName, MenuName, true);
             Properties.MainMenu.AddSubMenu(new Menu("Created by Kallen", "ddsfhjsjhdfjhdsfjhdfsjhdf"));
             //Properties.MainMenu.AddSubMenu(HumanizerMenu());
+            Properties.MainMenu.AddSubMenu(OrbwalkManagerMenu());
+            
+            //Reset Walkers
+            Properties.SkyWalker = null;
+            Properties.HavenWalker = null;
+            Properties.CommonWalker = null;
+
+            //Load Desired Walker
+            switch (Properties.MainMenu.Item("sOrbwalker").GetValue<StringList>().SelectedIndex)
+            {
+                case 0:
+                    Properties.MainMenu.AddSubMenu(SkyWalkerMenu());
+                    Properties.SkyWalker = new SkyWalker.Orbwalker(Properties.MainMenu.SubMenu("skyWalker"));
+                break;
+
+                case 1:
+                    Properties.MainMenu.AddSubMenu(HavenWalkerMenu());
+                    Properties.HavenWalker = new HWalker.Orbwalker(Properties.MainMenu.SubMenu("havenWalker"));
+                    break;
+
+                case 2:
+                    Properties.MainMenu.AddSubMenu(CommonWalkerMenu());
+                    Properties.CommonWalker = new Orbwalking.Orbwalker(Properties.MainMenu.SubMenu("commonWalker"));
+                    break;
+            }
             Properties.MainMenu.AddSubMenu(DrawingMenu());
             Properties.MainMenu.AddSubMenu(AutoEvents());
-            //Properties.MainMenu.AddSubMenu(OrbWalkingMenu());
-            Properties.MainMenu.AddSubMenu(NewOrbWalkingMenu());
             Properties.MainMenu.AddSubMenu(MixedMenu());
             Properties.MainMenu.AddSubMenu(ComboMenu());
             Properties.MainMenu.AddSubMenu(LaneClearMenu());
             Properties.MainMenu.AddSubMenu(ManaMenu());
+            Properties.MainMenu.AddSubMenu(ItemMenu());
             Properties.MainMenu.AddSubMenu(MiscMenu());
-           // Properties.LukeOrbWalker = new Orbwalking.Orbwalker(Properties.MainMenu.SubMenu("lukeWalker"));
-            Properties.SkyWalker = new SkyWalker.Orbwalker(Properties.MainMenu.SubMenu("skyWalker"));
         }
 
-        //private static Menu OrbWalkingMenu()
-        //{
-        //    var orbWalkingMenu = new Menu("Old OrbWalker", "lukeWalker");
-        //    var targetSelectorMenu = new Menu("Target Selector", "oldTargetSelect");
-        //    TargetSelector.AddToMenu(targetSelectorMenu);
-        //    orbWalkingMenu.AddSubMenu(targetSelectorMenu);
-        //    return orbWalkingMenu;
-        //}
+        private static Menu ItemMenu()
+        {
+            var itemMenu = new Menu("Item Options", "itemOptions");
+            itemMenu.AddItem(new MenuItem("bUseBork", "Smart Bork/Cutless Usage").SetValue(true));
+            itemMenu.AddItem(new MenuItem("bUseYoumuu", "Smart Youmuu's Usage").SetValue(true));
+            return itemMenu;
+        }
 
-        private static Menu NewOrbWalkingMenu()
+        private static Menu OrbwalkManagerMenu()
+        {
+            var oMenu = new Menu("Orbwalker Options", "orbwalkOptions");
+            oMenu.AddItem(new MenuItem("sOrbwalker", "Orbwalker (Chnage required F5)").SetValue(new StringList(new[] { "SkyWalker", "Haven Walker", "Common(SOON)" })));
+            return oMenu;
+        }
+
+        private static Menu SkyWalkerMenu()
         {
             var orbWalkingMenu = new Menu("Sky Walker", "skyWalker");
+            var targetSelectorMenu = new Menu("Target Selector", "targetSelect");
+            TargetSelector.AddToMenu(targetSelectorMenu);
+            orbWalkingMenu.AddSubMenu(targetSelectorMenu);
+            return orbWalkingMenu;
+        }
+        private static Menu HavenWalkerMenu()
+        {
+            var orbWalkingMenu = new Menu("Haven Walker", "havenWalker");
+            var targetSelectorMenu = new Menu("Target Selector", "targetSelect");
+            TargetSelector.AddToMenu(targetSelectorMenu);
+            orbWalkingMenu.AddSubMenu(targetSelectorMenu);
+            return orbWalkingMenu;
+        }
+        private static Menu CommonWalkerMenu()
+        {
+            var orbWalkingMenu = new Menu("Common OrbWalker", "commonWalker");
             var targetSelectorMenu = new Menu("Target Selector", "targetSelect");
             TargetSelector.AddToMenu(targetSelectorMenu);
             orbWalkingMenu.AddSubMenu(targetSelectorMenu);
@@ -93,7 +141,7 @@ namespace S_Class_Kalista
             laneClearMenu.AddItem(new MenuItem("bUseQLaneClear", "Use Q to Kill Minions").SetValue(false));
             laneClearMenu.AddItem(new MenuItem("sLaneClearMinionsKilledQ", ">> Min. Minions to Use Q").SetValue(new Slider(3, 2, 10)));
 
-            laneClearMenu.AddItem(new MenuItem("bUseJungleClear", "Jungle Clear").SetValue(new KeyBind('G', KeyBindType.Toggle)));
+            laneClearMenu.AddItem(new MenuItem("bUseJungleClear", "Toggle Jungle Clear").SetValue(new KeyBind('G', KeyBindType.Toggle)));
             return laneClearMenu;
         }
 

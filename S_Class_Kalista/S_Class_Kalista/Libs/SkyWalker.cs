@@ -350,12 +350,22 @@ namespace S_Class_Kalista
                     {
                         if (!NoCancelChamps.Contains(Player.ChampionName))
                         {
-                            LastAACommandTick = Utils.GameTimeTickCount - 4;
                             LastAATick = Utils.GameTimeTickCount + Game.Ping + 100 - (int)(ObjectManager.Player.AttackCastDelay * 1000f);
                             _missileLaunched = false;
-                            StopMove = true;
+
+                            var d = GetRealAutoAttackRange(target) - 65;
+                            if (Player.Distance(target, true) > d * d && !Player.IsMelee)
+                            {
+                                LastAATick = Utils.GameTimeTickCount + Game.Ping + 400 - (int)(ObjectManager.Player.AttackCastDelay * 1000f);
+                            }
                         }
-                        Player.IssueOrder(GameObjectOrder.AttackUnit, target);
+
+                        if (!Player.IssueOrder(GameObjectOrder.AttackUnit, target))
+                        {
+                            ResetAutoAttackTimer();
+                        }
+
+                        LastMoveCommandT = 0;
                         _lastTarget = target;
                         return;
                     }
@@ -365,7 +375,6 @@ namespace S_Class_Kalista
                 {
                     MoveTo(position, holdAreaRadius, false, useFixedDistance, randomizeMinDistance);
                 }
-                winduptime = (int)extraWindup;
             }
             catch (Exception e)
             {
@@ -782,7 +791,7 @@ namespace S_Class_Kalista
                 if (ActiveMode != OrbwalkingMode.LastHit)
                 {
                     var target = TargetSelector.GetTarget(-1, TargetSelector.DamageType.Physical);
-                    if (target.IsValidTarget())
+                    if (target.IsValidTarget() && target.CharData.BaseSkinName != "gangplankbarrel")
                     {
                         return target;
                     }

@@ -25,6 +25,7 @@ using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using S_Class_Kalista.Libs;
 using Collision = LeagueSharp.Common.Collision;
 
 namespace S_Class_Kalista
@@ -35,31 +36,9 @@ namespace S_Class_Kalista
 
         public static void DoTheWalk()
         {
-            //switch (Properties.MainMenu.Item("slOrbwalker").GetValue<StringList>().SelectedIndex)
-            //{
-
-            //    case 0:
-            //        switch (Properties.LukeOrbWalker.ActiveMode)
-            //        {
-            //            case Orbwalking.OrbwalkingMode.Combo:
-            //                Combo();
-            //                break;
-
-            //            case Orbwalking.OrbwalkingMode.Mixed:
-            //                Mixed();
-            //                break;
-
-            //            case Orbwalking.OrbwalkingMode.LaneClear:
-            //                LaneClear();
-            //                break;
-
-            //            case Orbwalking.OrbwalkingMode.LastHit:
-            //                LastHit();
-            //                break;
-            //        }
-            //        break;
-
-            //    case 1:
+            switch (Properties.MainMenu.Item("sOrbwalker").GetValue<StringList>().SelectedIndex)
+            {
+                case 0:
                     switch (Properties.SkyWalker.ActiveMode)
                     {
                         case SkyWalker.OrbwalkingMode.Combo:
@@ -77,9 +56,52 @@ namespace S_Class_Kalista
                         case SkyWalker.OrbwalkingMode.LastHit:
                             LastHit();
                             break;
-            //        }
-            //        break;
+                    }
+                    break;
+
+                case 1:
+                    switch (Properties.HavenWalker.ActiveMode)
+                    {
+                        case HWalker.OrbwalkingMode.Combo:
+                            Combo();
+                            break;
+
+                        case HWalker.OrbwalkingMode.Mixed:
+                            Mixed();
+                            break;
+
+                        case HWalker.OrbwalkingMode.LaneClear:
+                            LaneClear();
+                            break;
+
+                        case HWalker.OrbwalkingMode.LastHit:
+                            LastHit();
+                            break;
+                    }
+                    break;
+
+                case 2:
+                    switch (Properties.CommonWalker.ActiveMode)
+                    {
+                        case Orbwalking.OrbwalkingMode.Combo:
+                            Combo();
+                            break;
+
+                        case Orbwalking.OrbwalkingMode.Mixed:
+                            Mixed();
+                            break;
+
+                        case Orbwalking.OrbwalkingMode.LaneClear:
+                            LaneClear();
+                            break;
+
+                        case Orbwalking.OrbwalkingMode.LastHit:
+                            LastHit();
+                            break;
+                    }
+                    break;
             }
+            
         }
 
         #endregion Public Functions
@@ -119,7 +141,8 @@ namespace S_Class_Kalista
                 {
                     if (target2 != null) continue;
                     if (Vector3.Distance(ObjectManager.Player.ServerPosition, minion.Position) > Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero) + 50) continue;
-                    Properties.PlayerHero.IssueOrder(GameObjectOrder.AttackUnit, minion);
+                    if(minion.CharData.BaseSkinName == "gangplankbarrel") continue;
+                        Properties.PlayerHero.IssueOrder(GameObjectOrder.AttackUnit, minion);
                     break;
                 }
 
@@ -130,14 +153,26 @@ namespace S_Class_Kalista
                 var minions = ObjectManager.Get<Obj_AI_Minion>().Where(m => m.IsValidTarget(Orbwalking.GetRealAutoAttackRange(m)));
 
                 var objAiMinions = minions as Obj_AI_Minion[] ?? minions.ToArray();
-                if (objAiMinions.Any(m => Properties.Champion.E.CanCast(m) && m.Health <= Properties.Champion.E.GetDamage(m)))
+                if (
+                    objAiMinions.Any(
+                        m => Properties.Champion.E.CanCast(m) && m.Health <= Properties.Champion.E.GetDamage(m)))
                     Properties.Champion.UseRend();
                 else
                 {
                     // ReSharper disable once PossibleMultipleEnumeration
-                    var minion = VectorHelper.GetDashObjects(objAiMinions).Find(m => m.Health > Properties.PlayerHero.GetAutoAttackDamage(m) && m.Health < Properties.PlayerHero.GetAutoAttackDamage(m) + DamageCalc.GetRendDamage(m));
-                    if (minion != null)
-                        Properties.SkyWalker.ForceTarget(minion);
+                    var minion =
+                        VectorHelper.GetDashObjects(objAiMinions)
+                            .Find(
+                                m =>
+                                    m.Health > Properties.PlayerHero.GetAutoAttackDamage(m) &&
+                                    m.Health <
+                                    Properties.PlayerHero.GetAutoAttackDamage(m) + DamageCalc.GetRendDamage(m));
+                    if (minion != null && minion.CharData.BaseSkinName != "gangplankbarrel")
+                    {
+                        if (Properties.SkyWalker != null) Properties.SkyWalker.ForceTarget(minion);
+                        else if (Properties.HavenWalker != null) Properties.HavenWalker.ForceTarget(minion);
+                        else if (Properties.CommonWalker != null) Properties.CommonWalker.ForceTarget(minion);
+                    }
                 }
             }
             else
@@ -146,10 +181,18 @@ namespace S_Class_Kalista
                 foreach (var minion in minions)
                 {
                     if (Vector3.Distance(ObjectManager.Player.ServerPosition, minion.Position) > Orbwalking.GetRealAutoAttackRange(Properties.PlayerHero) + 50) continue;
+                    if(minion.CharData.BaseSkinName == "gangplankbarrel")continue;
                     Properties.PlayerHero.IssueOrder(GameObjectOrder.AttackUnit, minion);
                     break;
                 }
             }
+        }
+
+        public static void AfterAttack(AttackableUnit unit, AttackableUnit target)
+        {
+            if (Properties.SkyWalker != null) ItemManager.UseItems((Obj_AI_Hero)target, Properties.SkyWalker.ActiveMode == SkyWalker.OrbwalkingMode.Combo);
+            else if (Properties.HavenWalker != null) ItemManager.UseItems((Obj_AI_Hero)target, Properties.HavenWalker.ActiveMode == HWalker.OrbwalkingMode.Combo);
+            else if (Properties.CommonWalker != null) ItemManager.UseItems((Obj_AI_Hero)target, Properties.CommonWalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo);
         }
 
         private static void Combo()
